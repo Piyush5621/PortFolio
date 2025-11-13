@@ -26,20 +26,6 @@ async function loadHeader() {
         const el = document.getElementById("site-header");
         const html = await fetch("header.html").then(r => r.text());
         el.innerHTML = html;
-
-        const menuBtn = el.querySelector("#menu-btn");
-        const menu = el.querySelector("#menu");
-        if (menuBtn && menu) {
-            menuBtn.addEventListener("click", () => menu.classList.toggle("hidden"));
-        }
-
-        const links = el.querySelectorAll(".nav-link");
-        const current = (location.pathname.split('/').pop() || "index.html").toLowerCase();
-        links.forEach(a => {
-            const href = (a.getAttribute("href") || "").toLowerCase();
-            if (href === current) a.classList.add("text-gray-400", "underline");
-        });
-
     } catch (e) {
         console.error("Header load failed", e);
     }
@@ -82,16 +68,16 @@ loadHeader();
 
 <script>
 /* --------------------------------------------------
-   VALIDATE BLOG ID (IMPORTANT FIX FOR 406 & NULL)
+   VALIDATE BLOG ID
 -------------------------------------------------- */
 const idParam = new URLSearchParams(location.search).get("id");
 const blogId = parseInt(idParam, 10);
 
 if (!idParam || isNaN(blogId) || blogId < 1) {
     document.getElementById("blogContent").innerHTML = `
-        <p class="text-red-500 text-lg">Invalid or missing blog ID.</p>
+        <p class="text-red-500 text-lg">Invalid blog ID.</p>
     `;
-    throw new Error("Invalid blog ID");  // STOP SCRIPT HERE
+    throw new Error("Invalid blog ID"); 
 }
 
 /* -------------------------------
@@ -104,7 +90,7 @@ async function loadBlog() {
         .from("blogs")
         .select("*")
         .eq("id", blogId)
-        .maybeSingle(); // prevents 406
+        .maybeSingle();
 
     if (error || !b) {
         blogBox.innerHTML = `
@@ -134,6 +120,7 @@ async function loadBlog() {
         </p>
     `;
 }
+
 loadBlog();
 
 /* -------------------------------
@@ -172,7 +159,7 @@ async function loadComments() {
     }
 
     if (!comments || comments.length === 0) {
-        box.innerHTML = `<p class="text-gray-400">No comments yet. Be the first!</p>`;
+        box.innerHTML = `<p class="text-gray-400">No comments yet.</p>`;
         return;
     }
 
@@ -186,6 +173,7 @@ async function loadComments() {
         `;
     });
 }
+
 loadComments();
 
 /* -------------------------------
