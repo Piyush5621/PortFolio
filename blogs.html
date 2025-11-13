@@ -7,37 +7,52 @@
     <title>Blog</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabaseClient.js"></script>
-
 </head>
 
 <body class="bg-black text-white">
 
+<!-- HEADER -->
 <header class="fixed top-0 left-0 w-full z-50 bg-black shadow-md">
     <div id="site-header"></div>
 </header>
+
 <script>
-  async function loadHeader() {
-    const el = document.getElementById('site-header');
-    const html = await fetch('header.html').then(r => r.text());
-    el.innerHTML = html;
-    const menuBtn = el.querySelector('#menu-btn');
-    const menu = el.querySelector('#menu');
-    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
-    const links = el.querySelectorAll('.nav-link');
-    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    links.forEach(a => {
-      const href = (a.getAttribute('href') || '').toLowerCase();
-      if (href === current) a.classList.add('text-gray-400','underline');
-    });
-  }
-  loadHeader();
+async function loadHeader() {
+    try {
+        const el = document.getElementById("site-header");
+        const html = await fetch("header.html").then(r => r.text());
+        el.innerHTML = html;
+
+        const menuBtn = el.querySelector("#menu-btn");
+        const menu = el.querySelector("#menu");
+        if (menuBtn && menu) {
+            menuBtn.addEventListener("click", () => menu.classList.toggle("hidden"));
+        }
+
+        // Active Navigation Highlight
+        const links = el.querySelectorAll(".nav-link");
+        const current = (location.pathname.split('/').pop() || "index.html").toLowerCase();
+        links.forEach(a => {
+            const href = (a.getAttribute("href") || "").toLowerCase();
+            if (href === current) {
+                a.classList.add("text-gray-400", "underline");
+            }
+        });
+
+    } catch (e) {
+        console.error("Header load failed", e);
+    }
+}
+loadHeader();
 </script>
 
 <!-- BLOG CONTENT -->
 <div class="max-w-4xl mx-auto pt-[6rem] px-6 pb-20" id="blogContent">
-    Loading blog...
+    <p class="text-gray-400">Loading blog...</p>
 </div>
 
 <!-- COMMENTS SECTION -->
@@ -45,12 +60,12 @@
     
     <h2 class="text-2xl font-bold mb-4">Comments</h2>
 
-    <!-- Comment List -->
+    <!-- Comments -->
     <div id="commentList" class="space-y-4">
-        Loading comments...
+        <p class="text-gray-400">Loading comments...</p>
     </div>
 
-    <!-- Add Comment -->
+    <!-- Add Comment Box -->
     <div class="bg-[#111] rounded-xl p-5 mt-8">
         <h3 class="text-xl font-semibold mb-3">Leave a Comment</h3>
 
@@ -71,23 +86,31 @@
 </div>
 
 <script>
+const blogId = parseInt(new URLSearchParams(location.search).get("id") || "0");
 
-const blogId = parseInt(new URLSearchParams(location.search).get('id') || '0', 10);
-
-/* -------------------------------
-   LOAD BLOG DETAILS
---------------------------------*/
+// -----------------------------
+// LOAD BLOG DETAILS
+// -----------------------------
 async function loadBlog() {
 
-    const { data: b } = await supabase
+    const { data: b, error } = await supabase
         .from("blogs")
         .select("*")
         .eq("id", blogId)
         .single();
 
+    const blogBox = document.getElementById("blogContent");
+
+    if (error || !b) {
+        blogBox.innerHTML = `
+            <p class="text-red-500 text-lg">Blog not found.</p>
+        `;
+        return;
+    }
+
     const likes = await getLikes(blogId);
 
-    document.getElementById("blogContent").innerHTML = `
+    blogBox.innerHTML = `
         <img src="${b.image_url}" class="w-full rounded-xl mb-6">
 
         <h1 class="text-4xl font-bold">${b.title}</h1>
@@ -95,22 +118,22 @@ async function loadBlog() {
 
         <div class="flex items-center gap-3 mt-4">
             <button onclick="likeBlog(${blogId})"
-                    class="flex items-center gap-2 text-red-500 text-xl">
+                    class="flex items-center gap-2 text-red-500 text-xl hover:scale-110 transition">
                 <i class="fas fa-heart"></i>
             </button>
             <span id="likeCount" class="text-gray-300 text-lg">${likes}</span>
         </div>
 
-        <p class="mt-6 text-gray-200 leading-7">${b.content}</p>
+        <p class="mt-6 text-gray-200 leading-7 whitespace-pre-line">
+            ${b.content}
+        </p>
     `;
 }
-
 loadBlog();
 
-
-/* -------------------------------
-   LIKE SYSTEM
---------------------------------*/
+// -----------------------------
+// LIKE SYSTEM
+// -----------------------------
 async function likeBlog(id) {
     await supabase.from("blog_likes").insert([{ blog_id: id }]);
     document.getElementById("likeCount").innerText = await getLikes(id);
@@ -119,18 +142,18 @@ async function likeBlog(id) {
 async function getLikes(id) {
     const { data } = await supabase
         .from("blog_likes")
-        .select("*")
+        .select("id")
         .eq("blog_id", id);
 
-    return data.length;
+    return data ? data.length : 0;
 }
 
-
-/* -------------------------------
-   LOAD COMMENTS
---------------------------------*/
+// -----------------------------
+// LOAD COMMENTS
+// -----------------------------
 async function loadComments() {
-    const { data: comments } = await supabase
+
+    const { data: comments, error } = await supabase
         .from("blog_comments")
         .select("*")
         .eq("blog_id", blogId)
@@ -139,12 +162,22 @@ async function loadComments() {
     const box = document.getElementById("commentList");
     box.innerHTML = "";
 
+    if (error) {
+        box.innerHTML = `<p class="text-red-500">Failed to load comments.</p>`;
+        return;
+    }
+
+    if (!comments || comments.length === 0) {
+        box.innerHTML = `<p class="text-gray-400">No comments yet. Be the first!</p>`;
+        return;
+    }
+
     comments.forEach(c => {
         box.innerHTML += `
             <div class="bg-[#111] p-4 rounded-lg border border-gray-800">
                 <p class="text-yellow-400 font-semibold">${c.name || "Anonymous"}</p>
                 <p class="text-gray-300 mt-1">${c.comment}</p>
-                <p class="text-gray-500 text-xs mt-1">${c.created_at}</p>
+                <p class="text-gray-500 text-xs mt-1">${new Date(c.created_at).toLocaleString()}</p>
             </div>
         `;
     });
@@ -152,21 +185,24 @@ async function loadComments() {
 
 loadComments();
 
-
-/* -------------------------------
-   SUBMIT COMMENT
---------------------------------*/
+// -----------------------------
+// SUBMIT COMMENT
+// -----------------------------
 async function submitComment() {
-    let name = document.getElementById("commentName").value;
-    let comment = document.getElementById("commentText").value;
+    let name = document.getElementById("commentName").value.trim();
+    let comment = document.getElementById("commentText").value.trim();
 
-    if (comment.trim() === "") {
+    if (comment === "") {
         alert("Please write a comment.");
         return;
     }
 
     await supabase.from("blog_comments").insert([
-        { blog_id: blogId, name, comment }
+        {
+            blog_id: blogId,
+            name: name || null,
+            comment: comment
+        }
     ]);
 
     document.getElementById("commentName").value = "";
@@ -174,7 +210,6 @@ async function submitComment() {
 
     loadComments();
 }
-
 </script>
 
 </body>
