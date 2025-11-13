@@ -81,24 +81,30 @@ loadHeader();
 </div>
 
 <script>
-const blogId = Number(new URLSearchParams(location.search).get("id"));
+/* --------------------------------------------------
+   VALIDATE BLOG ID (IMPORTANT FIX FOR 406 & NULL)
+-------------------------------------------------- */
+const idParam = new URLSearchParams(location.search).get("id");
+const blogId = parseInt(idParam, 10);
 
-// -----------------------------
-// LOAD BLOG DETAILS
-// -----------------------------
+if (!idParam || isNaN(blogId) || blogId < 1) {
+    document.getElementById("blogContent").innerHTML = `
+        <p class="text-red-500 text-lg">Invalid or missing blog ID.</p>
+    `;
+    throw new Error("Invalid blog ID");  // STOP SCRIPT HERE
+}
+
+/* -------------------------------
+   LOAD BLOG DETAILS
+--------------------------------*/
 async function loadBlog() {
     const blogBox = document.getElementById("blogContent");
-
-    if (!blogId) {
-        blogBox.innerHTML = `<p class="text-red-500 text-lg">Invalid blog ID.</p>`;
-        return;
-    }
 
     const { data: b, error } = await supabase
         .from("blogs")
         .select("*")
         .eq("id", blogId)
-        .maybeSingle();   // NO 406 ERROR
+        .maybeSingle(); // prevents 406
 
     if (error || !b) {
         blogBox.innerHTML = `
@@ -130,9 +136,9 @@ async function loadBlog() {
 }
 loadBlog();
 
-// -----------------------------
-// LIKE SYSTEM
-// -----------------------------
+/* -------------------------------
+   LIKE SYSTEM
+--------------------------------*/
 async function likeBlog(id) {
     await supabase.from("blog_likes").insert([{ blog_id: id }]);
     document.getElementById("likeCount").innerText = await getLikes(id);
@@ -147,9 +153,9 @@ async function getLikes(id) {
     return data ? data.length : 0;
 }
 
-// -----------------------------
-// LOAD COMMENTS
-// -----------------------------
+/* -------------------------------
+   LOAD COMMENTS
+--------------------------------*/
 async function loadComments() {
     const { data: comments, error } = await supabase
         .from("blog_comments")
@@ -182,9 +188,9 @@ async function loadComments() {
 }
 loadComments();
 
-// -----------------------------
-// SUBMIT COMMENT
-// -----------------------------
+/* -------------------------------
+   SUBMIT COMMENT
+--------------------------------*/
 async function submitComment() {
     let name = document.getElementById("commentName").value.trim();
     let comment = document.getElementById("commentText").value.trim();
@@ -195,11 +201,7 @@ async function submitComment() {
     }
 
     await supabase.from("blog_comments").insert([
-        {
-            blog_id: blogId,
-            name: name || null,
-            comment: comment
-        }
+        { blog_id: blogId, name: name || null, comment }
     ]);
 
     document.getElementById("commentName").value = "";
