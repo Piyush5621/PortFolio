@@ -22,21 +22,19 @@
 
 <script>
 async function loadHeader() {
-    try {
-        const el = document.getElementById("site-header");
-        const html = await fetch("header.html").then(r => r.text());
-        el.innerHTML = html;
-    } catch (e) {
-        console.error("Header load failed", e);
-    }
+    const el = document.getElementById("site-header");
+    const html = await fetch("header.html").then(r => r.text());
+    el.innerHTML = html;
 }
 loadHeader();
 </script>
+
 
 <!-- BLOG CONTENT -->
 <div class="max-w-4xl mx-auto pt-[6rem] px-6 pb-20" id="blogContent">
     <p class="text-gray-400">Loading blog...</p>
 </div>
+
 
 <!-- COMMENTS SECTION -->
 <div class="max-w-4xl mx-auto px-6 pb-20">
@@ -66,9 +64,11 @@ loadHeader();
 
 </div>
 
+
 <script>
+
 /* --------------------------------------------------
-   VALIDATE BLOG ID
+   VALIDATE BLOG ID (IMPORTANT FIX)
 -------------------------------------------------- */
 const idParam = new URLSearchParams(location.search).get("id");
 const blogId = parseInt(idParam, 10);
@@ -77,13 +77,16 @@ if (!idParam || isNaN(blogId) || blogId < 1) {
     document.getElementById("blogContent").innerHTML = `
         <p class="text-red-500 text-lg">Invalid blog ID.</p>
     `;
-    throw new Error("Invalid blog ID"); 
+    console.error("Invalid blog ID:", idParam);
+    throw new Error("Invalid blog ID");
 }
+
 
 /* -------------------------------
    LOAD BLOG DETAILS
 --------------------------------*/
 async function loadBlog() {
+
     const blogBox = document.getElementById("blogContent");
 
     const { data: b, error } = await supabase
@@ -123,6 +126,8 @@ async function loadBlog() {
 
 loadBlog();
 
+
+
 /* -------------------------------
    LIKE SYSTEM
 --------------------------------*/
@@ -140,10 +145,13 @@ async function getLikes(id) {
     return data ? data.length : 0;
 }
 
+
+
 /* -------------------------------
    LOAD COMMENTS
 --------------------------------*/
 async function loadComments() {
+
     const { data: comments, error } = await supabase
         .from("blog_comments")
         .select("*")
@@ -176,6 +184,8 @@ async function loadComments() {
 
 loadComments();
 
+
+
 /* -------------------------------
    SUBMIT COMMENT
 --------------------------------*/
@@ -197,6 +207,7 @@ async function submitComment() {
 
     loadComments();
 }
+
 </script>
 
 </body>
