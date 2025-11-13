@@ -27,7 +27,6 @@
             );
             background-size: 200% 100%;
         }
-
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
@@ -58,7 +57,7 @@ loadHeader();
         </div>
 
         <div id="servicesContainer"
-             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         </div>
 
     </div>
@@ -101,8 +100,15 @@ async function loadServices() {
             <div data-aos="fade-up"
                 class="bg-white/10 text-white rounded-2xl p-6 text-center 
                 transition-all duration-300
-                hover:scale-105 hover:-translate-y-2 
-                hover:shadow-lg hover:shadow-white/40">
+                hover:scale-105 hover:-translate-y-2"
+                style="
+                    --shadow-color: ${service.color};
+                    box-shadow: 0 0 0 rgba(0,0,0,0);
+                    transition: box-shadow 0.3s ease, transform 0.3s ease;
+                "
+                onmouseover="this.style.boxShadow='0 0 30px var(--shadow-color)'"
+                onmouseout="this.style.boxShadow='0 0 0 rgba(0,0,0,0)'"
+            >
 
                 <div class="text-${service.color} text-5xl mb-4">
                     <i class="${service.icon}"></i>
