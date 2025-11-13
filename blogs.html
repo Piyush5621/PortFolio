@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+
+</head>
+
+<body class="bg-black text-white">
+
+<header class="fixed top-0 left-0 w-full z-50 bg-black shadow-md">
+    <div id="site-header"></div>
+</header>
+<script>
+  async function loadHeader() {
+    const el = document.getElementById('site-header');
+    const html = await fetch('header.html').then(r => r.text());
+    el.innerHTML = html;
+    const menuBtn = el.querySelector('#menu-btn');
+    const menu = el.querySelector('#menu');
+    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const links = el.querySelectorAll('.nav-link');
+    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    links.forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (href === current) a.classList.add('text-gray-400','underline');
+    });
+  }
+  loadHeader();
+</script>
+
+<!-- BLOG CONTENT -->
+<div class="max-w-4xl mx-auto pt-[6rem] px-6 pb-20" id="blogContent">
+    Loading blog...
+</div>
+
+<!-- COMMENTS SECTION -->
+<div class="max-w-4xl mx-auto px-6 pb-20">
+    
+    <h2 class="text-2xl font-bold mb-4">Comments</h2>
+
+    <!-- Comment List -->
+    <div id="commentList" class="space-y-4">
+        Loading comments...
+    </div>
+
+    <!-- Add Comment -->
+    <div class="bg-[#111] rounded-xl p-5 mt-8">
+        <h3 class="text-xl font-semibold mb-3">Leave a Comment</h3>
+
+        <input id="commentName"
+               class="w-full p-2 rounded bg-black border border-gray-700 mb-3"
+               placeholder="Your Name (optional)">
+
+        <textarea id="commentText"
+                  class="w-full p-2 rounded bg-black border border-gray-700 mb-3"
+                  placeholder="Write your comment..." rows="3"></textarea>
+
+        <button onclick="submitComment()"
+                class="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700 transition">
+            Post Comment
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+const blogId = parseInt(new URLSearchParams(location.search).get('id') || '0', 10);
+
+/* -------------------------------
+   LOAD BLOG DETAILS
+--------------------------------*/
+async function loadBlog() {
+
+    const { data: b } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("id", blogId)
+        .single();
+
+    const likes = await getLikes(blogId);
+
+    document.getElementById("blogContent").innerHTML = `
+        <img src="${b.image_url}" class="w-full rounded-xl mb-6">
+
+        <h1 class="text-4xl font-bold">${b.title}</h1>
+        <p class="text-purple-400 mt-2">${b.category}</p>
+
+        <div class="flex items-center gap-3 mt-4">
+            <button onclick="likeBlog(${blogId})"
+                    class="flex items-center gap-2 text-red-500 text-xl">
+                <i class="fas fa-heart"></i>
+            </button>
+            <span id="likeCount" class="text-gray-300 text-lg">${likes}</span>
+        </div>
+
+        <p class="mt-6 text-gray-200 leading-7">${b.content}</p>
+    `;
+}
+
+loadBlog();
+
+
+/* -------------------------------
+   LIKE SYSTEM
+--------------------------------*/
+async function likeBlog(id) {
+    await supabase.from("blog_likes").insert([{ blog_id: id }]);
+    document.getElementById("likeCount").innerText = await getLikes(id);
+}
+
+async function getLikes(id) {
+    const { data } = await supabase
+        .from("blog_likes")
+        .select("*")
+        .eq("blog_id", id);
+
+    return data.length;
+}
+
+
+/* -------------------------------
+   LOAD COMMENTS
+--------------------------------*/
+async function loadComments() {
+    const { data: comments } = await supabase
+        .from("blog_comments")
+        .select("*")
+        .eq("blog_id", blogId)
+        .order("id", { ascending: false });
+
+    const box = document.getElementById("commentList");
+    box.innerHTML = "";
+
+    comments.forEach(c => {
+        box.innerHTML += `
+            <div class="bg-[#111] p-4 rounded-lg border border-gray-800">
+                <p class="text-yellow-400 font-semibold">${c.name || "Anonymous"}</p>
+                <p class="text-gray-300 mt-1">${c.comment}</p>
+                <p class="text-gray-500 text-xs mt-1">${c.created_at}</p>
+            </div>
+        `;
+    });
+}
+
+loadComments();
+
+
+/* -------------------------------
+   SUBMIT COMMENT
+--------------------------------*/
+async function submitComment() {
+    let name = document.getElementById("commentName").value;
+    let comment = document.getElementById("commentText").value;
+
+    if (comment.trim() === "") {
+        alert("Please write a comment.");
+        return;
+    }
+
+    await supabase.from("blog_comments").insert([
+        { blog_id: blogId, name, comment }
+    ]);
+
+    document.getElementById("commentName").value = "";
+    document.getElementById("commentText").value = "";
+
+    loadComments();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- PROTECT PAGE -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+            <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+            </nav>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1">
+
+            <!-- TOP NAVBAR -->
+            <header class="bg-white shadow p-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold">Dashboard</h1>
+                <div class="flex items-center gap-3">
+                    <span class="font-medium">Welcome Admin</span>
+                    <div onclick="window.location.href='profile.html'"
+                        class="w-10 h-10 bg-purple-600 rounded-full cursor-pointer hover:opacity-80 transition">
+                    </div>
+
+                </div>
+            </header>
+
+
+            <!-- STATS CARDS -->
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="bg-white shadow-lg p-6 rounded-xl">
+                    <h3 class="text-gray-600">Messages</h3>
+                    <p id="messagesCount" class="text-3xl font-bold mt-2">0</p>
+                </div>
+
+                <div class="bg-white shadow-lg p-6 rounded-xl">
+                    <h3 class="text-gray-600">Projects</h3>
+                    <p id="projectsCount" class="text-3xl font-bold mt-2">0</p>
+                </div>
+
+                <div class="bg-white shadow-lg p-6 rounded-xl">
+                    <h3 class="text-gray-600">Website Likes</h3>
+                    <p id="likesCount" class="text-3xl font-bold mt-2">0</p>
+                </div>
+
+                <div class="bg-white shadow-lg p-6 rounded-xl">
+                    <h3 class="text-gray-600">Blogs</h3>
+                    <p id="blogsCount" class="text-3xl font-bold mt-2">0</p>
+                </div>
+
+            </div>
+
+
+            <!-- RECENT MESSAGES -->
+            <div class="px-6 pb-10">
+                <div class="bg-white shadow-lg p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold mb-4">Recent Messages</h2>
+
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-2">Name</th>
+                                <th>Email</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="messagesTable">
+                            <tr>
+                                <td class="py-2">Loading...</td>
+                                <td>Loading...</td>
+                                <td>Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- LOGOUT FUNCTION -->
+    <script>
+        function logout() {
+            localStorage.removeItem("adminSession");
+            window.location.href = "../index.html";
+        }
+    </script>
+
+
+    <!-- LOAD DATA -->
+    <script>
+
+        loadDashboard();
+
+        async function loadDashboard() {
+
+            /* COUNT MESSAGES */
+            let { count: msgCount } = await supabase
+                .from("messages")
+                .select("*", { count: "exact" });
+
+            document.getElementById("messagesCount").innerText = msgCount ?? 0;
+
+
+            /* COUNT PROJECTS */
+            let { count: projectCount } = await supabase
+                .from("projects")
+                .select("*", { count: "exact" });
+
+            document.getElementById("projectsCount").innerText = projectCount ?? 0;
+
+
+            /* COUNT WEBSITE LIKES */
+            let { count: likeCount } = await supabase
+                .from("likes_website")
+                .select("*", { count: "exact" });
+
+            document.getElementById("likesCount").innerText = likeCount ?? 0;
+
+
+            /* COUNT BLOGS */
+            let { count: blogCount } = await supabase
+                .from("blogs")
+                .select("*", { count: "exact" });
+
+            document.getElementById("blogsCount").innerText = blogCount ?? 0;
+
+
+            /* BADGE FOR UNREAD MESSAGES */
+            let { data: unread } = await supabase
+                .from("messages")
+                .select("*")
+                .eq("status", "unread");
+
+            if (unread.length > 0) {
+                let badge = document.getElementById("unreadBadge");
+                badge.innerText = unread.length;
+                badge.classList.remove("hidden");
+            }
+
+
+            /* LOAD LAST 5 MESSAGES */
+            let { data: recentMsgs } = await supabase
+                .from("messages")
+                .select("*")
+                .order("id", { ascending: false })
+                .limit(5);
+
+            const table = document.getElementById("messagesTable");
+            table.innerHTML = "";
+
+            recentMsgs.forEach(m => {
+                table.innerHTML += `
+                    <tr class="border-b">
+                        <td class="py-2">${m.name}</td>
+                        <td>${m.email}</td>
+                        <td>${m.message}</td>
+                    </tr>
+                `;
+            });
+
+        }
+
+        function showToast(text) {
+            const id = 'realtimeToast';
+            let t = document.getElementById(id);
+            if (!t) {
+                t = document.createElement('div');
+                t.id = id;
+                t.className = "fixed top-6 right-6 bg-black/80 text-white px-4 py-2 rounded shadow z-60";
+                document.body.appendChild(t);
+            }
+            t.innerText = text;
+            t.style.opacity = 1;
+            setTimeout(() => { t.style.opacity = 0; }, 4000);
+        }
+
+        // create a channel (v2 API)
+        const realtimeChannel = supabase.channel('public-changes');
+
+        // messages
+        realtimeChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' },
+            payload => {
+                showToast('New message: ' + (payload.new.name || 'Anonymous'));
+                // refresh messages count and recent messages
+                loadDashboard();
+            }
+        );
+
+        // website likes
+        realtimeChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'likes_website' },
+            payload => {
+                showToast('Someone liked the website ❤️');
+                loadDashboard();
+            }
+        );
+
+        // blog comments
+        realtimeChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'blog_comments' },
+            payload => {
+                showToast('New blog comment on blog id ' + payload.new.blog_id);
+                // optionally refresh blog analytics
+                loadDashboard();
+            }
+        );
+
+        // connect
+        realtimeChannel.subscribe();
+    </script>
+
+</body>
+
+</html>

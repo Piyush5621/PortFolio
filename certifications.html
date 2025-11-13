@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Certifications</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Your Supabase client -->
+    <script src="js/supabaseClient.js"></script>
+
+</head>
+
+<body class="bg-black text-white">
+
+<header class="relative h-20 bg-black shadow-md">
+    <div id="site-header"></div>
+</header>
+<script>
+  async function loadHeader() {
+    const el = document.getElementById('site-header');
+    const html = await fetch('header.html').then(r => r.text());
+    el.innerHTML = html;
+    const menuBtn = el.querySelector('#menu-btn');
+    const menu = el.querySelector('#menu');
+    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const links = el.querySelectorAll('.nav-link');
+    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    links.forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (href === current) a.classList.add('text-gray-400','underline');
+    });
+  }
+  loadHeader();
+</script>
+
+<!-- PAGE HEADER -->
+<section class="text-center py-10">
+    <h1 class="text-4xl font-bold mb-2">My Certifications</h1>
+    <p class="text-gray-400 text-lg">
+        A showcase of my achievements, completed courses, and verified skills.
+    </p>
+</section>
+
+
+<!-- CERTIFICATES SECTION -->
+<section class="pb-20">
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div id="certContainer"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!-- Cards will load here -->
+
+        </div>
+    </div>
+</section>
+
+
+<!-- MODAL BACKDROP -->
+<div id="modalOverlay"
+     class="fixed inset-0 bg-black/70 hidden z-40">
+</div>
+
+<!-- CERTIFICATE MODAL -->
+<div id="certModal"
+     class="fixed top-0 right-0 w-full sm:w-[450px] h-full bg-[#111] shadow-xl p-6 transform translate-x-full transition-all z-50">
+
+    <button onclick="closeModal()" class="text-white text-2xl absolute top-4 right-6">✕</button>
+
+    <div id="modalContent" class="mt-10"></div>
+</div>
+
+
+
+<script>
+
+/* LOAD CERTIFICATES */
+async function loadCertificates() {
+
+    const { data: certs, error } = await supabase
+        .from("certificates")
+        .select("*")
+        .order("id", { ascending: false });
+
+    const container = document.getElementById("certContainer");
+    container.innerHTML = "";
+
+    certs.forEach(c => {
+        container.innerHTML += `
+        <div class="bg-[#0f0f0f] p-4 rounded-xl border border-gray-800 shadow-xl
+                    hover:shadow-purple-500/30 hover:border-purple-500
+                    hover:scale-[1.03] transition-all duration-300 cursor-pointer"
+             onclick="openModal(${c.id})">
+
+            <img src="${c.image_url}"
+                 class="w-full h-60 object-cover rounded-lg mb-4" />
+
+            <h3 class="text-xl font-semibold">${c.title}</h3>
+
+            <p class="text-gray-400 text-sm mt-1">
+                Issued By: ${c.issuer}
+            </p>
+
+            <p class="text-purple-400 text-xs mt-2">
+                ${c.date}
+            </p>
+
+        </div>
+        `;
+    });
+}
+
+loadCertificates();
+
+
+
+/* OPEN MODAL */
+async function openModal(id) {
+
+    const { data: c } = await supabase
+        .from("certificates")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    document.getElementById("modalContent").innerHTML = `
+        <img src="${c.image_url}" class="w-full h-56 object-cover rounded-lg mb-4">
+
+        <h2 class="text-2xl font-semibold">${c.title}</h2>
+
+        <p class="text-gray-400 mt-2">Issued By: ${c.issuer}</p>
+
+        <p class="text-purple-400 text-sm mt-3">Date: ${c.date}</p>
+    `;
+
+    document.getElementById("modalOverlay").classList.remove("hidden");
+    document.getElementById("certModal").classList.remove("translate-x-full");
+}
+
+
+
+/* CLOSE MODAL */
+function closeModal() {
+    document.getElementById("modalOverlay").classList.add("hidden");
+    document.getElementById("certModal").classList.add("translate-x-full");
+}
+
+</script>
+
+</body>
+</html>

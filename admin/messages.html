@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin – Messages</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- Protect Admin Page -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+
+    <style>
+        .modal-slide {
+            transform: translateX(100%);
+            transition: all .4s ease-in-out;
+        }
+        .modal-slide.active {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+        <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+        <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+        </nav>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 p-10">
+
+        <h1 class="text-3xl font-bold mb-6">Messages</h1>
+
+        <!-- FILTER BUTTONS -->
+        <div class="flex gap-3 mb-5">
+            <button onclick="filterMessages('all')" class="px-4 py-2 bg-gray-700 text-white rounded">All</button>
+            <button onclick="filterMessages('unread')" class="px-4 py-2 bg-red-600 text-white rounded">Unread</button>
+            <button onclick="filterMessages('read')" class="px-4 py-2 bg-green-600 text-white rounded">Read</button>
+        </div>
+
+        <!-- LIST -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <table class="w-full text-left">
+                <thead>
+                <tr class="border-b">
+                    <th class="py-2">Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody id="messagesTable">
+                <tr><td colspan="6" class="text-center py-4">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- MESSAGE MODAL -->
+<div id="messageModal"
+     class="fixed top-0 right-0 w-full sm:w-[450px] h-full bg-white p-6 shadow-xl modal-slide z-50">
+
+    <button onclick="closeMessageModal()" class="absolute top-4 right-6 text-2xl">✖</button>
+
+    <h2 class="text-xl font-bold mb-4">Message Details</h2>
+
+    <div class="space-y-2">
+        <p><strong>Name:</strong> <span id="modal_name"></span></p>
+        <p><strong>Email:</strong> <span id="modal_email"></span></p>
+        <p><strong>Subject:</strong> <span id="modal_subject"></span></p>
+        <p><strong>Date:</strong> <span id="modal_date"></span></p>
+
+        <p class="mt-4"><strong>Message:</strong></p>
+        <p id="modal_message" class="bg-gray-100 p-3 rounded-lg"></p>
+
+        <!-- REPLY BUTTON -->
+        <a id="replyBtn" target="_blank"
+           class="block mt-4 text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+            Reply to Message
+        </a>
+    </div>
+
+</div>
+
+
+<!-- LOGOUT -->
+<script>
+    function logout() {
+        localStorage.removeItem("adminSession");
+        window.location.href = "login.html";
+    }
+</script>
+
+
+<!-- MAIN SCRIPT -->
+<script>
+
+    /* LOAD UNREAD COUNT FOR SIDEBAR */
+    async function loadUnreadBadge() {
+        const { data } = await supabase
+            .from("messages")
+            .select("id")
+            .eq("status", "unread");
+
+        const badge = document.getElementById("unreadBadge");
+
+        if (data.length > 0) {
+            badge.innerText = data.length;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+
+
+    /* LOAD MESSAGES */
+    async function loadMessages(filter = "all") {
+
+        let query = supabase
+            .from("messages")
+            .select("*")
+            .order("id", { ascending: false });
+
+        if (filter !== "all") {
+            query = query.eq("status", filter);
+        }
+
+        const { data, error } = await query;
+
+        const table = document.getElementById("messagesTable");
+        table.innerHTML = "";
+
+        data.forEach(m => {
+            table.innerHTML += `
+            <tr class="border-b">
+                <td class="py-2">${m.name}</td>
+                <td>${m.email}</td>
+                <td>${m.subject ?? "-"}</td>
+
+                <td>
+                    <span class="px-3 py-1 text-xs rounded-full 
+                        ${m.status === 'unread' ? 'bg-red-600' : 'bg-green-600'} text-white">
+                        ${m.status}
+                    </span>
+                </td>
+
+                <td>${new Date(m.created_at).toLocaleDateString()}</td>
+
+                <td>
+                    <button onclick="viewMessage(${m.id})" class="text-blue-500">View</button>
+                    <button onclick="deleteMessage(${m.id})" class="text-red-500 ml-3">Delete</button>
+                </td>
+            </tr>
+            `;
+        });
+
+        loadUnreadBadge();
+    }
+
+    loadMessages();
+
+
+
+    /* FILTER */
+    function filterMessages(type) {
+        loadMessages(type);
+    }
+
+
+
+    /* VIEW MESSAGE */
+    async function viewMessage(id) {
+
+        const { data: m } = await supabase
+            .from("messages")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+        modal_name.innerText = m.name;
+        modal_email.innerText = m.email;
+        modal_subject.innerText = m.subject;
+        modal_date.innerText = new Date(m.created_at).toLocaleString();
+        modal_message.innerText = m.message;
+
+        // Set mailto reply
+        document.getElementById("replyBtn").href =
+            `mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject)}&body=${encodeURIComponent("\n\n------ Original Message ------\n" + m.message)}`;
+
+        document.getElementById("messageModal").classList.add("active");
+
+        // Mark as read
+        await supabase.from("messages").update({ status: "read" }).eq("id", id);
+
+        loadMessages();
+    }
+
+
+
+    /* CLOSE MODAL */
+    function closeMessageModal() {
+        document.getElementById("messageModal").classList.remove("active");
+    }
+
+
+
+    /* DELETE MESSAGE */
+    async function deleteMessage(id) {
+        if (!confirm("Delete this message?")) return;
+
+        await supabase.from("messages").delete().eq("id", id);
+
+        loadMessages();
+    }
+
+</script>
+
+</body>
+</html>

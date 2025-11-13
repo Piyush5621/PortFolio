@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Manage Certificates</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- Protect Admin Page -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+            <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+            </nav>
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 p-10">
+
+            <h1 class="text-3xl font-bold mb-6">Manage Certificates</h1>
+
+            <!-- ADD CERTIFICATE FORM -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-10">
+                <h2 class="text-xl font-semibold mb-4">Add New Certificate</h2>
+
+                <form id="addCertForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <input type="text" id="cert_title" placeholder="Certificate Title"
+                        class="border p-2 rounded" required>
+
+                    <input type="text" id="cert_issuer" placeholder="Issued By"
+                        class="border p-2 rounded" required>
+
+                    <input type="date" id="cert_date"
+                        class="border p-2 rounded" required>
+
+                    <input type="file" id="cert_file" accept="image/*"
+                        class="border p-2 rounded col-span-1 md:col-span-2" required>
+
+                    <button class="bg-blue-600 text-white py-2 rounded col-span-1 md:col-span-2">
+                        Add Certificate
+                    </button>
+                </form>
+
+                <p id="addStatus" class="text-green-600 mt-3"></p>
+            </div>
+
+
+            <!-- CERTIFICATES LIST -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">All Certificates</h2>
+
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-2">Title</th>
+                            <th>Issuer</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="certTable"></tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- EDIT MODAL -->
+    <div id="editModal"
+        class="fixed top-0 right-0 w-full sm:w-[450px] bg-white h-full shadow-xl p-6 transform translate-x-full transition-all z-50">
+
+        <h2 class="text-xl font-bold mb-4">Edit Certificate</h2>
+
+        <form id="editCertForm" class="flex flex-col gap-4">
+
+            <input type="hidden" id="edit_id">
+
+            <input type="text" id="edit_title" class="border p-2 rounded">
+
+            <input type="text" id="edit_issuer" class="border p-2 rounded">
+
+            <input type="date" id="edit_date" class="border p-2 rounded">
+
+            <input type="file" id="edit_file" accept="image/*" class="border p-2 rounded">
+
+            <button class="bg-purple-600 text-white py-2 rounded">Update Certificate</button>
+        </form>
+
+        <button onclick="closeEditModal()" class="absolute top-4 right-6 text-2xl">✖</button>
+    </div>
+
+
+
+    <!-- LOGOUT -->
+    <script>
+        function logout() {
+            localStorage.removeItem("adminSession");
+            window.location.href = "../index.html";
+        }
+    </script>
+
+
+    <!-- MAIN CRUD SCRIPT -->
+    <script>
+
+        /* LOAD CERTIFICATES */
+        async function loadCertificates() {
+            const { data } = await supabase
+                .from("certificates")
+                .select("*")
+                .order("id", { ascending: false });
+
+            const table = document.getElementById("certTable");
+            table.innerHTML = "";
+
+            data.forEach(c => {
+                table.innerHTML += `
+                <tr class="border-b">
+                    <td>${c.title}</td>
+                    <td>${c.issuer}</td>
+                    <td>${c.date}</td>
+
+                    <td>
+                        <button onclick="openEditModal(${c.id})" class="text-blue-500">Edit</button>
+                        <button onclick="deleteCert(${c.id})" class="text-red-500 ml-3">Delete</button>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        loadCertificates();
+
+
+
+        /* ADD CERTIFICATE */
+        document.getElementById("addCertForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const file = document.getElementById("cert_file").files[0];
+            const filename = Date.now() + "_" + file.name;
+
+            const upload = await supabase.storage
+                .from("certificates")
+                .upload(`public/${filename}`, file);
+
+            if (upload.error) {
+                alert("Image upload failed!");
+                return;
+            }
+
+            const image_url =
+                `${supabaseUrl}/storage/v1/object/public/certificates/public/${filename}`;
+
+            const newCert = {
+                title: cert_title.value,
+                issuer: cert_issuer.value,
+                date: cert_date.value,
+                image_url
+            };
+
+            await supabase.from("certificates").insert([newCert]);
+
+            addStatus.innerText = "Certificate Added Successfully!";
+            loadCertificates();
+            e.target.reset();
+        });
+
+
+
+        /* OPEN EDIT MODAL */
+        async function openEditModal(id) {
+            const { data: c } = await supabase
+                .from("certificates")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+            edit_id.value = c.id;
+            edit_title.value = c.title;
+            edit_issuer.value = c.issuer;
+            edit_date.value = c.date;
+
+            document.getElementById("editModal").classList.remove("translate-x-full");
+        }
+
+
+
+        /* CLOSE MODAL */
+        function closeEditModal() {
+            document.getElementById("editModal").classList.add("translate-x-full");
+        }
+
+
+
+        /* UPDATE CERTIFICATE */
+        document.getElementById("editCertForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const id = edit_id.value;
+            let updated = {
+                title: edit_title.value,
+                issuer: edit_issuer.value,
+                date: edit_date.value
+            };
+
+            const file = edit_file.files[0];
+
+            if (file) {
+                const filename = Date.now() + "_" + file.name;
+
+                await supabase.storage
+                    .from("certificates")
+                    .upload(`public/${filename}`, file);
+
+                updated.image_url =
+                    `${supabaseUrl}/storage/v1/object/public/certificates/public/${filename}`;
+            }
+
+            await supabase.from("certificates").update(updated).eq("id", id);
+
+            closeEditModal();
+            loadCertificates();
+        });
+
+
+
+        /* DELETE CERTIFICATE */
+        async function deleteCert(id) {
+            if (confirm("Delete this certificate?")) {
+                await supabase.from("certificates").delete().eq("id", id);
+                loadCertificates();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Projects</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Your Supabase client -->
+    <script src="js/supabaseClient.js"></script>
+
+    <style>
+        .line-clamp-3 {
+            /* Fallbacks */
+            overflow: hidden;
+            /* Standard (some linters expect unprefixed properties alongside vendor-prefixed) */
+            line-clamp: 3;
+            box-orient: vertical;
+            /* WebKit */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .modal-slide-in {
+            transform: translateX(100%);
+            transition: all 0.4s ease-in-out;
+        }
+        .modal-slide-in.active {
+            transform: translateX(0);
+        }
+
+        .modal-bg {
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+
+<body class="bg-black text-white">
+
+<header class="relative h-20 bg-black shadow-md">
+    <div id="site-header"></div>
+</header>
+<script>
+  async function loadHeader() {
+    const el = document.getElementById('site-header');
+    const html = await fetch('header.html').then(r => r.text());
+    el.innerHTML = html;
+    const menuBtn = el.querySelector('#menu-btn');
+    const menu = el.querySelector('#menu');
+    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const links = el.querySelectorAll('.nav-link');
+    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    links.forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (href === current) a.classList.add('text-gray-400','underline');
+    });
+  }
+  loadHeader();
+</script>
+
+
+<!-- PAGE HEADER -->
+<section class="text-center py-10">
+    <h1 class="text-4xl font-bold mb-2">My Projects</h1>
+    <p class="text-gray-400 text-lg">
+        A collection of my best work — blending creativity, code, and modern technology.
+    </p>
+</section>
+
+
+<!-- FILTER TABS -->
+<div class="flex justify-center gap-4 mb-10">
+    <button class="filter-btn px-4 py-2 bg-purple-600 rounded-lg" data-cat="all">All</button>
+    <button class="filter-btn px-4 py-2 bg-gray-800 rounded-lg" data-cat="portfolio">Portfolio</button>
+    <button class="filter-btn px-4 py-2 bg-gray-800 rounded-lg" data-cat="ecommerce">E-commerce</button>
+    <button class="filter-btn px-4 py-2 bg-gray-800 rounded-lg" data-cat="business">Business</button>
+    <button class="filter-btn px-4 py-2 bg-gray-800 rounded-lg" data-cat="webapp">Web App</button>
+</div>
+
+
+<!-- PROJECT SECTION -->
+<section class="pb-20">
+    <div class="max-w-7xl mx-auto px-6">
+
+        <!-- Projects Grid -->
+        <div id="projectsContainer"
+             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!-- Cards load automatically -->
+
+        </div>
+
+        <div class="flex justify-center mt-10">
+            <button id="loadMoreBtn"
+                    class="px-6 py-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition hidden">
+                Load More
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- SLIDE-IN MODAL -->
+<div id="modalOverlay"
+     class="fixed inset-0 bg-black/60 modal-bg hidden z-40">
+</div>
+
+<div id="projectModal"
+     class="fixed top-0 right-0 w-full sm:w-[450px] h-full bg-[#111] z-50 p-6 modal-slide-in">
+
+    <button onclick="closeModal()" class="text-white text-2xl absolute top-4 right-6">
+        ✕
+    </button>
+
+    <div id="modalContent" class="mt-10"></div>
+</div>
+
+
+
+<!-- MAIN SCRIPT -->
+<script>
+
+let limit = 6;
+let currentCategory = "all";
+
+
+
+/* Load Projects */
+async function loadProjects(loadMore = false) {
+
+    let query = supabase
+        .from("projects")
+        .select("*")
+        .order("id", { ascending: false })
+        .limit(limit);
+
+    if (currentCategory !== "all") {
+        query = query.eq("category", currentCategory);
+    }
+
+    const { data: projects } = await query;
+
+    const container = document.getElementById("projectsContainer");
+
+    if (!loadMore) container.innerHTML = ""; // Reset container
+
+    projects.forEach(p => {
+
+        container.innerHTML += `
+        <div class="relative group bg-[#0f0f0f] rounded-xl p-4 shadow-xl
+                    hover:scale-[1.03] transition-all duration-300
+                    border border-gray-800 hover:border-purple-500
+                    hover:shadow-purple-500/40 cursor-pointer"
+            onclick="openModal(${p.id})">
+
+            <div class="overflow-hidden rounded-lg">
+                <img src="${p.image_url}"
+                     class="w-full h-48 object-cover rounded-lg
+                            group-hover:scale-110 transition duration-500">
+            </div>
+
+            <h3 class="text-xl font-semibold mt-4">${p.title}</h3>
+
+            <p class="text-gray-400 text-sm mt-2 line-clamp-3">
+                ${p.description}
+            </p>
+
+            <p class="text-purple-400 text-xs mt-3">
+                ${p.tech}
+            </p>
+
+            <div class="flex justify-between items-center mt-5">
+
+                <span class="text-gray-400 text-sm">Click to view</span>
+
+                <button onclick="event.stopPropagation(); likeProject(${p.id});"
+                        class="flex items-center gap-2 text-gray-300 hover:text-red-500 transition cursor-pointer">
+                    <i class="fas fa-heart"></i>
+                    <span id="likes_${p.id}">0</span>
+                </button>
+
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("loadMoreBtn").classList.remove("hidden");
+    loadLikes();
+}
+
+loadProjects();
+
+
+
+
+/* FILTER CLICK HANDLER */
+document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        currentCategory = btn.dataset.cat;
+        limit = 6;
+
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("bg-purple-600"));
+        btn.classList.add("bg-purple-600");
+
+        loadProjects(false);
+    });
+});
+
+
+
+
+/* LOAD MORE */
+document.getElementById("loadMoreBtn").addEventListener("click", () => {
+    limit += 6;
+    loadProjects(true);
+});
+
+
+
+
+/* OPEN MODAL */
+async function openModal(id) {
+
+    const { data: p } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    let mediaContent = "";
+
+    if (p.image_url.endsWith(".mp4") || p.image_url.includes("youtube")) {
+        mediaContent = `
+            <video src="${p.image_url}" controls autoplay
+                class="w-full h-56 rounded-lg mb-4"></video>`;
+    } else {
+        mediaContent = `
+            <img src="${p.image_url}" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.src='images/pp.jpg'; this.onerror=null;" 
+                 class="w-full h-56 object-cover rounded-lg mb-4">`;
+    }
+
+    document.getElementById("modalContent").innerHTML = `
+        ${mediaContent}
+
+        <h2 class="text-2xl font-semibold">${p.title}</h2>
+
+        <p class="text-gray-400 mt-2">${p.description}</p>
+
+        <p class="text-purple-400 text-sm mt-3">Tech Used: ${p.tech}</p>
+
+        <div class="mt-5 flex gap-3">
+            <a href="${p.project_link}" target="_blank"
+               class="px-4 py-2 bg-purple-600 rounded-lg">
+               Visit Project
+            </a>
+
+            <button onclick="likeProject(${p.id})"
+                class="px-4 py-2 bg-red-600 rounded-lg flex items-center gap-2">
+                <i class="fas fa-heart"></i>
+                <span id="modalLikes">${await getLikes(id)}</span>
+            </button>
+        </div>
+    `;
+
+    document.getElementById("modalOverlay").classList.remove("hidden");
+    document.getElementById("projectModal").classList.add("active");
+}
+
+
+
+/* CLOSE MODAL */
+function closeModal() {
+    document.getElementById("modalOverlay").classList.add("hidden");
+    document.getElementById("projectModal").classList.remove("active");
+}
+
+
+
+/* LIKE SYSTEM */
+async function likeProject(id) {
+    await supabase.from("likes").insert([{ project_id: id }]);
+    loadLikes();
+}
+
+async function getLikes(id) {
+    const { data } = await supabase
+        .from("likes")
+        .select("*")
+        .eq("project_id", id);
+
+    return data.length;
+}
+
+async function loadLikes() {
+    const { data: likes } = await supabase.from("likes").select("*");
+
+    const counts = {};
+    likes.forEach(l => {
+        counts[l.project_id] = (counts[l.project_id] || 0) + 1;
+    });
+
+    Object.keys(counts).forEach(id => {
+        const el = document.getElementById(`likes_${id}`);
+        if (el) el.innerText = counts[id];
+    });
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Me</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+
+</head>
+
+<body class="bg-black text-white min-h-screen">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 w-full z-50">
+        <div id="site-header"></div>
+    </header>
+    <script>
+      async function loadHeader() {
+        const el = document.getElementById('site-header');
+        const html = await fetch('header.html').then(r => r.text());
+        el.innerHTML = html;
+        const menuBtn = el.querySelector('#menu-btn');
+        const menu = el.querySelector('#menu');
+        if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        const links = el.querySelectorAll('.nav-link');
+        const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        links.forEach(a => {
+          const href = (a.getAttribute('href') || '').toLowerCase();
+          if (href === current) a.classList.add('text-gray-400','underline');
+        });
+      }
+      loadHeader();
+    </script>
+
+
+    <!-- MAIN SECTION -->
+    <section class="pt-28 pb-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+            <!-- LEFT SIDE: Contact Details + Social Icons -->
+            <div class="flex flex-col justify-center">
+
+                <h1 class="text-4xl font-bold mb-4">Get In Touch</h1>
+
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    I’m always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
+                </p>
+
+                <div class="space-y-4">
+                    <p><i class="fa-solid fa-envelope text-yellow-400 mr-3"></i> piyushkk0206@gmail.com</p>
+                    <p><i class="fa-solid fa-phone text-green-400 mr-3"></i> +91 9798526058</p>
+                    <p><i class="fa-solid fa-location-dot text-red-400 mr-3"></i> Nagar Untari, Garhwa, Jharkhand</p>
+                </div>
+
+                <!-- SOCIAL LINKS -->
+                <div class="flex gap-4 mt-6 text-2xl">
+
+                    <a href="https://instagram.com" target="_blank"
+                       class="hover:text-pink-400 transition"><i class="fa-brands fa-instagram"></i></a>
+
+                    <a href="https://github.com" target="_blank"
+                       class="hover:text-gray-300 transition"><i class="fa-brands fa-github"></i></a>
+
+                    <a href="https://linkedin.com" target="_blank"
+                       class="hover:text-blue-400 transition"><i class="fa-brands fa-linkedin"></i></a>
+
+                </div>
+
+                <!-- GOOGLE MAP -->
+                <div class="mt-8 rounded-xl overflow-hidden shadow-lg border border-white/10">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!..." 
+                        width="100%" height="250" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE: GLASS FORM -->
+            <div class="backdrop-blur-xl bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20">
+
+                <h2 class="text-2xl font-semibold mb-6">Send me a Message</h2>
+
+                <form id="contactForm" class="space-y-4">
+
+                    <input type="text" id="name" placeholder="Your Name"
+                        class="w-full p-3 rounded-lg bg-white/10 border border-white/20 
+                               focus:border-purple-400 focus:ring-2 focus:ring-purple-500 outline-none">
+
+                    <input type="email" id="email" placeholder="Your Email"
+                        class="w-full p-3 rounded-lg bg-white/10 border border-white/20 
+                               focus:border-purple-400 focus:ring-2 focus:ring-purple-500 outline-none">
+
+                    <input type="text" id="subject" placeholder="Subject"
+                        class="w-full p-3 rounded-lg bg-white/10 border border-white/20 
+                               focus:border-purple-400 focus:ring-2 focus:ring-purple-500 outline-none">
+
+                    <textarea id="message" placeholder="Your Message"
+                        class="w-full p-3 rounded-lg bg-white/10 border border-white/20 h-32 
+                               focus:border-purple-400 focus:ring-2 focus:ring-purple-500 outline-none"></textarea>
+
+                    <button
+                        class="w-full p-3 bg-purple-600 hover:bg-purple-700 transition rounded-lg font-semibold">
+                        Send Message
+                    </button>
+
+                </form>
+
+                <!-- Success Message -->
+                <p id="formStatus" class="text-green-400 mt-4"></p>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Supabase Form Submit Script -->
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let subject = document.getElementById("subject").value;
+            let message = document.getElementById("message").value;
+
+            const { error } = await supabase
+                .from("messages")
+                .insert([{ name, email, subject, message }]);
+
+            if (!error) {
+                formStatus.innerText = "Message sent successfully!";
+                document.getElementById("contactForm").reset();
+            } else {
+                formStatus.innerText = "Error sending message!";
+            }
+        });
+    </script>
+
+</body>
+</html>

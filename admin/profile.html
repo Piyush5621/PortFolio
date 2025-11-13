@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabaseClient.js"></script>
+
+  <script>
+    // protect page
+    if (!localStorage.getItem("adminSession")) {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+      <h2 class="text-2xl font-bold mb-8">Portfolio Admin</h2>
+      <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-8">
+      <h1 class="text-2xl font-bold mb-6">Admin Profile</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- left: avatar -->
+        <div class="bg-white p-6 rounded-xl shadow">
+          <div class="flex flex-col items-center">
+            <div id="avatarWrap" class="w-36 h-36 bg-gray-200 rounded-full overflow-hidden mb-4">
+              <img id="avatarImg" src="https://via.placeholder.com/300x300.png?text=Avatar" alt="avatar" class="w-full h-full object-cover">
+            </div>
+
+            <label class="block w-full">
+              <span class="text-sm text-gray-600">Upload Profile Photo</span>
+              <input id="photoInput" type="file" accept="image/*" class="mt-2 block w-full"/>
+            </label>
+
+            <button id="uploadBtn" class="mt-4 bg-purple-600 text-white py-2 px-4 rounded">Upload Photo</button>
+
+            <p id="photoStatus" class="text-sm mt-2 text-green-600"></p>
+          </div>
+        </div>
+
+        <!-- middle: info -->
+        <div class="bg-white p-6 rounded-xl shadow col-span-2">
+          <h2 class="text-lg font-semibold mb-4">Account Info</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm text-gray-600">Full Name</label>
+              <input id="fullName" class="w-full mt-1 border p-2 rounded" />
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-600">Email</label>
+              <input id="userEmail" type="email" class="w-full mt-1 border p-2 rounded" />
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button id="saveProfileBtn" class="bg-green-600 text-white py-2 px-4 rounded">Save Profile</button>
+            <span id="profileStatus" class="ml-3 text-sm text-green-600"></span>
+          </div>
+
+          <hr class="my-6">
+
+          <h3 class="text-lg font-semibold mb-3">Change Password</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input id="newPassword" type="password" placeholder="New password" class="w-full border p-2 rounded" />
+            <input id="confirmPassword" type="password" placeholder="Confirm password" class="w-full border p-2 rounded" />
+          </div>
+          <div class="mt-4">
+            <button id="changePassBtn" class="bg-yellow-600 text-black py-2 px-4 rounded">Change Password</button>
+            <span id="passStatus" class="ml-3 text-sm text-green-600"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  // bucket name where profile photos will be stored
+  const PROFILE_BUCKET = "profile-photos";
+
+  // fetch and display current user
+  async function loadUser() {
+    const { data } = await supabase.auth.getUser();
+    const user = data?.user;
+    if (!user) {
+      // if not authenticated, but adminSession exists, we still allow editing via metadata if you stored it differently.
+      return;
+    }
+
+    // If you store profile fields in user.user_metadata e.g., user.user_metadata.full_name
+    const meta = user.user_metadata || {};
+    document.getElementById("fullName").value = meta.full_name || meta.name || "";
+    document.getElementById("userEmail").value = user.email || "";
+
+    // try load avatar from storage (public)
+    try {
+      const publicUrl = supabase.storage.from(PROFILE_BUCKET).getPublicUrl(`public/${user.id}.jpg`).data.publicUrl;
+      // check length — if publicUrl exists
+      if (publicUrl && !publicUrl.includes("null")) {
+        document.getElementById("avatarImg").src = publicUrl;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  loadUser();
+
+  // upload photo
+  document.getElementById("uploadBtn").addEventListener("click", async () => {
+    const input = document.getElementById("photoInput");
+    const file = input.files[0];
+    if (!file) return alert("Select a photo first");
+
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+    if (!user) return alert("You must be signed in to upload photo");
+
+    const fileExt = file.name.split('.').pop();
+    const filePath = `public/${user.id}.jpg`; // normalize to jpg
+
+    // upload
+    const { error: uploadError } = await supabase.storage.from(PROFILE_BUCKET).upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      document.getElementById("photoStatus").innerText = "Upload failed";
+      console.error(uploadError);
+      return;
+    }
+
+    // get public url
+    const { data: publicData } = supabase.storage.from(PROFILE_BUCKET).getPublicUrl(filePath);
+    document.getElementById("avatarImg").src = publicData.publicUrl;
+    document.getElementById("photoStatus").innerText = "Uploaded ✅";
+  });
+
+  // save profile (update metadata / email)
+  document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+    const name = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("userEmail").value.trim();
+
+    // update user metadata and email
+    // NOTE: Updating email may require re-auth steps depending on Supabase settings
+    const updates = {};
+    if (name) updates.data = { full_name: name };
+
+    // update metadata
+    if (Object.keys(updates).length) {
+      const { error: metaErr } = await supabase.auth.updateUser(updates);
+      if (metaErr) {
+        document.getElementById("profileStatus").innerText = "Failed to update profile";
+        console.error(metaErr);
+        return;
+      }
+    }
+
+    // update email if changed
+    const { data } = await supabase.auth.getUser();
+    const currentEmail = data?.user?.email;
+    if (email && email !== currentEmail) {
+      // update email (Supabase may send confirmation to new email)
+      const { error: emailErr } = await supabase.auth.updateUser({ email });
+      if (emailErr) {
+        document.getElementById("profileStatus").innerText = "Failed to update email";
+        console.error(emailErr);
+        return;
+      }
+    }
+
+    document.getElementById("profileStatus").innerText = "Profile saved ✅";
+    setTimeout(() => document.getElementById("profileStatus").innerText = "", 3500);
+    loadUser();
+  });
+
+  // change password
+  document.getElementById("changePassBtn").addEventListener("click", async () => {
+    const p = document.getElementById("newPassword").value;
+    const c = document.getElementById("confirmPassword").value;
+    if (!p || p !== c) {
+      document.getElementById("passStatus").innerText = "Passwords do not match";
+      return;
+    }
+
+    // update user password
+    const { error } = await supabase.auth.updateUser({ password: p });
+    if (error) {
+      document.getElementById("passStatus").innerText = "Failed to change password";
+      console.error(error);
+      return;
+    }
+    document.getElementById("passStatus").innerText = "Password updated ✅";
+    setTimeout(() => document.getElementById("passStatus").innerText = "", 3500);
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+  });
+
+  function logout() {
+    localStorage.removeItem("adminSession");
+    // optionally sign out from supabase
+    supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+</head>
+
+<body
+    class="min-h-screen relative flex justify-center items-center bg-gradient-to-b from-blue-50 to-white overflow-hidden">
+
+    <!-- FLOW BACKGROUND (All 4 Corners) -->
+    <div class="absolute inset-0 z-0 overflow-hidden min-h-screen">
+
+        <div class="absolute top-[-150px] left-[-150px] w-[750px] h-[750px] bg-purple-500 opacity-70 rounded-br-full"
+            style="clip-path: ellipse(70% 60% at 0% 0%);"></div>
+
+        <div class="absolute top-[-150px] right-[-150px] w-[750px] h-[750px] bg-green-400 opacity-70 rounded-bl-full"
+            style="clip-path: ellipse(70% 60% at 100% 0%);"></div>
+
+        <div class="absolute bottom-[-150px] left-[-150px] w-[750px] h-[750px] bg-blue-400 opacity-70 rounded-tr-full"
+            style="clip-path: ellipse(70% 60% at 0% 100%);"></div>
+
+        <div class="absolute bottom-[-150px] right-[-150px] w-[750px] h-[750px] bg-pink-400 opacity-70 rounded-tl-full"
+            style="clip-path: ellipse(70% 60% at 100% 100%);"></div>
+
+    </div>
+
+    <!-- LOGIN CARD -->
+    <div class="bg-white shadow-xl rounded-xl w-[90%] max-w-4xl flex relative z-10">
+
+        <div class="hidden md:flex w-1/2 justify-center items-center p-8">
+            <img src="../images/login.jpg" class="w-90 rounded-2xl">
+        </div>
+
+        <div class="w-full md:w-1/2 p-10 flex flex-col gap-2 ">
+
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+                Admin Login
+            </h2>
+
+            <!-- LOGIN FORM -->
+            <form id="adminLoginForm" class="space-y-5">
+
+                <div>
+                    <label class="text-gray-600 text-sm">Email</label>
+                    <div class="flex items-center bg-gray-100 px-3 py-2 rounded-xl mt-1">
+                        <input type="email" id="email" placeholder="admin@example.com"
+                            class="w-full bg-transparent outline-none text-gray-700" required>
+                        <i>👤</i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-600 text-sm">Password</label>
+                    <div class="flex items-center bg-gray-100 px-3 py-2 rounded-xl mt-1">
+                        <input type="password" id="password" placeholder="••••••••"
+                            class="w-full bg-transparent outline-none text-gray-700" required>
+                        <i>🔒</i>
+                    </div>
+                </div>
+
+                <p id="errorMessage" class="text-red-600 text-sm"></p>
+
+                <button
+                    class="w-full py-3 rounded-xl bg-purple-600 text-white font-semibold text-lg hover:bg-purple-700 transition">
+                    LOGIN
+                </button>
+
+            </form>
+            
+            <p onclick="backtohome()" class="w-full flex justify-center item-center cursor-pointer item-end mx-30 text-blue-500" >Back to HomePage</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                document.getElementById("errorMessage").innerText = "Invalid email or password!";
+            } else {
+                localStorage.setItem("adminSession", "true");
+                window.location.href = "dashboard.html";   // FIXED
+            }
+        });
+
+        
+        function backtohome() {
+            window.location.href = "../index.html";
+        }
+    </script>
+
+</body>
+
+</html>

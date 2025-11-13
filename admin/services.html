@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin – Manage Services</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- Protect Admin Page -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+            <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 p-10">
+
+            <h1 class="text-3xl font-bold mb-6">Manage Services</h1>
+
+            <!-- ADD SERVICE FORM -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-10">
+                <h2 class="text-xl font-semibold mb-4">Add New Service</h2>
+
+                <form id="addServiceForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <input type="text" id="title" placeholder="Service Title"
+                        class="border p-2 rounded" required>
+
+                    <input type="text" id="icon" placeholder="Font Awesome Icon (e.g., fas fa-code)"
+                        class="border p-2 rounded" required>
+
+                    <input type="text" id="color" placeholder="Color (e.g., yellow-500)"
+                        class="border p-2 rounded" required>
+
+                    <input type="number" id="delay" placeholder="Animation Delay (100,200...)"
+                        class="border p-2 rounded" required>
+
+                    <textarea id="description" placeholder="Service Description"
+                        class="border p-2 rounded col-span-1 md:col-span-2" required></textarea>
+
+                    <button class="bg-blue-600 text-white py-2 rounded col-span-1 md:col-span-2">
+                        Add Service
+                    </button>
+                </form>
+
+                <p id="addStatus" class="text-green-600 mt-3"></p>
+            </div>
+
+            <!-- SERVICES LIST -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">All Services</h2>
+
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-2">Title</th>
+                            <th>Icon</th>
+                            <th>Color</th>
+                            <th>Delay</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="servicesTable"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- EDIT MODAL -->
+    <div id="editModal"
+        class="fixed inset-0 bg-black/50 hidden justify-center items-center z-50 p-4">
+        <div class="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-lg">
+
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Edit Service</h2>
+
+            <form id="editServiceForm" class="grid grid-cols-1 gap-4">
+
+                <input type="hidden" id="edit_id">
+
+                <input type="text" id="edit_title" class="border p-2 rounded" required>
+
+                <input type="text" id="edit_icon" class="border p-2 rounded" required>
+
+                <input type="text" id="edit_color" class="border p-2 rounded" required>
+
+                <input type="number" id="edit_delay" class="border p-2 rounded" required>
+
+                <textarea id="edit_description" class="border p-2 rounded" required></textarea>
+
+                <div class="flex justify-end gap-4 mt-4">
+                    <button type="button"
+                        onclick="closeEditModal()"
+                        class="px-4 py-2 bg-gray-400 text-white rounded">
+                        Cancel
+                    </button>
+
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- SCRIPT -->
+    <script>
+        /* LOAD SERVICES */
+        async function loadServices() {
+            const { data } = await supabase
+                .from("services")
+                .select("*")
+                .order("id");
+
+            const table = document.getElementById("servicesTable");
+            table.innerHTML = "";
+
+            data.forEach(s => {
+                table.innerHTML += `
+                    <tr class="border-b">
+                        <td class="py-2">${s.title}</td>
+                        <td><i class="${s.icon} text-xl"></i></td>
+                        <td>${s.color}</td>
+                        <td>${s.delay}</td>
+                        <td class="max-w-sm">${s.description}</td>
+                        <td>
+                            <button onclick="editService(${s.id})" class="text-blue-500 cursor-pointer">Edit</button>
+                            <button onclick="deleteService(${s.id})" class="text-red-500 ml-3 cursor-pointer">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        loadServices();
+
+
+        /* ADD SERVICE */
+        document.getElementById("addServiceForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const service = {
+                title: title.value,
+                icon: icon.value,
+                color: color.value,
+                delay: delay.value,
+                description: description.value
+            };
+
+            const { error } = await supabase.from("services").insert([service]);
+
+            if (!error) {
+                addStatus.innerText = "Service Added Successfully!";
+                loadServices();
+                e.target.reset();
+            }
+        });
+
+
+        /* DELETE SERVICE */
+        async function deleteService(id) {
+            await supabase.from("services").delete().eq("id", id);
+            loadServices();
+        }
+
+
+        /* OPEN EDIT MODAL */
+        async function editService(id) {
+            const { data } = await supabase
+                .from("services")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+            document.getElementById("edit_id").value = data.id;
+            document.getElementById("edit_title").value = data.title;
+            document.getElementById("edit_icon").value = data.icon;
+            document.getElementById("edit_color").value = data.color;
+            document.getElementById("edit_delay").value = data.delay;
+            document.getElementById("edit_description").value = data.description;
+
+            document.getElementById("editModal").classList.remove("hidden");
+            document.getElementById("editModal").classList.add("flex");
+        }
+
+
+        /* CLOSE EDIT MODAL */
+        function closeEditModal() {
+            document.getElementById("editModal").classList.add("hidden");
+        }
+
+
+        /* SAVE EDITED SERVICE */
+        document.getElementById("editServiceForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const id = edit_id.value;
+
+            const updatedService = {
+                title: edit_title.value,
+                icon: edit_icon.value,
+                color: edit_color.value,
+                delay: edit_delay.value,
+                description: edit_description.value
+            };
+
+            await supabase.from("services")
+                .update(updatedService)
+                .eq("id", id);
+
+            closeEditModal();
+            loadServices();
+        });
+
+
+        /* LOGOUT */
+        function logout() {
+            localStorage.removeItem("adminSession");
+            window.location.href = "login.html";
+        }
+    </script>
+
+</body>
+
+</html>

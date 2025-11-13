@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Manage Blogs</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- Protect Page -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+            <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+            </nav>
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 p-10">
+
+            <h1 class="text-3xl font-bold mb-6">Manage Blogs</h1>
+
+            <!-- ADD BLOG FORM -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-10">
+                <h2 class="text-xl font-semibold mb-4">Add New Blog</h2>
+
+                <form id="addBlogForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <input type="text" id="title" class="border p-2 rounded" placeholder="Blog Title" required>
+
+                    <input type="text" id="category" class="border p-2 rounded" placeholder="Category" required>
+
+                    <input type="text" id="image_url" class="border p-2 rounded" placeholder="Image URL" required>
+
+                    <textarea id="content" class="border p-2 rounded col-span-2" placeholder="Blog Content" rows="5" required></textarea>
+
+                    <button class="bg-blue-600 text-white py-2 rounded col-span-2">Add Blog</button>
+                </form>
+
+                <p id="addStatus" class="text-green-600 mt-3"></p>
+            </div>
+
+
+            <!-- BLOG LIST -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4">All Blogs</h2>
+
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-2">Title</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="blogsTable"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- EDIT BLOG MODAL -->
+    <div id="editModal"
+        class="fixed top-0 right-0 w-full sm:w-[450px] h-full bg-white z-50 p-6 shadow-xl transform translate-x-full transition-all">
+
+        <h2 class="text-xl font-bold mb-4">Edit Blog</h2>
+
+        <form id="editBlogForm" class="flex flex-col gap-4">
+
+            <input type="hidden" id="edit_id">
+
+            <input id="edit_title" class="border p-2 rounded">
+
+            <input id="edit_category" class="border p-2 rounded">
+
+            <input id="edit_image_url" class="border p-2 rounded">
+
+            <textarea id="edit_content" class="border p-2 rounded" rows="6"></textarea>
+
+            <button class="bg-purple-600 text-white py-2 rounded">Update Blog</button>
+        </form>
+
+        <button onclick="closeEditModal()" class="absolute top-4 right-6 text-2xl">✖</button>
+    </div>
+
+
+    <script>
+
+        function logout() {
+            localStorage.removeItem("adminSession");
+            window.location.href = "login.html";
+        }
+
+        /* LOAD BLOGS */
+        async function loadBlogs() {
+            const { data: blogs } = await supabase
+                .from("blogs")
+                .select("*")
+                .order("id", { ascending: false });
+
+            const table = document.getElementById("blogsTable");
+            table.innerHTML = "";
+
+            blogs.forEach(b => {
+                table.innerHTML += `
+                <tr class="border-b">
+                    <td class="py-2">${b.title}</td>
+                    <td>${b.category}</td>
+                    <td>${new Date(b.created_at).toLocaleDateString()}</td>
+
+                    <td>
+                        <button onclick="openEditModal(${b.id})" class="text-blue-500">Edit</button>
+                        <button onclick="deleteBlog(${b.id})" class="text-red-500 ml-3">Delete</button>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        loadBlogs();
+
+
+        /* ADD BLOG */
+        document.getElementById("addBlogForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const blog = {
+                title: title.value,
+                category: category.value,
+                image_url: image_url.value,
+                content: content.value
+            };
+
+            const { error } = await supabase.from("blogs").insert([blog]);
+
+            if (!error) {
+                addStatus.innerText = "Blog Added Successfully!";
+                loadBlogs();
+                e.target.reset();
+            }
+        });
+
+
+        /* OPEN EDIT MODAL */
+        async function openEditModal(id) {
+
+            const { data: b } = await supabase
+                .from("blogs")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+            edit_id.value = b.id;
+            edit_title.value = b.title;
+            edit_category.value = b.category;
+            edit_image_url.value = b.image_url;
+            edit_content.value = b.content;
+
+            document.getElementById("editModal").classList.remove("translate-x-full");
+        }
+
+        /* CLOSE */
+        function closeEditModal() {
+            document.getElementById("editModal").classList.add("translate-x-full");
+        }
+
+        /* UPDATE BLOG */
+        document.getElementById("editBlogForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const id = edit_id.value;
+
+            await supabase.from("blogs").update({
+                title: edit_title.value,
+                category: edit_category.value,
+                image_url: edit_image_url.value,
+                content: edit_content.value
+            }).eq("id", id);
+
+            loadBlogs();
+            closeEditModal();
+        });
+
+
+        /* DELETE BLOG */
+        async function deleteBlog(id) {
+            if (confirm("Delete this blog?")) {
+                await supabase.from("blogs").delete().eq("id", id);
+                loadBlogs();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

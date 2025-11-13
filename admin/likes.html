@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Likes</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+
+    <!-- Protect Admin -->
+    <script>
+        if (!localStorage.getItem("adminSession")) {
+            window.location.href = "login.html";
+        }
+    </script>
+
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#1e293b] text-white p-6 hidden md:block">
+            <h2 class="text-2xl font-bold mb-10">Portfolio Admin</h2>
+
+            <nav class="space-y-4">
+                <a href="dashboard.html" class="block py-2 px-3 hover:bg-[#334155]">Dashboard</a>
+                <a href="services.html" class="block py-2 px-3 hover:bg-[#334155]">Services</a>
+                <a href="projects.html" class="block py-2 px-3 hover:bg-[#334155]">Projects</a>
+                <a href="certifications.html" class="block py-2 px-3 hover:bg-[#334155]">Certificates</a>
+                <a href="messages.html" class="block py-2 px-3 hover:bg-[#334155]">Messages</a>
+                <a href="likes.html" class="block py-2 px-3 hover:bg-[#334155]">Likes</a>
+
+                <a href="blogs.html" class="block py-2 px-3 bg-[#334155] rounded-lg">Blogs</a>
+
+                <button onclick="logout()" class="mt-10 w-full py-2 px-3 bg-red-500 hover:bg-red-600 rounded-lg">
+                    Logout
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 p-10">
+
+            <h1 class="text-3xl font-bold mb-6">Website Likes ❤️</h1>
+
+            <!-- Search -->
+            <input type="text" id="searchBox" placeholder="Search name/message..."
+                   onkeyup="filterLikes()"
+                   class="w-full max-w-md p-2 border rounded mb-4 bg-white shadow">
+
+            <!-- Table -->
+            <div class="bg-white p-6 rounded-xl shadow">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b bg-gray-100">
+                            <th class="p-3">Name</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="likesTable"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+<script>
+async function loadLikes() {
+    const { data } = await supabase
+        .from("likes_website")
+        .select("*")
+        .order("id", { ascending: false });
+
+    let table = document.getElementById("likesTable");
+    table.innerHTML = "";
+
+    data.forEach(l => {
+        table.innerHTML += `
+            <tr class="border-b hover:bg-gray-50">
+                <td class="p-3 font-semibold">${l.name || "Anonymous"}</td>
+
+                <td class="text-gray-700">${l.message}</td>
+
+                <td class="text-sm text-gray-500">${new Date(l.created_at).toLocaleString()}</td>
+
+                <td class="text-sm flex gap-3 p-3">
+                    <button onclick="deleteLike(${l.id})" 
+                            class="text-red-600 hover:text-red-800">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+loadLikes();
+
+
+// Delete Like
+async function deleteLike(id) {
+    if (!confirm("Delete this like?")) return;
+
+    await supabase.from("likes_website").delete().eq("id", id);
+    loadLikes();
+}
+
+
+// Search Filter
+function filterLikes() {
+    const keyword = document.getElementById("searchBox").value.toLowerCase();
+    const rows = document.querySelectorAll("#likesTable tr");
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(keyword) ? "" : "none";
+    });
+}
+
+
+// Logout
+function logout() {
+    localStorage.removeItem("adminSession");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

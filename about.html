@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Piyush Kumar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Prevent body from scrolling */
+        body {
+            overflow: hidden;
+        }
+
+        /* Custom styles for scrollable content */
+        .scrollable-content {
+            height: calc(100vh - 5rem);
+            overflow-y: auto;
+        }
+
+        /* Custom scrollbar styling */
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+    </style>
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+</head>
+
+<body class="bg-black text-white scroll-smooth">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/10">
+      <div id="site-header"></div>
+    </header>
+    <script>
+      async function loadHeader() {
+        const el = document.getElementById('site-header');
+        const html = await fetch('header.html').then(r => r.text());
+        el.innerHTML = html;
+        const menuBtn = el.querySelector('#menu-btn');
+        const menu = el.querySelector('#menu');
+        if (menuBtn && menu) {
+          menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        }
+        const links = el.querySelectorAll('.nav-link');
+        const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+        links.forEach(a => {
+          const href = (a.getAttribute('href') || '').toLowerCase();
+          if (href === current) a.classList.add('text-gray-400','underline');
+        });
+      }
+      loadHeader();
+    </script>
+
+    <!-- Main Content -->
+    <div class="flex gap-10 px-10 pt-[6rem] slide-in-left"> <!-- padding-top = header height -->
+
+        <!-- Left Sidebar (Sticky) -->
+        <div class="flex flex-col w-1/3 bg-white/10 h-full  rounded-xl p-10 gap-4">
+            <div class="flex flex-col items-center gap-3">
+                <img src="images/Avtarp.jpg" class="size-20 rounded-2xl" alt="Profile">
+                <h1 class="font-bold text-[20px]">Piyush Kumar</h1>
+                <h2 class="font-semibold text-[13px] bg-white/10 p-2.5 rounded-xl">Full Stack Developer</h2>
+            </div>
+
+            <hr class="border-white/20">
+
+            <!-- Contact Info -->
+            <div class="flex flex-col gap-2 text-purple-500 text-[18px] p-2">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-envelope p-3 bg-white/10 rounded-xl"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[15px]">Email</span>
+                        <span class="text-white">piyushkk0206@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-phone p-3 bg-white/10 rounded-xl"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[15px]">Phone</span>
+                        <span class="text-white">+91 9798526058</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-calendar-alt p-3 bg-white/10 rounded-xl"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[15px]">Birthday</span>
+                        <span class="text-white">March 7, 2004</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-map-marker-alt p-3 bg-white/10 rounded-xl"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[15px]">Location</span>
+                        <span class="text-white">Nagar Untari, Garhwa, Jharkhand</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex gap-4 text-xl justify-center">
+                <a href="#" class="hover:text-purple-500"><i class="fab fa-github"></i></a>
+                <a href="#" class="hover:text-purple-500"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-purple-500"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-purple-500"><i class="fab fa-linkedin"></i></a>
+                <!-- <a href="#" class="hover:text-purple-500"><i class="fab fa-leetcode"></i></a> -->
+            </div>
+        </div>
+
+        <!-- Right Content (Scrollable) -->
+        <div class="w-2/3 flex flex-col gap-6 scrollable-content pb-6">
+            <!-- About Me -->
+            <div class="bg-white/10 rounded-xl p-6">
+                <h2 class="text-purple-500 text-2xl font-bold pb-2 border-b border-white/10">About Me</h2>
+                <p class="pt-4 text-[15px]">
+                    Hi, I'm Piyush Kumar, pursuing BTech in Computer Science & Engineering (2023–2027) at Lovely
+                    Professional University.
+                </p>
+                <p class="pt-2 text-[15px]">
+                    I have a keen interest in Full-Stack Web Development and enjoy building projects that solve
+                    real-world problems. My academic journey has helped me develop skills in HTML, CSS, Tailwind CSS,
+                    JavaScript, PHP, MySQL, and programming in C, C++, Java, and Python.
+                </p>
+            </div>
+
+            <!-- Education -->
+            <div class="bg-white/10 rounded-xl p-6">
+                <h3 class="text-purple-500 text-xl font-bold border-b-2 border-white/10 pb-2">Education</h3>
+                <div class="pt-2">
+                    <span class="font-semibold">10th Standard (2020)</span><br>
+                    <span>School: DAV Centenary Public School, Township</span><br>
+                    <span>Percentage: 74%</span>
+                </div>
+                <div class="pt-2">
+                    <span class="font-semibold">12th Standard (2022)</span><br>
+                    <span>School: DAV Public School, Bariatu, Ranchi</span><br>
+                    <span>Percentage: 86.6%</span>
+                </div>
+                <div class="pt-2">
+                    <span class="font-semibold">BTech in CSE (2023–Present)</span><br>
+                    <span>University: Lovely Professional University, Jalandhar, Punjab</span>
+                </div>
+            </div>
+
+            <!-- My Journey -->
+            <div class="bg-white/10 rounded-xl p-6">
+                <h3 class="text-purple-500 text-xl font-bold border-b-2 border-white/10 pb-2">My Journey</h3>
+                <p class="pt-2 text-[15px]">
+                    From school to college, my journey has been driven by curiosity and passion for technology. Starting
+                    with small HTML/CSS projects, I gradually moved to full-stack development, building projects like
+                    NexaMart. I believe in learning by doing and constantly challenging myself.
+                </p>
+            </div>
+
+            <!-- Hobbies -->
+            <div class="bg-white/10 rounded-xl p-6">
+                <h3 class="text-purple-500 text-xl font-bold border-b-2 border-white/10 pb-2">Hobbies</h3>
+                <ul class="list-disc list-inside text-[15px]">
+                    <li>Coding and problem-solving</li>
+                    <li>Exploring new web technologies</li>
+                    <li>Gaming and strategy games</li>
+                    <li>Reading tech blogs and tutorials</li>
+                    <li>Photography and creative design</li>
+                </ul>
+            </div>
+
+            <!-- Additional content to demonstrate scrolling -->
+            <div class="bg-white/10 rounded-xl p-6">
+                <h3 class="text-purple-500 text-xl font-bold border-b-2 border-white/10 pb-2">Skills</h3>
+                <ul class="list-disc list-inside text-[15px]">
+                    <li>HTML, CSS, JavaScript</li>
+                    <li>PHP, MySQL</li>
+                    <li>Tailwind CSS, Bootstrap</li>
+                    <li>C, C++, Java, Python</li>
+                    <li>React, Node.js</li>
+                </ul>
+            </div>
+
+            <div class="bg-white/10 rounded-xl p-6">
+                <h3 class="text-purple-500 text-xl font-bold border-b-2 border-white/10 pb-2">Projects</h3>
+                <p class="pt-2 text-[15px]">
+                    I've worked on several projects including NexaMart, a full-stack e-commerce platform, and various
+                    web applications that demonstrate my skills in both frontend and backend development.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+
+</body>
+
+</html>

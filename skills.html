@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Skills</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="bg-black text-white">
+
+<header class="relative h-20 bg-black shadow-md">
+    <div id="site-header"></div>
+</header>
+<script>
+  async function loadHeader() {
+    const el = document.getElementById('site-header');
+    const html = await fetch('header.html').then(r => r.text());
+    el.innerHTML = html;
+    const menuBtn = el.querySelector('#menu-btn');
+    const menu = el.querySelector('#menu');
+    if (menuBtn && menu) menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    const links = el.querySelectorAll('.nav-link');
+    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    links.forEach(a => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      if (href === current) a.classList.add('text-gray-400','underline');
+    });
+  }
+  loadHeader();
+</script>
+
+<section class="py-10 px-6 max-w-6xl mx-auto">
+
+    <!-- Heading -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-2">My Skills</h1>
+        <p class="text-gray-400 text-lg">Technologies I use to design & build modern web experiences.</p>
+    </div>
+
+    <!-- SKILLS GRID -->
+    <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"></div>
+
+    <script>
+      const skills = [
+        {icon: 'fa-html5', title: 'HTML', level: 95, color: 'orange-500'},
+        {icon: 'fa-css3-alt', title: 'CSS', level: 90, color: 'blue-500'},
+        {icon: 'fa-js', title: 'JavaScript', level: 85, color: 'yellow-400'},
+        {icon: 'fa-php', title: 'PHP', level: 80, color: 'purple-500'},
+        {icon: 'fa-database', title: 'MySQL', level: 75, color: 'teal-400'},
+        {icon: 'fa-leaf', title: 'Tailwind CSS', level: 90, color: 'cyan-400'},
+        {icon: 'fa-server', title: 'Supabase', level: 70, color: 'green-400'},
+        {icon: 'fa-code', title: 'C / C++', level: 85, color: 'red-400'},
+        {icon: 'fa-java', title: 'Java', level: 75, color: 'orange-600'},
+        {icon: 'fa-python', title: 'Python', level: 70, color: 'blue-300'},
+      ];
+      const grid = document.getElementById('skills-grid');
+      grid.innerHTML = skills.map(s => `
+        <div class="p-6 bg-[#0f0f0f] rounded-xl border border-gray-800 shadow-xl hover:shadow-${s.color}/40 hover:border-${s.color} transition-all duration-300">
+          <div class="text-${s.color} text-5xl mb-4">
+            <i class="fa-brands ${s.icon}"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">${s.title}</h3>
+          <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+            <div class="h-full bg-${s.color} rounded-full" style="width: ${s.level}%"></div>
+          </div>
+          <p class="text-gray-400 text-sm mt-2">${s.level}% proficiency</p>
+        </div>
+      `).join('');
+    </script>
+
+</section>
+
+</body>
+</html>
