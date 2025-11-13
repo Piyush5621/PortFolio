@@ -33,14 +33,11 @@ async function loadHeader() {
             menuBtn.addEventListener("click", () => menu.classList.toggle("hidden"));
         }
 
-        // Active Navigation Highlight
         const links = el.querySelectorAll(".nav-link");
         const current = (location.pathname.split('/').pop() || "index.html").toLowerCase();
         links.forEach(a => {
             const href = (a.getAttribute("href") || "").toLowerCase();
-            if (href === current) {
-                a.classList.add("text-gray-400", "underline");
-            }
+            if (href === current) a.classList.add("text-gray-400", "underline");
         });
 
     } catch (e) {
@@ -60,12 +57,10 @@ loadHeader();
     
     <h2 class="text-2xl font-bold mb-4">Comments</h2>
 
-    <!-- Comments -->
     <div id="commentList" class="space-y-4">
         <p class="text-gray-400">Loading comments...</p>
     </div>
 
-    <!-- Add Comment Box -->
     <div class="bg-[#111] rounded-xl p-5 mt-8">
         <h3 class="text-xl font-semibold mb-3">Leave a Comment</h3>
 
@@ -86,20 +81,24 @@ loadHeader();
 </div>
 
 <script>
-const blogId = parseInt(new URLSearchParams(location.search).get("id") || "0");
+const blogId = Number(new URLSearchParams(location.search).get("id"));
 
 // -----------------------------
 // LOAD BLOG DETAILS
 // -----------------------------
 async function loadBlog() {
+    const blogBox = document.getElementById("blogContent");
+
+    if (!blogId) {
+        blogBox.innerHTML = `<p class="text-red-500 text-lg">Invalid blog ID.</p>`;
+        return;
+    }
 
     const { data: b, error } = await supabase
         .from("blogs")
         .select("*")
         .eq("id", blogId)
-        .single();
-
-    const blogBox = document.getElementById("blogContent");
+        .maybeSingle();   // NO 406 ERROR
 
     if (error || !b) {
         blogBox.innerHTML = `
@@ -152,7 +151,6 @@ async function getLikes(id) {
 // LOAD COMMENTS
 // -----------------------------
 async function loadComments() {
-
     const { data: comments, error } = await supabase
         .from("blog_comments")
         .select("*")
@@ -182,7 +180,6 @@ async function loadComments() {
         `;
     });
 }
-
 loadComments();
 
 // -----------------------------
