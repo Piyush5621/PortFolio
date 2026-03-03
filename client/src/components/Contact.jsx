@@ -68,19 +68,19 @@ const HolographicCard = () => {
                 className="relative w-full h-full"
             >
                 {/* Inner div handles the smooth 0.6s CSS flip, eliminating animation conflicts */}
-                <div 
+                <div
                     className="relative w-full h-full rounded-xl shadow-[0_0_30px_rgba(0,85,255,0.1)]"
-                    style={{ 
-                        transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)", 
-                        transformStyle: "preserve-3d", 
-                        transition: "transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1)" 
+                    style={{
+                        transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                        transformStyle: "preserve-3d",
+                        transition: "transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1)"
                     }}
                 >
                     {/* FRONT FACE */}
                     <div className="absolute inset-0 bg-[#0a0a0a] rounded-xl border border-white/10 p-6 flex flex-col justify-between overflow-hidden backface-hidden z-20">
                         <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
                         <motion.div className="absolute w-[300px] h-[300px] bg-[#0055FF] blur-[100px] opacity-20 rounded-full pointer-events-none -z-10" style={{ x, y }} />
-                        
+
                         <div className="flex justify-between items-start z-10">
                             <div className="relative group-hover:scale-105 transition-transform duration-300">
                                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/20 relative z-10">
@@ -94,6 +94,7 @@ const HolographicCard = () => {
                                 <div className="flex items-center justify-end gap-2 text-white/60 font-mono text-xs">
                                     <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                     <FaMapMarkerAlt className="text-[#0055FF]" />
+                                    <span>Phagwara, Punjab</span>
                                 </div>
                             </div>
                         </div>
@@ -117,11 +118,14 @@ const HolographicCard = () => {
 
                     {/* BACK FACE */}
                     <div className="absolute inset-0 bg-[#0055FF] rounded-xl p-8 flex flex-col items-center justify-center backface-hidden border border-white/20" style={{ transform: "rotateY(180deg)" }}>
-                        <div className="bg-white p-3 rounded-lg mb-4 shadow-xl transform group-hover:scale-105 transition-transform">
-                            <div className="w-24 h-24 bg-black flex items-center justify-center text-white text-[8px] font-mono text-center leading-tight">SCAN_FOR<br/>V_CARD</div>
-                        </div>
-                        <p className="text-white font-bold tracking-wider text-sm">DOWNLOAD RESUME</p>
-                        <p className="text-white/60 text-[10px] font-mono mt-2">ENCRYPTED // V.2.0</p>
+                        {/* Wrap the content in an anchor tag for direct download */}
+                        <a href="/Piyush_Kumar_CV.pdf" download="Piyush_Kumar_CV.pdf" className="flex flex-col items-center group cursor-pointer" onClick={(e) => e.stopPropagation()}>
+                            <div className="bg-white p-3 rounded-lg mb-4 shadow-xl transform group-hover:scale-105 transition-transform">
+                                <div className="w-24 h-24 bg-black flex items-center justify-center text-white text-[8px] font-mono text-center leading-tight">SCAN_FOR<br />V_CARD</div>
+                            </div>
+                            <p className="text-white font-bold tracking-wider text-sm group-hover:underline">DOWNLOAD RESUME</p>
+                            <p className="text-white/60 text-[10px] font-mono mt-2">ENCRYPTED // V.2.0</p>
+                        </a>
                     </div>
                 </div>
             </motion.div>
@@ -130,7 +134,7 @@ const HolographicCard = () => {
 };
 
 // --- COMPONENT: Refined Terminal Input ---
-const TerminalInput = ({ label, type, name, value, onChange, lineNumber }) => {
+const TerminalInput = ({ label, type, name, value, onChange, lineNumber, placeholderText }) => {
     const [focused, setFocused] = useState(false);
     return (
         <div className="relative mb-8 group">
@@ -138,7 +142,7 @@ const TerminalInput = ({ label, type, name, value, onChange, lineNumber }) => {
                 <span className={`font-mono text-sm mt-3 transition-colors duration-300 ${focused ? 'text-[#0055FF]' : 'text-gray-700'}`}>
                     {lineNumber}
                 </span>
-                
+
                 <div className="relative w-full">
                     <label className={`absolute left-3 transition-all duration-300 pointer-events-none font-mono text-[11px] uppercase tracking-wider z-20 ${focused || value ? '-top-6 left-0 text-[#0055FF]' : 'top-3 text-gray-600'}`}>
                         {focused || value ? `// ${label}` : label}
@@ -153,8 +157,8 @@ const TerminalInput = ({ label, type, name, value, onChange, lineNumber }) => {
                                 onFocus={() => setFocused(true)}
                                 onBlur={() => setFocused(false)}
                                 required
-                                className="peer w-full bg-transparent border-b border-gray-800 text-white px-3 py-3 focus:outline-none focus:border-[#0055FF] transition-all duration-300 font-mono text-sm placeholder-transparent min-h-[140px] resize-none leading-relaxed"
-                                placeholder={label}
+                                className={`peer w-full bg-transparent border-b border-gray-800 text-white px-3 py-3 focus:outline-none focus:border-[#0055FF] transition-all duration-300 font-mono text-sm resize-none leading-relaxed min-h-[150px] ${focused ? 'placeholder-gray-700/50' : 'placeholder-transparent'}`}
+                                placeholder={placeholderText || label}
                             />
                         ) : (
                             <input
@@ -165,8 +169,8 @@ const TerminalInput = ({ label, type, name, value, onChange, lineNumber }) => {
                                 onFocus={() => setFocused(true)}
                                 onBlur={() => setFocused(false)}
                                 required
-                                className="peer w-full bg-transparent border-b border-gray-800 text-white px-3 py-3 focus:outline-none focus:border-[#0055FF] transition-all duration-300 font-mono text-sm placeholder-transparent"
-                                placeholder={label}
+                                className={`peer w-full bg-transparent border-b border-gray-800 text-white px-3 py-3 focus:outline-none focus:border-[#0055FF] transition-all duration-300 font-mono text-sm ${focused ? 'placeholder-gray-700/50' : 'placeholder-transparent'}`}
+                                placeholder={placeholderText || label}
                             />
                         )}
                         <div className={`absolute bottom-0 left-0 h-[1px] bg-[#0055FF] shadow-[0_0_10px_#0055FF] transition-all duration-500 ${focused ? 'w-full opacity-100' : 'w-0 opacity-0'}`} />
@@ -188,7 +192,7 @@ const Contact = () => {
         setStatus('sending');
 
         const submissionData = new FormData();
-        submissionData.append("access_key", "468b1a79-91f6-4369-b29d-41f66022c280"); 
+        submissionData.append("access_key", "468b1a79-91f6-4369-b29d-41f66022c280");
         submissionData.append("name", formData.name);
         submissionData.append("email", formData.email);
         submissionData.append("message", formData.message);
@@ -226,11 +230,19 @@ const Contact = () => {
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    // Ensure the correct email from CV is used here
     const handleCopyEmail = () => {
-        navigator.clipboard.writeText('piyushkumar10902080@gmail.com');
+        navigator.clipboard.writeText('piyushkk0206@gmail.com');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
+
+    // Social links pulled directly from your updated CV
+    const socialLinks = [
+        { Icon: FaGithub, url: "https://github.com/Piyush5621" },
+        { Icon: FaLinkedin, url: "https://www.linkedin.com/in/piyushkumar5621/" },
+        { Icon: FaTwitter, url: "#" } // Update this if you have a Twitter/X profile
+    ];
 
     return (
         <section id="contact" className="py-24 md:py-40 bg-[#050608] relative overflow-hidden flex items-center min-h-screen">
@@ -268,11 +280,11 @@ const Contact = () => {
 
                         <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-b-lg p-8 md:p-12 shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-1 bg-[#0055FF]/20 animate-scanline pointer-events-none z-0"></div>
-                            
+
                             <form onSubmit={handleSubmit} className="relative z-10">
                                 <div className="grid gap-4">
                                     <TerminalInput lineNumber="01" label="Enter Identity (Name)" type="text" name="name" value={formData.name} onChange={handleChange} />
-                                    <TerminalInput lineNumber="02" label="Communication Link (Email)" type="email" name="email" value={formData.email} onChange={handleChange} />
+                                    <TerminalInput lineNumber="02" label="Communication Link (Email)" type="email" name="email" value={formData.email} onChange={handleChange} placeholderText="piyushkk0206@gmail.com" />
                                     <TerminalInput lineNumber="03" label="Transmission Data (Message)" type="textarea" name="message" value={formData.message} onChange={handleChange} />
                                 </div>
 
@@ -290,7 +302,7 @@ const Contact = () => {
                                     >
                                         <div className="flex items-center gap-3">
                                             {status === 'idle' && (
-                                                <><span>Execute Send</span><FaPaperPlane size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"/></>
+                                                <><span>Execute Send</span><FaPaperPlane size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></>
                                             )}
                                             {status === 'sending' && <span className="animate-pulse">Uploading Data...</span>}
                                             {status === 'sent' && (
@@ -304,21 +316,23 @@ const Contact = () => {
                     </motion.div>
                 </div>
 
-                <div className="mt-32 border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div onClick={handleCopyEmail} className="group flex items-center gap-4 cursor-pointer p-3 px-6 rounded-full border border-white/5 hover:border-[#0055FF]/30 hover:bg-[#0055FF]/5 transition-all duration-300">
+                <div className="mt-32 border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8 relative z-20">
+                    <div onClick={handleCopyEmail} className="group flex items-center gap-4 cursor-pointer p-3 px-6 rounded-full border border-white/5 hover:border-[#0055FF]/30 hover:bg-[#0055FF]/5 transition-all duration-300 z-20">
                         <div className="w-10 h-10 rounded-full bg-[#0055FF]/10 flex items-center justify-center text-[#0055FF]">
                             <FaEnvelope size={16} />
                         </div>
                         <span className="font-mono text-sm text-gray-400 group-hover:text-white transition-colors">
-                            {copied ? 'Copied to Clipboard!' : 'piyushkumar10902080@gmail.com'}
+                            {copied ? 'Copied to Clipboard!' : 'piyushkk0206@gmail.com'}
                         </span>
                     </div>
 
-                    <div className="flex gap-6">
-                        {[FaGithub, FaLinkedin, FaTwitter].map((Icon, i) => (
-                            <MagneticButton key={i} className="w-12 h-12 flex items-center justify-center rounded-full bg-[#111] border border-white/10 text-gray-400 hover:text-white hover:border-[#0055FF] hover:shadow-[0_0_15px_rgba(0,85,255,0.3)] transition-all duration-300">
-                                <Icon size={20} />
-                            </MagneticButton>
+                    <div className="flex gap-6 z-20">
+                        {socialLinks.map(({ Icon, url }, i) => (
+                            <a href={url} target="_blank" rel="noopener noreferrer" key={i}>
+                                <MagneticButton className="w-12 h-12 flex items-center justify-center rounded-full bg-[#111] border border-white/10 text-gray-400 hover:text-white hover:border-[#0055FF] hover:shadow-[0_0_15px_rgba(0,85,255,0.3)] transition-all duration-300">
+                                    <Icon size={20} />
+                                </MagneticButton>
+                            </a>
                         ))}
                     </div>
                 </div>

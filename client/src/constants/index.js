@@ -40,28 +40,33 @@ export const skills = {
 };
 
 export const projects = [
-    {
-        id: 1,
-        title: "NexaMart",
-        subtitle: "B2B Marketing Platform",
-        description: "A comprehensive B2B platform facilitating seller registration, inventory management, and admin approval workflows. Streamlines the supply chain connecting businesses.",
-        tech: ["React", "Node.js", "Express", "MongoDB", "Tailwind"],
-        project_link: "#",
-        github_link: "#",
-        image_url: "/images/nexamart.jpg", // Placeholder until user provides image
-        category: "Full Stack"
-    },
-    {
-        id: 2,
-        title: "FinSathi",
-        subtitle: "Business Software System",
-        description: "A business management tool focusing on brand identity and product line extensions. Helps businesses track performance and manage resources efficiently.",
-        tech: ["HTML", "CSS", "PHP", "MySQL"],
-        project_link: "#",
-        github_link: "#",
-        image_url: "/images/finsathi.jpg", // Placeholder
-        category: "Web App"
-    }
+  {
+    id: "anarchy-bay",
+    title: "Anarchy Bay",
+    description: "A full-stack e-commerce marketplace supporting 100+ product listings. Engineered secure authentication, payment workflows, and multi-level filtering, reducing cart abandonment by 25% and improving product discovery by 40%.",
+    tech: ["React", "Express.js", "Supabase", "Tailwind CSS", "JavaScript"],
+    github_link: "https://github.com/Piyush5621", 
+    project_link: "#", // Add your live demo link here
+    image_url: "/images/Anarchy-Bay.png" // Update with your actual image path
+  },
+  {
+    id: "nexa-mart",
+    title: "NexaMart",
+    description: "A B2B & B2C marketing platform featuring interactive admin dashboards that manage 200+ inventory records. Implemented DOM-based image previews and client-side validation, reducing user errors by 40%.",
+    tech: ["PHP", "MySQL", "JavaScript", "HTML", "Tailwind CSS"],
+    github_link: "https://github.com/Piyush5621",
+    project_link: "#", // Add your live demo link here
+    image_url: "/images/NexaMart.png" // Update with your actual image path
+  },
+  {
+    id: "ipc-simulator",
+    title: "IPC Simulator",
+    description: "A GUI-based Operating System visualization tool demonstrating core inter-process communication mechanisms (pipes, message queues, shared memory). Simulated 5–10 concurrent processes to analyze synchronization, race conditions, and deadlocks.",
+    tech: ["JavaScript", "HTML", "CSS", "OS Concepts"],
+    github_link: "https://github.com/Piyush5621", // Update with specific repo link if available
+    project_link: "#", 
+    image_url: "/images/IPC.png" // Update with your actual image path
+  }
 ];
 
 export const socialLinks = {

@@ -1,142 +1,168 @@
-import { useState } from 'react'; // Added useState
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { services } from '../constants';
-import { FaCode, FaPaintBrush, FaServer, FaShoppingCart, FaMicrochip, FaSpinner } from 'react-icons/fa';
+import { FaCode, FaServer, FaDatabase, FaLayerGroup, FaMicrochip, FaTerminal } from 'react-icons/fa';
 
-const iconMap = {
-    FaCode: FaCode,
-    FaPaintBrush: FaPaintBrush,
-    FaServer: FaServer,
-    FaShoppingCart: FaShoppingCart
-};
+// 1. Technical Service Data (Use your CV strengths)
+const serviceData = [
+    {
+        id: "01",
+        title: "Full-Stack Architecture",
+        description: "Designing end-to-end systems like Anarchy Bay. High-performance React frontends paired with robust Node/Express backends.",
+        tech: ["REACT", "NEXT.JS", "EXPRESS"],
+        icon: <FaLayerGroup />
+    },
+    {
+        id: "02",
+        title: "Backend Engineering",
+        description: "Scalable API development and system logic. Expertise in Java Spring Boot and PHP for secure, enterprise-grade data handling.",
+        tech: ["JAVA", "SPRING BOOT", "PHP"],
+        icon: <FaServer />
+    },
+    {
+        id: "03",
+        title: "Database Management",
+        description: "Optimized schema design and real-time data sync using MySQL and Supabase. Handling complex 200+ record inventories.",
+        tech: ["MYSQL", "SUPABASE", "POSTGRES"],
+        icon: <FaDatabase />
+    },
+    {
+        id: "04",
+        title: "System Programming",
+        description: "Operating system concepts and IPC simulation. Deep understanding of process synchronization and memory management.",
+        tech: ["C++", "OS CONCEPTS", "IPC"],
+        icon: <FaMicrochip />
+    }
+];
 
 const Services = () => {
-    // 1. State for the loading sequence
     const [isInitializing, setIsInitializing] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
 
     const handleInitialization = () => {
         setIsInitializing(true);
-
-        // 2. Simulate "System Processing" for 2.5 seconds
         setTimeout(() => {
             setIsInitializing(false);
-            window.location.href = 'mailto:yourname@email.com?subject=Project Initialization Request';
-        }, 2500);
+            window.location.href = 'mailto:piyushkk0206@gmail.com?subject=System_Collaboration_Request';
+        }, 2000);
     };
 
     return (
-        <section id="services" className="py-32 bg-[#050608] relative overflow-hidden">
-            {/* Background Decorations */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{ backgroundImage: `radial-gradient(#0055FF 0.5px, transparent 0.5px)`, backgroundSize: '30px 30px' }}
+        <section id="services" className="py-32 bg-[#020203] relative overflow-hidden font-mono">
+            {/* Background Terminal Grid */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: `linear-gradient(#0055FF 1px, transparent 1px), linear-gradient(90deg, #0055FF 1px, transparent 1px)`, backgroundSize: '50px 50px' }}
             />
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-                    <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                        <div className="flex items-center gap-2 mb-4">
-                            <FaMicrochip className="text-[#0055FF] animate-pulse" />
-                            <span className="text-[#0055FF] font-mono text-[10px] tracking-[0.4em] uppercase">System_Capabilities.v2</span>
-                        </div>
-                        <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
-                            Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-cyan-400">Services.</span>
-                        </h2>
-                    </motion.div>
+                {/* Header: Terminal Style */}
+                <div className="mb-20">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-2 h-2 bg-[#0055FF] rounded-full animate-pulse" />
+                        <span className="text-[#0055FF] text-[10px] tracking-[0.5em] uppercase">Core_Modules.sys</span>
+                    </div>
+                    <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4">
+                        Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-white">Services_</span>
+                    </h2>
+                    <p className="text-gray-500 text-sm max-w-xl border-l border-[#0055FF]/30 pl-4 uppercase">
+                        Deploying scalable digital solutions through advanced logic and architecture.
+                    </p>
                 </div>
 
-                {/* Services Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {services.map((service, index) => {
-                        const Icon = iconMap[service.icon];
-                        return (
-                            <motion.div
-                                key={service.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="group relative p-8 bg-[#0a0c10] border border-white/5 hover:border-[#0055FF]/40 transition-all duration-500 overflow-hidden"
-                            >
-                                <div className="flex justify-between items-start mb-12 relative z-10">
-                                    <div className="p-3 bg-white/5 border border-white/5 text-2xl text-gray-500 group-hover:text-[#0055FF] transition-all duration-500">
-                                        {Icon && <Icon />}
-                                    </div>
-                                    <span className="font-mono text-[10px] text-gray-600">[ 0{index + 1} ]</span>
+                {/* Services Grid: High-Tech Cards */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/10">
+                    {serviceData.map((service, index) => (
+                        <div 
+                            key={service.id}
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                            className="group relative p-8 border border-white/5 bg-[#0a0a0c] hover:bg-[#0055FF]/5 transition-all duration-300 cursor-crosshair overflow-hidden"
+                        >
+                            {/* Scanning Line Effect */}
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-[#0055FF]/20 translate-y-[-100%] group-hover:animate-scan" />
+                            
+                            <div className="flex justify-between items-start mb-12">
+                                <div className="text-2xl text-gray-600 group-hover:text-[#0055FF] transition-colors duration-500">
+                                    {service.icon}
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-4 tracking-tight uppercase group-hover:text-[#0055FF] transition-colors">
-                                    {service.title}
-                                </h3>
-                                <p className="text-gray-500 text-xs leading-relaxed font-mono">
-                                    {service.description}
-                                </p>
-                            </motion.div>
-                        );
-                    })}
+                                <span className="text-[10px] text-[#0055FF] opacity-30 group-hover:opacity-100 font-bold">ID_{service.id}</span>
+                            </div>
+
+                            <h3 className="text-lg font-bold text-white mb-4 tracking-tight uppercase group-hover:translate-x-2 transition-transform duration-300">
+                                {service.title}
+                            </h3>
+                            
+                            <p className="text-gray-500 text-[11px] leading-relaxed mb-6 h-16">
+                                {service.description}
+                            </p>
+
+                            {/* Tech Tags */}
+                            <div className="flex flex-wrap gap-2">
+                                {service.tech.map(t => (
+                                    <span key={t} className="text-[8px] px-2 py-1 bg-white/5 text-gray-400 border border-white/10 group-hover:border-[#0055FF]/30 transition-colors">
+                                        {t}
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Corner Accents */}
+                            <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/20 group-hover:border-[#0055FF]" />
+                        </div>
+                    ))}
                 </div>
 
-                {/* --- UPGRADED CALL TO ACTION --- */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    className="mt-20 p-8 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 bg-[#0a0c10]/50 backdrop-blur-sm relative overflow-hidden"
-                >
-                    {/* Progress Bar (Visual feedback when loading) */}
-                    {isInitializing && (
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{ duration: 2.5, ease: "linear" }}
-                            className="absolute top-0 left-0 h-[2px] bg-[#0055FF] z-20 shadow-[0_0_10px_#0055FF]"
-                        />
-                    )}
-
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full border border-[#0055FF]/30 flex items-center justify-center">
-                            <div className={`w-2 h-2 bg-[#0055FF] rounded-full ${isInitializing ? 'animate-ping' : 'animate-pulse'}`} />
+                {/* --- CALL TO ACTION: TERMINAL BUTTON --- */}
+                <div className="mt-20 flex flex-col items-center">
+                    <div className="w-full max-w-2xl bg-[#0a0a0c] border border-white/10 p-1 flex items-center gap-4">
+                        <div className="bg-[#0055FF] text-white px-4 py-2 text-[10px] font-bold uppercase">
+                            Status
                         </div>
-                        <div className="font-mono text-xs">
-                            <p className="text-gray-400 uppercase tracking-widest">
-                                {isInitializing ? "Processing Request..." : "System Ready // Waiting for input"}
-                            </p>
-                            {isInitializing && <p className="text-[#0055FF] mt-1">SECURE_HANDSHAKE_IN_PROGRESS</p>}
-                        </div>
+                        <marquee className="text-[10px] text-gray-500 uppercase tracking-widest flex-1">
+                             System Ready... Initializing secure handshake... Waiting for project parameters... Connection: STABLE... Location: piyushkk0206@gmail.com
+                        </marquee>
                     </div>
 
                     <button
                         onClick={handleInitialization}
                         disabled={isInitializing}
-                        className={`relative px-10 py-4 font-black text-xs tracking-widest uppercase transition-all duration-300 min-w-[240px] flex items-center justify-center gap-3
+                        className={`mt-8 w-full max-w-2xl py-6 border transition-all duration-500 flex flex-col items-center justify-center gap-2
                             ${isInitializing 
-                                ? "bg-gray-800 text-gray-400 cursor-wait shadow-none" 
-                                : "bg-white text-black hover:bg-[#0055FF] hover:text-white shadow-[4px_4px_0px_#0055FF] active:translate-x-1 active:translate-y-1 active:shadow-none"
+                                ? "bg-[#0055FF]/20 border-[#0055FF] text-[#0055FF]" 
+                                : "bg-transparent border-white/20 text-white hover:border-[#0055FF] hover:bg-[#0055FF]/10"
                             }`}
                     >
-                        <AnimatePresence mode="wait">
-                            {isInitializing ? (
+                        <span className="text-xs font-black tracking-[0.5em] uppercase">
+                            {isInitializing ? "Initializing_System..." : "Start_Collaboration"}
+                        </span>
+                        
+                        {isInitializing ? (
+                            <div className="w-48 h-1 bg-white/10 mt-2 overflow-hidden">
                                 <motion.div 
-                                    key="loading"
-                                    initial={{ opacity: 0 }} 
-                                    animate={{ opacity: 1 }} 
-                                    exit={{ opacity: 0 }}
-                                    className="flex items-center gap-2"
-                                >
-                                    <FaSpinner className="animate-spin" />
-                                    <span>Syncing...</span>
-                                </motion.div>
-                            ) : (
-                                <motion.span 
-                                    key="normal"
-                                    initial={{ opacity: 0 }} 
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    Initialize Collaboration
-                                </motion.span>
-                            )}
-                        </AnimatePresence>
+                                    initial={{ x: "-100%" }}
+                                    animate={{ x: "100%" }}
+                                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                    className="w-full h-full bg-[#0055FF]"
+                                />
+                            </div>
+                        ) : (
+                            <span className="text-[8px] text-gray-500 uppercase tracking-widest opacity-50 group-hover:opacity-100">
+                                Click to execute protocol
+                            </span>
+                        )}
                     </button>
-                </motion.div>
+                </div>
             </div>
+
+            {/* Global Scanning Animation CSS */}
+            <style>{`
+                @keyframes scan {
+                    0% { transform: translateY(0); opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { transform: translateY(400px); opacity: 0; }
+                }
+                .animate-scan {
+                    animation: scan 2s linear infinite;
+                }
+            `}</style>
         </section>
     );
 };

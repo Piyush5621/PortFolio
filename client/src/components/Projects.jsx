@@ -9,7 +9,7 @@ import MagneticButton from './MagneticButton';
 const HackerText = ({ text, className }) => {
     const [displayText, setDisplayText] = useState(text);
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
-    
+
     const scramble = () => {
         let iterations = 0;
         const interval = setInterval(() => {
@@ -72,17 +72,17 @@ const ProjectImage = ({ url, title }) => {
             className="relative w-full h-[400px] lg:h-[500px] rounded-xl overflow-hidden border border-white/10 group perspective-1000"
         >
             {/* Image Layer */}
-            <div 
+            <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                style={{ backgroundImage: `url(${url})` }} 
+                style={{ backgroundImage: `url(${url})` }}
             />
-            
+
             {/* Digital Overlay / Glare */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#0055FF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none mix-blend-overlay"></div>
-            
+
             {/* Scanline Grid */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-            
+
             {/* HUD Overlay Elements */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="bg-black/50 backdrop-blur-md px-2 py-1 rounded border border-white/20 text-[10px] font-mono text-white">
@@ -96,20 +96,20 @@ const ProjectImage = ({ url, title }) => {
 
 // --- MAIN COMPONENT ---
 const Projects = () => {
-    const displayedProjects = projects.slice(0, 2);
+    const displayedProjects = projects.slice(0, 3);
 
     return (
         <section id="projects" className="py-32 bg-[#050608] relative overflow-hidden">
-            
+
             {/* 1. Cyber Grid Background */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(0,85,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,85,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-            
+
             {/* 2. Floating Ambient Glows */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#0055FF] rounded-full blur-[120px] opacity-[0.05] pointer-events-none"></div>
             <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-600 rounded-full blur-[150px] opacity-[0.05] pointer-events-none"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                
+
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-white/5 pb-8">
                     <motion.div
@@ -124,17 +124,17 @@ const Projects = () => {
                             </span>
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter leading-none">
-                            Selected <br/>
+                            Selected <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-white">Works_</span>
                         </h2>
                     </motion.div>
-                    
+
                     <div className="hidden md:block text-right">
                         <div className="font-mono text-xs text-gray-500 mb-1">Database Status</div>
                         <div className="flex items-center gap-2 text-green-400 font-mono text-sm">
                             <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
                             ONLINE // V.2.4.0
                         </div>
@@ -152,10 +152,10 @@ const Projects = () => {
                             transition={{ duration: 0.8 }}
                             className={`relative grid lg:grid-cols-12 gap-8 items-center ${index % 2 === 1 ? 'lg:text-right' : 'lg:text-left'}`}
                         >
-                            
+
                             {/* Connector Line (The "Circuit" connecting image and text) */}
                             <div className="hidden lg:block absolute top-1/2 left-0 w-full h-[1px] bg-white/5 -z-10"></div>
-                            
+
                             {/* Project Visual (Takes up 7 cols) */}
                             <div className={`lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
                                 <ProjectImage url={project.image_url} title={project.title} />
@@ -163,7 +163,7 @@ const Projects = () => {
 
                             {/* Project Details (Takes up 5 cols) */}
                             <div className={`lg:col-span-5 relative ${index % 2 === 1 ? 'lg:order-1 lg:pr-12' : 'lg:order-2 lg:pl-12'}`}>
-                                
+
                                 {/* Floating Glass Card Background for Text */}
                                 <div className="absolute inset-0 bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-xl -z-10 shadow-2xl"></div>
 
@@ -210,7 +210,7 @@ const Projects = () => {
                                             <span>Demo</span>
                                         </a>
                                     </div>
-                                    
+
                                     {/* Corner Accents */}
                                     <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-white/20"></div>
                                     <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-white/20"></div>
@@ -230,7 +230,7 @@ const Projects = () => {
                                 <span className="font-mono text-xs text-white uppercase tracking-[0.2em] z-10">Access Full Archives</span>
                                 <FaArrowRight className="text-[#0055FF] group-hover:translate-x-1 transition-transform z-10" />
                             </div>
-                            
+
                             {/* Button Corner Decals */}
                             <div className="absolute top-0 left-0 w-2 h-2 bg-white group-hover:bg-[#0055FF] transition-colors"></div>
                             <div className="absolute bottom-0 right-0 w-2 h-2 bg-white group-hover:bg-[#0055FF] transition-colors"></div>
@@ -239,7 +239,7 @@ const Projects = () => {
                 </div>
 
             </div>
-            
+
             <style jsx>{`
                 .perspective-1000 { perspective: 1000px; }
             `}</style>

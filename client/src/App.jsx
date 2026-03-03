@@ -23,16 +23,7 @@ import Lab from './pages/Lab';
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isCmdOpen, setIsCmdOpen] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const location = useLocation();
-
-  // 1. Upgrade: Custom Cursor Tracking
-  useEffect(() => {
-    const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   // Handle scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -57,13 +48,8 @@ function App() {
 
   return (
     <div className="bg-[#050608] min-h-screen text-gray-300 font-sans selection:bg-[#0055FF] selection:text-white relative overflow-x-hidden">
-      
-      {/* 2. Upgrade: Cyberpunk Custom Cursor */}
-      <motion.div 
-        className="fixed w-4 h-4 border border-[#0055FF] rounded-full pointer-events-none z-[999] hidden md:block"
-        animate={{ x: mousePos.x - 8, y: mousePos.y - 8 }}
-        transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.5 }}
-      />
+
+      {/* Cursor removed for performance */}
 
       <AnimatePresence mode="wait">
         {!isLoaded && (
@@ -111,7 +97,7 @@ function App() {
                   <Contact />
                 </motion.div>
               } />
-              
+
               <Route path="/projects" element={<AllProjects />} />
               <Route path="/now" element={<Now />} />
               <Route path="/lab" element={<Lab />} />

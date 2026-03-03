@@ -1,16 +1,14 @@
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { FaReact, FaNodeJs, FaJava, FaPython, FaTerminal, FaCodeBranch } from 'react-icons/fa';
-import { SiTailwindcss, SiMysql, SiNextdotjs, SiCplusplus, SiFigma } from 'react-icons/si';
+import { FaReact, FaNodeJs, FaJava, FaPython, FaTerminal, FaCodeBranch, FaAward, FaUniversity } from 'react-icons/fa';
+import { SiTailwindcss, SiMysql, SiNextdotjs, SiCplusplus, SiFigma, SiLeetcode, SiHackerrank } from 'react-icons/si';
 
-// --- Interactive Wrapper for Bento Items ---
+// --- Interactive Wrapper for Bento Items (Keep your existing logic) ---
 const BentoItem = ({ children, className = "", span = "" }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-
     const mouseXSpring = useSpring(x);
     const mouseYSpring = useSpring(y);
-
     const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
     const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
 
@@ -84,7 +82,7 @@ const About = () => {
                 </div>
 
                 {/* 2. Advanced Bento Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[200px]">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[180px]">
 
                     {/* Portrait Module */}
                     <BentoItem span="md:col-span-1 md:row-span-2">
@@ -98,51 +96,67 @@ const About = () => {
                         </div>
                         <div className="absolute bottom-6 left-6">
                             <p className="text-white font-black text-2xl tracking-tighter leading-none">PIYUSH<br/>KUMAR</p>
-                            <span className="text-[10px] font-mono text-[#0055FF] mt-2 block">@fullstack_dev</span>
+                            <span className="text-[10px] font-mono text-[#0055FF] mt-2 block">@fullstack_architect</span>
                         </div>
                     </BentoItem>
 
                     {/* Bio Module */}
-                    <BentoItem span="md:col-span-2 md:row-span-1" className="p-8">
-                        <FaTerminal className="text-[#0055FF] mb-4 opacity-50" />
-                        <p className="text-gray-400 text-lg leading-relaxed">
-                            I specialize in <span className="text-white">scalable backend architectures</span> and high-fidelity frontends. 
-                            Focused on merging technical efficiency with aesthetic precision.
+                    <BentoItem span="md:col-span-2 md:row-span-1" className="p-8 flex flex-col justify-center">
+                        <FaTerminal className="text-[#0055FF] mb-4 opacity-50 text-xl" />
+                        <p className="text-gray-400 text-lg leading-relaxed font-light">
+                            I specialize in <span className="text-white font-medium">scalable backend architectures</span> and high-fidelity frontends. 
+                            Currently engineering seamless digital experiences with <span className="text-[#0055FF]">React</span> & <span className="text-[#0055FF]">Java Spring Boot</span>.
                         </p>
                     </BentoItem>
 
-                    {/* Status/Exp Module */}
-                    <BentoItem span="md:col-span-1" className="p-8 flex flex-col justify-between border-l-4 border-l-[#0055FF]">
-                        <span className="font-mono text-[10px] text-gray-500">SYSTEM_UPTIME</span>
+                    {/* Education Module (New) */}
+                    <BentoItem span="md:col-span-1 md:row-span-1" className="p-6 flex flex-col justify-between border-l-4 border-l-[#0055FF]">
+                        <div className="flex justify-between items-start">
+                            <FaUniversity className="text-2xl text-gray-600 group-hover:text-white transition-colors" />
+                            <span className="font-mono text-[9px] text-[#0055FF] border border-[#0055FF]/30 px-2 py-1 rounded">2023 - PRESENT</span>
+                        </div>
                         <div>
-                            <span className="text-5xl font-black text-white">02+</span>
-                            <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-2">Years Coding</p>
+                            <span className="text-sm font-mono text-gray-500 uppercase tracking-widest block mb-1">Academia</span>
+                            <span className="text-xl font-bold text-white block">B.Tech CSE</span>
+                            <span className="text-xs text-gray-400">Lovely Professional University</span>
+                            <div className="mt-2 text-[#0055FF] font-mono text-xs">CGPA: 8.00</div>
                         </div>
                     </BentoItem>
 
-                    {/* Tech Stack Module */}
-                    <BentoItem span="md:col-span-3" className="p-8">
-                        <div className="flex justify-between items-center mb-8">
-                            <h4 className="font-mono text-[10px] text-gray-500 uppercase tracking-widest">// Technical_Arsenal</h4>
-                            <div className="flex gap-1">
-                                {[1,2,3].map(i => <div key={i} className="w-1 h-1 bg-[#0055FF] rounded-full animate-pulse" />)}
+                    {/* Algorithmic Mastery (DSA) Module (New) */}
+                    <BentoItem span="md:col-span-2 md:row-span-1" className="p-6">
+                        <div className="flex justify-between items-center mb-6">
+                            <h4 className="font-mono text-[10px] text-gray-500 uppercase tracking-widest">// Algorithmic_Core</h4>
+                            <SiLeetcode className="text-xl text-[#ffa116] opacity-80" />
+                        </div>
+                        <div className="flex gap-8">
+                            <div>
+                                <span className="text-4xl font-black text-white">150+</span>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase mt-1">Problems Solved</p>
+                            </div>
+                            <div className="h-10 w-px bg-white/10" />
+                            <div>
+                                <span className="text-4xl font-black text-white flex items-center gap-1">
+                                    3 <span className="text-[#0055FF] text-2xl">★</span>
+                                </span>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase mt-1">HackerRank Java</p>
                             </div>
                         </div>
-                        <div className="flex flex-wrap gap-6">
-                            {[
-                                { Icon: FaReact, name: "React" },
-                                { Icon: SiNextdotjs, name: "Next" },
-                                { Icon: FaNodeJs, name: "Node" },
-                                { Icon: SiTailwindcss, name: "Tailwind" },
-                                { Icon: SiMysql, name: "SQL" },
-                                { Icon: FaJava, name: "Java" },
-                                { Icon: FaPython, name: "Python" },
-                                { Icon: SiCplusplus, name: "C++" },
-                                { Icon: SiFigma, name: "Figma" },
-                            ].map((tech, i) => (
-                                <div key={i} className="group/icon flex flex-col items-center gap-2">
-                                    <tech.Icon size={28} className="text-gray-600 group-hover/icon:text-[#0055FF] group-hover/icon:-translate-y-1 transition-all duration-300" />
-                                    <span className="text-[8px] font-mono text-gray-700 opacity-0 group-hover/icon:opacity-100 transition-opacity uppercase">{tech.name}</span>
+                    </BentoItem>
+
+                    {/* Tech Stack Mini-Grid */}
+                    <BentoItem span="md:col-span-1 md:row-span-1" className="p-6">
+                         <div className="flex justify-between items-center mb-4">
+                            <h4 className="font-mono text-[10px] text-gray-500 uppercase">// Stack</h4>
+                            <div className="flex gap-1">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                <span className="text-[9px] text-green-500 font-mono">ONLINE</span>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                            {[FaReact, FaNodeJs, FaJava, FaPython, SiMysql, SiNextdotjs].map((Icon, i) => (
+                                <div key={i} className="flex items-center justify-center p-2 bg-white/5 rounded hover:bg-[#0055FF] hover:text-white text-gray-500 transition-all duration-300">
+                                    <Icon size={18} />
                                 </div>
                             ))}
                         </div>
