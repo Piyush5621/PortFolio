@@ -36,9 +36,11 @@ This project has been modernized to use **React (Vite)** for the frontend and **
 ## Features
 
 - **Performance**: Powered by Vite for lightning-fast HMR and building.
-- **Animations**: Advanced scroll animations using Framer Motion.
-- **Design**: "Acid Green" and "Dark Mode" aesthetic using Tailwind CSS.
-- **Backend**: Node.js server setup for handling API requests.
+- **AI Assistant**: Interactive Gemini-powered chatbot trained on personal resume data.
+- **Coding Dashboard**: Real-time stats integration from LeetCode, GitHub, and CodeChef.
+- **Animations**: Advanced 3D mouse tracking and scroll animations using Framer Motion.
+- **Design**: "Digital Architect" premium dark mode aesthetic with glassmorphism.
+- **Backend**: Node.js server with Express 5 handling AI integration and API logic.
 - **Seamless Experience**: Single Page Application structure for smooth navigation.
 
 ## Deployment

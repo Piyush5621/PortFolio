@@ -1,16 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { projects } from '../constants'; // Ensure this path is correct
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaDatabase, FaCodeBranch, FaLayerGroup } from 'react-icons/fa';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { projects } from '../constants'; 
+import { FaGithub, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import MagneticButton from './MagneticButton';
 
 // --- COMPONENT: Hacker Decryption Text Effect ---
-const HackerText = ({ text, className }) => {
+const HackerText = ({ text, className, trigger }) => {
     const [displayText, setDisplayText] = useState(text);
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    const scramble = () => {
+    useEffect(() => {
+        if (!trigger) {
+            setDisplayText(text);
+            return;
+        }
         let iterations = 0;
         const interval = setInterval(() => {
             setDisplayText(text
@@ -24,224 +28,176 @@ const HackerText = ({ text, className }) => {
             if (iterations >= text.length) clearInterval(interval);
             iterations += 1 / 3;
         }, 30);
-    };
+        return () => clearInterval(interval);
+    }, [trigger, text]);
 
-    return (
-        <span onMouseEnter={scramble} className={className}>
-            {displayText}
-        </span>
-    );
+    return <span className={className}>{displayText}</span>;
 };
 
-// --- COMPONENT: 3D Project Image ---
+// --- COMPONENT: Upgraded 3D Project Image ---
 const ProjectImage = ({ url, title }) => {
+    const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(null);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x);
-    const mouseYSpring = useSpring(y);
+    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
 
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+    const brightness = useTransform(mouseXSpring, [-0.5, 0.5], ["1.2", "0.8"]);
 
     const handleMouseMove = (e) => {
-        if (!ref.current) return;
         const rect = ref.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const xPct = mouseX / width - 0.5;
-        const yPct = mouseY / height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
     };
 
     return (
         <motion.div
             ref={ref}
             onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => {
+                setIsHovered(false);
+                x.set(0); y.set(0);
+            }}
             style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className="relative w-full h-[400px] lg:h-[500px] rounded-xl overflow-hidden border border-white/10 group perspective-1000"
+            className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-white/10 group cursor-none"
         >
-            {/* Image Layer */}
-            <div
-                className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                style={{ backgroundImage: `url(${url})` }}
+            {/* Image Layer with Smooth Transition */}
+            <motion.div
+                className="absolute inset-0 bg-cover bg-center transition-all duration-700"
+                style={{ 
+                    backgroundImage: `url(${url})`,
+                    filter: isHovered ? "grayscale(0%) saturate(120%)" : "grayscale(60%) contrast(110%) opacity(0.5)",
+                    scale: isHovered ? 1.05 : 1
+                }}
             />
 
-            {/* Digital Overlay / Glare */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#0055FF]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none mix-blend-overlay"></div>
+            {/* Glass Overlay Scannline */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0055FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none animate-scanline"></div>
 
-            {/* Scanline Grid */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-
-            {/* HUD Overlay Elements */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="bg-black/50 backdrop-blur-md px-2 py-1 rounded border border-white/20 text-[10px] font-mono text-white">
-                    IMG_SRC_001
+            {/* HUD Elements that react to 3D movement */}
+            <motion.div 
+                style={{ x: useTransform(mouseXSpring, [-0.5, 0.5], [15, -15]), y: useTransform(mouseYSpring, [-0.5, 0.5], [15, -15]) }}
+                className="absolute top-6 left-6 z-20"
+            >
+                <div className="flex items-center gap-2 bg-black/60 backdrop-blur-xl px-3 py-1.5 rounded-full border border-[#0055FF]/30 text-[10px] font-mono text-white tracking-widest">
+                    <span className="w-1.5 h-1.5 bg-[#0055FF] rounded-full animate-pulse" />
+                    ENCRYPTED_DATA_01
                 </div>
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_red]"></div>
-            </div>
+            </motion.div>
+
+            <motion.div 
+                style={{ x: useTransform(mouseXSpring, [-0.5, 0.5], [-20, 20]), y: useTransform(mouseYSpring, [-0.5, 0.5], [-20, 20]) }}
+                className="absolute bottom-6 right-6 z-20 bg-white/10 backdrop-blur-md p-2 rounded border border-white/10 text-[8px] font-mono text-gray-400"
+            >
+                LAT: 28.6139° N <br /> LONG: 77.2090° E
+            </motion.div>
         </motion.div>
     );
 };
 
 // --- MAIN COMPONENT ---
 const Projects = () => {
+    const [hoveredIndex, setHoveredIndex] = useState(null);
     const displayedProjects = projects.slice(0, 3);
 
     return (
         <section id="projects" className="py-32 bg-[#050608] relative overflow-hidden">
-
-            {/* 1. Cyber Grid Background */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,85,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,85,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-
-            {/* 2. Floating Ambient Glows */}
-            <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#0055FF] rounded-full blur-[120px] opacity-[0.05] pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-600 rounded-full blur-[150px] opacity-[0.05] pointer-events-none"></div>
+            {/* Professional Background: Moving Grid */}
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 bg-[linear-gradient(rgba(0,85,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,85,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none"
+            />
 
             <div className="container mx-auto px-6 relative z-10">
-
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-white/5 pb-8">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                    >
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-2 h-2 bg-[#0055FF]"></span>
-                            <span className="text-[#0055FF] font-mono text-xs tracking-widest uppercase">
-                                System.Root.Projects
-                            </span>
-                        </div>
-                        <h2 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter leading-none">
-                            Selected <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-white">Works_</span>
+                <div className="flex flex-col md:flex-row justify-between items-end mb-32 border-b border-white/5 pb-12">
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
+                        <p className="text-[#0055FF] font-mono text-xs tracking-[0.5em] uppercase mb-4">Discovery_Archive</p>
+                        <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+                            Elite <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-[#0055FF]">Prototypes_</span>
                         </h2>
                     </motion.div>
-
-                    <div className="hidden md:block text-right">
-                        <div className="font-mono text-xs text-gray-500 mb-1">Database Status</div>
-                        <div className="flex items-center gap-2 text-green-400 font-mono text-sm">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            ONLINE // V.2.4.0
-                        </div>
-                    </div>
                 </div>
 
-                {/* Projects List */}
-                <div className="space-y-40">
+                <div className="space-y-48">
                     {displayedProjects.map((project, index) => (
                         <motion.div
                             key={project.id}
-                            initial={{ opacity: 0, y: 50 }}
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                            initial={{ opacity: 0, y: 100 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.8 }}
-                            className={`relative grid lg:grid-cols-12 gap-8 items-center ${index % 2 === 1 ? 'lg:text-right' : 'lg:text-left'}`}
+                            className={`relative grid lg:grid-cols-12 gap-16 items-center ${index % 2 === 1 ? 'lg:text-right' : 'lg:text-left'}`}
                         >
-
-                            {/* Connector Line (The "Circuit" connecting image and text) */}
-                            <div className="hidden lg:block absolute top-1/2 left-0 w-full h-[1px] bg-white/5 -z-10"></div>
-
-                            {/* Project Visual (Takes up 7 cols) */}
                             <div className={`lg:col-span-7 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
                                 <ProjectImage url={project.image_url} title={project.title} />
                             </div>
 
-                            {/* Project Details (Takes up 5 cols) */}
-                            <div className={`lg:col-span-5 relative ${index % 2 === 1 ? 'lg:order-1 lg:pr-12' : 'lg:order-2 lg:pl-12'}`}>
+                            <div className={`lg:col-span-5 relative ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}>
+                                <div className="relative p-10 group">
+                                    {/* Glass Morphism Card with Animated Border */}
+                                    <div className="absolute inset-0 bg-[#0a0a0c]/60 backdrop-blur-2xl rounded-3xl border border-white/10 group-hover:border-[#0055FF]/50 transition-colors duration-500" />
+                                    
+                                    <div className="relative z-10">
+                                        <div className="text-[10px] font-mono text-gray-500 mb-4 tracking-widest uppercase">
+                                            Phase_0{index + 1} // {project.tech[0]}
+                                        </div>
 
-                                {/* Floating Glass Card Background for Text */}
-                                <div className="absolute inset-0 bg-[#111]/80 backdrop-blur-xl border border-white/10 rounded-xl -z-10 shadow-2xl"></div>
+                                        <h3 className="text-4xl font-bold text-white mb-6 uppercase tracking-tight">
+                                            <HackerText text={project.title} trigger={hoveredIndex === index} />
+                                        </h3>
 
-                                <div className="p-8 lg:py-12 relative overflow-hidden rounded-xl">
-                                    {/* Decorative "Caution" Strip */}
-                                    <div className={`absolute top-0 w-24 h-1 bg-[#0055FF] ${index % 2 === 1 ? 'right-8' : 'left-8'}`}></div>
+                                        <p className="text-gray-400 text-sm leading-relaxed mb-8 font-light italic opacity-80">
+                                            "{project.description}"
+                                        </p>
 
-                                    {/* Project Number */}
-                                    <div className="font-mono text-[10px] text-[#0055FF] mb-4 tracking-[0.2em]">
-                                        // PROJECT_0{index + 1}
+                                        <div className={`flex flex-wrap gap-2 mb-10 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}>
+                                            {project.tech.map(t => (
+                                                <span key={t} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono text-white/60 uppercase tracking-tighter group-hover:border-[#0055FF]/30 transition-all">
+                                                    {t}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        <div className={`flex items-center gap-8 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}>
+                                            <a href={project.github_link} className="flex items-center gap-2 group/link">
+                                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover/link:bg-[#0055FF] group-hover/link:border-[#0055FF] transition-all">
+                                                    <FaGithub className="text-white text-lg" />
+                                                </div>
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/link:text-white">Source</span>
+                                            </a>
+                                            <a href={project.project_link} className="flex items-center gap-2 group/link">
+                                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover/link:bg-white group-hover/link:border-white transition-all">
+                                                    <FaExternalLinkAlt className="text-white group-hover/link:text-black text-sm" />
+                                                </div>
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/link:text-white">Live</span>
+                                            </a>
+                                        </div>
                                     </div>
-
-                                    {/* Title with Decrypt Effect */}
-                                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 uppercase tracking-tight hover:text-[#0055FF] transition-colors cursor-default">
-                                        <HackerText text={project.title} />
-                                    </h3>
-
-                                    {/* Description */}
-                                    <p className="text-gray-400 text-sm leading-relaxed mb-8 font-mono">
-                                        {project.description}
-                                    </p>
-
-                                    {/* Tech Stack Chips */}
-                                    <div className={`flex flex-wrap gap-2 mb-10 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}>
-                                        {project.tech.map(t => (
-                                            <div key={t} className="px-3 py-1 bg-white/5 border border-white/5 hover:border-[#0055FF]/50 hover:bg-[#0055FF]/10 transition-colors rounded text-[10px] font-mono text-gray-300 uppercase tracking-wider cursor-help">
-                                                {t}
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Action Buttons */}
-                                    <div className={`flex items-center gap-6 ${index % 2 === 1 ? 'justify-end' : 'justify-start'}`}>
-                                        <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-white/80 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
-                                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-[#0055FF] group-hover:bg-[#0055FF] transition-all">
-                                                <FaGithub size={14} />
-                                            </div>
-                                            <span>Code</span>
-                                        </a>
-                                        <a href={project.project_link} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-white/80 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
-                                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-[#0055FF] group-hover:bg-[#0055FF] transition-all">
-                                                <FaExternalLinkAlt size={12} />
-                                            </div>
-                                            <span>Demo</span>
-                                        </a>
-                                    </div>
-
-                                    {/* Corner Accents */}
-                                    <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-white/20"></div>
-                                    <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-white/20"></div>
                                 </div>
                             </div>
-
                         </motion.div>
                     ))}
                 </div>
-
-                {/* View All / Archive Link */}
-                <div className="flex justify-center mt-32">
-                    <Link to="/projects">
-                        <MagneticButton className="relative group overflow-hidden bg-transparent border border-white/20 px-12 py-4 hover:border-[#0055FF] transition-colors duration-300">
-                            <div className="absolute inset-0 w-0 bg-[#0055FF] group-hover:w-full transition-all duration-300 opacity-10"></div>
-                            <div className="flex items-center gap-4">
-                                <span className="font-mono text-xs text-white uppercase tracking-[0.2em] z-10">Access Full Archives</span>
-                                <FaArrowRight className="text-[#0055FF] group-hover:translate-x-1 transition-transform z-10" />
-                            </div>
-
-                            {/* Button Corner Decals */}
-                            <div className="absolute top-0 left-0 w-2 h-2 bg-white group-hover:bg-[#0055FF] transition-colors"></div>
-                            <div className="absolute bottom-0 right-0 w-2 h-2 bg-white group-hover:bg-[#0055FF] transition-colors"></div>
-                        </MagneticButton>
-                    </Link>
-                </div>
-
             </div>
 
             <style jsx>{`
-                .perspective-1000 { perspective: 1000px; }
+                @keyframes scanline {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(100%); }
+                }
+                .animate-scanline {
+                    animation: scanline 4s linear infinite;
+                    background: linear-gradient(to bottom, transparent, rgba(0, 85, 255, 0.1), transparent);
+                    height: 50%;
+                }
             `}</style>
         </section>
     );

@@ -6,7 +6,7 @@ import { FaSearch } from 'react-icons/fa';
 // Components
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import About from './components/About';
+import CodingDashboard from './components/dashboard/CodingDashboard';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
@@ -14,6 +14,7 @@ import Services from './components/Services';
 import Contact from './components/Contact';
 import CommandPalette from './components/CommandPalette';
 import Loader from './components/Loader';
+import ChatBot from './components/ChatBot';
 
 // Pages
 import AllProjects from './pages/AllProjects';
@@ -29,7 +30,7 @@ function App() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Command Palette Keyboard Shortcut
+  // Command Palette Handlers
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -37,8 +38,16 @@ function App() {
         setIsCmdOpen(prev => !prev);
       }
     };
+
+    const handleCustomToggle = () => setIsCmdOpen(prev => !prev);
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('toggleCmdPalette', handleCustomToggle);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('toggleCmdPalette', handleCustomToggle);
+    };
   }, []);
 
   const handleLoaderComplete = () => {
@@ -63,22 +72,8 @@ function App() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* 3. Fixed: Navbar is now Global (appears on all pages) */}
+          {/* Global Navigation */}
           <Navbar />
-
-          {/* 4. Upgrade: Refined Search Trigger */}
-          <div className="fixed top-6 right-6 z-[110] hidden md:block">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsCmdOpen(true)}
-              className="group flex items-center gap-3 px-3 py-2 bg-[#111]/80 backdrop-blur-md border border-white/10 text-gray-500 hover:text-[#0055FF] hover:border-[#0055FF]/50 transition-all shadow-2xl"
-              title="Cmd+K"
-            >
-              <span className="text-[10px] font-mono tracking-widest hidden group-hover:block">SEARCH_DB</span>
-              <FaSearch size={14} />
-            </motion.button>
-          </div>
 
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -88,13 +83,21 @@ function App() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <Hero />
-                  <About />
-                  <Skills />
-                  <Services />
-                  <Projects />
-                  <Experience />
-                  <Contact />
+                  {/* Main Content Sections */}
+                  <main className="relative pt-20 flex-grow">
+                    <Hero />
+
+                    {/* ID should remain problem-solving to not break navbar scroll links */}
+                    <div id="problem-solving">
+                      <CodingDashboard />
+                    </div>
+
+                    <Skills />
+                    <Services />
+                    <Projects />
+                    <Experience />
+                    <Contact />
+                  </main>
                 </motion.div>
               } />
 
@@ -105,6 +108,7 @@ function App() {
           </AnimatePresence>
 
           <CommandPalette isOpen={isCmdOpen} onClose={() => setIsCmdOpen(false)} />
+          <ChatBot />
 
           {/* 5. Upgrade: Global Noise Overlay for texture */}
           <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>

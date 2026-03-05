@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaTwitter, FaTerminal, FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';
+import { TypeAnimation } from 'react-type-animation';
 import MagneticButton from './MagneticButton';
 
 const Hero = () => {
@@ -53,7 +54,7 @@ const Hero = () => {
             {/* --- 2. THE PK SIDEBAR --- */}
             <div className="hidden lg:flex flex-col justify-between items-center absolute left-0 top-0 bottom-0 w-20 z-50 border-r border-white/5 bg-[#050608]/80 backdrop-blur-md py-12">
                 {/* Fixed PK Logo Button */}
-                <button 
+                <button
                     onClick={scrollToTop}
                     className="font-black text-2xl text-white tracking-tighter hover:text-[#0055FF] transition-all active:scale-90"
                 >
@@ -62,20 +63,20 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-8 text-gray-500">
                     {[
-                        { Icon: FaGithub, link: "#" },
-                        { Icon: FaLinkedin, link: "#" },
+                        { Icon: FaGithub, link: "https://github.com/Piyush5621" },
+                        { Icon: FaLinkedin, link: "https://www.linkedin.com/in/piyushkumar5621/" },
                         { Icon: FaTwitter, link: "#" }
                     ].map((item, i) => (
-                        <a 
-                            key={i} 
-                            href={item.link} 
+                        <a
+                            key={i}
+                            href={item.link}
                             className="hover:text-[#0055FF] hover:scale-125 transition-all duration-300"
                         >
                             <item.Icon size={18} />
                         </a>
                     ))}
                 </div>
-                
+
                 {/* Vertical Line Decoration */}
                 <div className="h-24 w-px bg-gradient-to-t from-[#0055FF] to-transparent opacity-50" />
             </div>
@@ -83,18 +84,18 @@ const Hero = () => {
             {/* --- 3. MAIN UI CONTENT --- */}
             <div className="container mx-auto px-6 md:px-24 lg:px-32 relative z-40">
                 <div className="max-w-4xl">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="mb-6 flex items-center gap-3"
                     >
                         <div className="w-2 h-2 rounded-full bg-[#0055FF] animate-pulse" />
                         <span className="font-mono text-[10px] tracking-[0.4em] text-[#0055FF] uppercase">
-                            Connection.Established
+                            Ready to Work
                         </span>
                     </motion.div>
 
-                    <h1 className="text-[5rem] md:text-[8rem] lg:text-[11rem] font-black text-white leading-[0.8] tracking-tighter">
+                    <h1 className="text-[3.5rem] md:text-[5.5rem] lg:text-[7.5rem] font-black text-white leading-[0.9] tracking-tighter">
                         <motion.span initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="block text-gray-400/80">
                             PIYUSH
                         </motion.span>
@@ -103,35 +104,57 @@ const Hero = () => {
                         </motion.span>
                     </h1>
 
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }} 
-                        animate={{ opacity: 1, y: 0 }} 
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                         className="mt-12 flex flex-col md:flex-row gap-12 md:items-center"
                     >
-                        <div className="max-w-[300px] border-l border-[#0055FF] pl-6 py-1">
-                            <p className="text-gray-400 text-sm font-medium leading-relaxed italic">
-                                Specializing in <span className="text-white">Full-Stack Architecture</span> and high-performance digital systems.
+                        <div className="max-w-[450px] border-l-2 border-[#0055FF] pl-6 py-2">
+                            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 h-[32px] flex items-center">
+                                <span className="text-gray-500 mr-2 font-mono text-sm">&gt;</span>
+                                <TypeAnimation
+                                    sequence={[
+                                        'Full-Stack Developer.',
+                                        2000,
+                                        'Software Engineer.',
+                                        2000,
+                                        'UI/UX Enthusiast.',
+                                        2000,
+                                        'Competitive Programmer.',
+                                        2000
+                                    ]}
+                                    wrapper="span"
+                                    speed={50}
+                                    repeat={Infinity}
+                                />
+                            </h2>
+                            <p className="text-gray-400 text-sm font-medium leading-relaxed mb-5">
+                                I specialize in building high-performance systems and seamless web apps. Currently engineering scalable logic with <span className="text-white font-semibold">Java</span> & <span className="text-white font-semibold">React</span>.
                             </p>
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                <span className="font-mono text-[9px] text-gray-500 uppercase tracking-widest border border-white/10 px-2 py-0.5 rounded backdrop-blur-sm">B.Tech CSE @ LPU (2023 - Present)</span>
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-6">
-                            <button 
+                            <button
                                 onClick={scrollToProjects}
                                 className="group relative px-10 py-4 bg-[#0055FF] text-white font-black text-[10px] tracking-[0.2em] uppercase overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(0,85,255,0.4)] active:scale-95"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
-                                    Project_Log <FaExternalLinkAlt size={10} />
+                                    View Projects <FaExternalLinkAlt size={10} />
                                 </span>
                                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 mix-blend-difference" />
                             </button>
-                            
-                            <button 
+
+                            <button
                                 onClick={openContact}
                                 className="group flex items-center gap-3 text-gray-500 hover:text-white transition-all font-mono text-[10px] tracking-widest uppercase"
                             >
                                 <FaTerminal className="text-[#0055FF]" />
-                                <span className="border-b border-transparent group-hover:border-[#0055FF]">Initialize_Chat</span>
+                                <span className="border-b border-transparent group-hover:border-[#0055FF]">Contact Me</span>
                             </button>
                         </div>
                     </motion.div>
@@ -140,7 +163,7 @@ const Hero = () => {
 
             {/* Decorative HUD Elements */}
             <div className="absolute bottom-10 right-12 flex flex-col items-center gap-4 text-gray-700 pointer-events-none z-40">
-                <span className="text-[8px] font-mono tracking-[0.5em] uppercase [writing-mode:vertical-rl]">Navigate</span>
+                <span className="text-[8px] font-mono tracking-[0.5em] uppercase [writing-mode:vertical-rl]">Scroll Down</span>
                 <FaChevronDown size={10} className="text-[#0055FF] animate-bounce" />
             </div>
         </section>

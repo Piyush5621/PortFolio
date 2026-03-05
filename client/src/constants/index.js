@@ -2,78 +2,83 @@ import { FaReact, FaHtml5, FaCss3Alt, FaJs, FaNode, FaPhp, FaJava, FaPython, FaD
 import { SiTailwindcss, SiMysql, SiCplusplus, SiC, SiNextdotjs } from 'react-icons/si';
 
 export const experiences = [
-    {
-        year: "2023",
-        role: "Java Spring Boot Training",
-        company: "Online/Internship",
-        description: "Intensive training on REST APIs, MVC architecture, and MySQL integration. Built robust backend services using Spring Boot."
-    },
-    {
-        year: "Present",
-        role: "B.Tech CSE Student",
-        company: "Lovely Professional University",
-        description: "Focusing on Full Stack Development, Data Structures, and Algorithms. Building scalable projects like NexaMart and FinSathi."
-    }
+  {
+    year: "2023 - Present",
+    role: "B.Tech Computer Science student",
+    company: "Lovely Professional University",
+    description: "Focusing on Full-Stack Engineering, Data Structures, and Scalable Systems. Currently maintaining a 8.00 CGPA while building high-impact web applications."
+  },
+  {
+    year: "2025",
+    role: "Java Spring Boot Training",
+    company: "Programming Pathshala",
+    description: "Advanced training in building RESTful APIs, implementing microservices architecture, and backend optimization with MySQL."
+  }
 ];
 
 export const skills = {
-    frontend: [
-        { name: "HTML5", icon: "FaHtml5", color: "#e34c26" },
-        { name: "CSS3", icon: "FaCss3Alt", color: "#264de4" },
-        { name: "Tailwind CSS", icon: "SiTailwindcss", color: "#38b2ac" },
-        { name: "JavaScript", icon: "FaJs", color: "#f0db4f" },
-        { name: "React.js", icon: "FaReact", color: "#61dbfb" },
-        { name: "Next.js", icon: "SiNextdotjs", color: "#000000" }
-    ],
-    backend: [
-        { name: "Node.js", icon: "FaNode", color: "#68a063" },
-        { name: "PHP", icon: "FaPhp", color: "#777bb4" },
-        { name: "MySQL", icon: "SiMysql", color: "#4479a1" },
-        { name: "REST APIs", icon: "FaDatabase", color: "#00d0ff" }
-    ],
-    programming: [
-        { name: "C", icon: "SiC", color: "#555555" },
-        { name: "C++", icon: "SiCplusplus", color: "#00599C" },
-        { name: "Java", icon: "FaJava", color: "#007396" },
-        { name: "Python", icon: "FaPython", color: "#3776ab" }
-    ]
+  frontend: [
+    { name: "React", icon: "FaReact", color: "#61dbfb" },
+    { name: "Next.js", icon: "SiNextdotjs", color: "#ffffff" },
+    { name: "JavaScript", icon: "FaJs", color: "#f0db4f" },
+    { name: "Tailwind CSS", icon: "SiTailwindcss", color: "#38b2ac" },
+    { name: "HTML5", icon: "FaHtml5", color: "#e34c26" },
+    { name: "CSS3", icon: "FaCss3Alt", color: "#264de4" }
+  ],
+  backend: [
+    { name: "Node.js", icon: "FaNode", color: "#68a063" },
+    { name: "Express.js", icon: "SiExpress", color: "#ffffff" },
+    { name: "Java Spring Boot", icon: "FaJava", color: "#007396" },
+    { name: "PHP", icon: "FaPhp", color: "#777bb4" },
+    { name: "MySQL", icon: "SiMysql", color: "#4479a1" },
+    { name: "Supabase", icon: "FaDatabase", color: "#3ecf8e" }
+  ],
+  programming: [
+    { name: "Java", icon: "FaJava", color: "#007396" },
+    { name: "C++", icon: "SiCplusplus", color: "#00599C" },
+    { name: "Data Structures", icon: "FaCode", color: "#0055FF" },
+    { name: "Algorithms", icon: "FaTerminal", color: "#ffffff" }
+  ]
 };
 
 export const projects = [
   {
-    id: "anarchy-bay",
+    id: "01",
     title: "Anarchy Bay",
-    description: "A full-stack e-commerce marketplace supporting 100+ product listings. Engineered secure authentication, payment workflows, and multi-level filtering, reducing cart abandonment by 25% and improving product discovery by 40%.",
-    tech: ["React", "Express.js", "Supabase", "Tailwind CSS", "JavaScript"],
-    github_link: "https://github.com/Piyush5621", 
-    project_link: "#", // Add your live demo link here
-    image_url: "/images/Anarchy-Bay.png" // Update with your actual image path
-  },
-  {
-    id: "nexa-mart",
-    title: "NexaMart",
-    description: "A B2B & B2C marketing platform featuring interactive admin dashboards that manage 200+ inventory records. Implemented DOM-based image previews and client-side validation, reducing user errors by 40%.",
-    tech: ["PHP", "MySQL", "JavaScript", "HTML", "Tailwind CSS"],
+    category: "Full Stack",
+    description: "Architected a full-stack digital marketplace with 100+ listings. Features secure authentication, dynamic filtering, and optimized checkout, resulting in 30% faster load times.",
+    tech: ["React", "Express.js", "Supabase", "Tailwind CSS"],
     github_link: "https://github.com/Piyush5621",
-    project_link: "#", // Add your live demo link here
-    image_url: "/images/NexaMart.png" // Update with your actual image path
+    project_link: "#",
+    image_url: "/images/Anarchy-Bay.png"
   },
   {
-    id: "ipc-simulator",
+    id: "02",
+    title: "NexaMart",
+    category: "Full Stack",
+    description: "Developed a robust B2B/B2C marketing platform managing 200+ inventory records. Streamlined seller onboarding and admin approval workflows with real-time data visualization.",
+    tech: ["PHP", "MySQL", "JavaScript", "Tailwind CSS"],
+    github_link: "https://github.com/Piyush5621",
+    project_link: "#",
+    image_url: "/images/NexaMart.png"
+  },
+  {
+    id: "03",
     title: "IPC Simulator",
-    description: "A GUI-based Operating System visualization tool demonstrating core inter-process communication mechanisms (pipes, message queues, shared memory). Simulated 5–10 concurrent processes to analyze synchronization, race conditions, and deadlocks.",
+    category: "Web App",
+    description: "A technical visualization of Inter-Process Communication mechanisms. Models pipe, message queue, and shared memory behavior across concurrent simulated processes.",
     tech: ["JavaScript", "HTML", "CSS", "OS Concepts"],
-    github_link: "https://github.com/Piyush5621", // Update with specific repo link if available
-    project_link: "#", 
-    image_url: "/images/IPC.png" // Update with your actual image path
+    github_link: "https://github.com/Piyush5621",
+    project_link: "#",
+    image_url: "/images/IPC.png"
   }
 ];
 
 export const socialLinks = {
-    linkedin: "#",
-    github: "#",
-    email: "mailto:piyush@example.com", // Update with real email
-    phone: "tel:+910000000000" // Update with real phone
+  linkedin: "https://www.linkedin.com/in/piyushkumar5621/",
+  github: "https://github.com/Piyush5621",
+  email: "mailto:piyushkk0206@gmail.com",
+  phone: "tel:+919798526058"
 };
 
 // Keeping services for compatibility if needed, but focusing on skills/projects as per prompt
