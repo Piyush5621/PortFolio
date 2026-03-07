@@ -14,7 +14,7 @@ const RatingRow = ({ platform, rating, rank, icon: Icon, color }) => (
     </div>
 );
 
-const PlatformRatings = ({ lcData, ccData, gfgData, hrData }) => {
+const PlatformRatings = ({ lcData, ccData, gfgData, hrData, contestData }) => {
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -26,8 +26,8 @@ const PlatformRatings = ({ lcData, ccData, gfgData, hrData }) => {
             <div className="space-y-2">
                 <RatingRow
                     platform="LeetCode"
-                    rating={lcData?.ranking || 'N/A'}
-                    rank="Global Rank"
+                    rating={contestData?.currentRating || lcData?.ranking || 'N/A'}
+                    rank={contestData?.currentRating ? "Contest Rating" : "Global Rank"}
                     icon={SiLeetcode}
                     color="#ffa116"
                 />

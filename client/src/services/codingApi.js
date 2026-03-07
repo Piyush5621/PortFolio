@@ -1,23 +1,138 @@
 import axios from "axios";
 
-// Using allorigins proxy for LeetCode because Heroku app was blocking CORS
+// LeetCode basic stats API
 export const getLeetCode = async (username) => {
     try {
-        const res = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://leetcode-stats-api.herokuapp.com/${username}`)}`);
-        return { data: JSON.parse(res.data.contents) };
+        // Try the GraphQL API first via our server proxy
+        const response = await axios.post('/api/leetcode', { username });
+
+        const user = response.data.data.matchedUser;
+        if (!user) throw new Error('User not found');
+
+        const stats = user.submitStats.acSubmissionNum;
+        // Use the "All" count directly instead of summing all difficulties (which includes "All")
+        const totalSolved = stats.find(s => s.difficulty === 'All')?.count || 0;
+        const easySolved = stats.find(s => s.difficulty === 'Easy')?.count || 0;
+        const mediumSolved = stats.find(s => s.difficulty === 'Medium')?.count || 0;
+        const hardSolved = stats.find(s => s.difficulty === 'Hard')?.count || 0;
+
+        return {
+            data: {
+                totalSolved,
+                easySolved,
+                mediumSolved,
+                hardSolved,
+                ranking: user.profile.ranking,
+                realName: user.profile.realName,
+                avatar: user.profile.userAvatar
+            }
+        };
     } catch (err) {
+        console.warn('LeetCode GraphQL failed, trying alternative API:', err.message);
+        // Fallback to the heroku API via proxy
+        try {
+            const res = await axios.get(`/api/leetcode-stats/${username}`);
+            return { data: res.data };
+        } catch (fallbackErr) {
+            console.error('LeetCode fallback API also failed:', fallbackErr.message);
+            return { data: null };
+        }
+    }
+};
+
+// LeetCode Activity - Get real active days from submissions
+export const getLeetCodeActivity = async (username) => {
+    try {
+        const response = await axios.post('/api/leetcode-activity', { username });
+        return { data: response.data };
+    } catch (err) {
+        console.error('LeetCode Activity API error:', err.message);
         return { data: null };
     }
 };
 
-export const getGithub = (username) =>
-    axios.get(`https://api.github.com/users/${username}`);
+// LeetCode Contest History API
+export const getLeetCodeContests = async (username) => {
+    try {
+        const response = await axios.post('/api/leetcode-contests', { username });
 
-export const getCodeChef = (username) =>
-    axios.get(`https://codechef-api.vercel.app/${username}`);
+        if (response.status !== 200) {
+            throw new Error(`LeetCode API returned status ${response.status}`);
+        }
 
-export const getGFG = (username) =>
-    axios.get(`https://gfgstatscard.vercel.app/${username}`);
+        const data = response.data.data;
+        if (!data || !data.userContestRanking) {
+            console.warn('No contest data found for user:', username);
+            return { data: null };
+        }
 
-export const getHackerRank = (username) =>
-    axios.get(`https://hackerrank-stats-api.vercel.app/${username}`);
+        // Process contest history for the last 6 contests
+        const contestHistory = data.userContestRankingHistory
+            .slice(-6)
+            .map(contest => ({
+                name: contest.contest.title.split(' ').pop(),
+                rating: Math.round(contest.rating),
+                date: new Date(contest.contest.startTime * 1000).toLocaleDateString()
+            }))
+            .reverse();
+
+        return {
+            data: {
+                currentRating: Math.round(data.userContestRanking.rating),
+                globalRanking: data.userContestRanking.globalRanking,
+                attendedContests: data.userContestRanking.attendedContestsCount,
+                contestHistory
+            }
+        };
+    } catch (err) {
+        console.error('LeetCode contest API error:', err.message);
+        return { data: null };
+    }
+};
+
+// GitHub API - Enhanced with contribution data
+export const getGithub = async (username) => {
+    try {
+        const response = await axios.get(`/api/github/${username}`);
+        return { data: response.data };
+    } catch (err) {
+        console.error('GitHub API error:', err.message);
+        return { data: null };
+    }
+};
+
+// CodeChef API - Using alternative endpoint
+export const getCodeChef = async (username) => {
+    try {
+        // Try the Vercel API first via proxy
+        const response = await axios.get(`/api/codechef/${username}`);
+        return { data: response.data };
+    } catch (err) {
+        console.warn('CodeChef Vercel API failed:', err.message);
+        return { data: null };
+    }
+};
+
+// GeeksForGeeks API
+export const getGFG = async (username) => {
+    try {
+        const response = await axios.get(`/api/gfg/${username}`);
+        return { data: response.data };
+    } catch (err) {
+        console.error('GFG API error:', err.message);
+        return { data: null };
+    }
+};
+
+
+
+// HackerRank API
+export const getHackerRank = async (username) => {
+    try {
+        const response = await axios.get(`/api/hackerrank/${username}`);
+        return { data: response.data };
+    } catch (err) {
+        console.error('HackerRank API error:', err.message);
+        return { data: null };
+    }
+};

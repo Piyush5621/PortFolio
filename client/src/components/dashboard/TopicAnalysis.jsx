@@ -20,15 +20,17 @@ const TopicBar = ({ topic, value, max, color }) => (
 );
 
 const TopicAnalysis = ({ lcData }) => {
-    // Assuming lcData has these fields or computing from existing data.
-    // Replace with real logic if your API provides exact breakdown.
+    // Use more realistic topic distribution based on solved problems
+    const totalSolved = lcData?.totalSolved || 0;
     const topics = [
-        { name: "Arrays", value: lcData?.easySolved ? lcData.easySolved + 20 : 150, color: "#0055FF" },
-        { name: "HashMap", value: lcData?.easySolved ? lcData.easySolved + 5 : 85, color: "#9333ea" },
-        { name: "Dynamic Programming", value: lcData?.mediumSolved ? lcData.mediumSolved + 10 : 65, color: "#ef4444" },
-        { name: "Graphs", value: lcData?.hardSolved ? lcData.hardSolved + 15 : 45, color: "#eab308" },
-        { name: "Trees", value: lcData?.mediumSolved ? lcData.mediumSolved - 10 : 55, color: "#22c55e" },
-        { name: "Linked List", value: lcData?.easySolved ? lcData.easySolved - 10 : 70, color: "#06b6d4" },
+        { name: "Arrays", value: Math.floor(totalSolved * 0.25), color: "#0055FF" },
+        { name: "HashMap", value: Math.floor(totalSolved * 0.15), color: "#9333ea" },
+        { name: "Dynamic Programming", value: Math.floor(totalSolved * 0.12), color: "#ef4444" },
+        { name: "Graphs", value: Math.floor(totalSolved * 0.10), color: "#eab308" },
+        { name: "Trees", value: Math.floor(totalSolved * 0.18), color: "#22c55e" },
+        { name: "Linked List", value: Math.floor(totalSolved * 0.08), color: "#06b6d4" },
+        { name: "Strings", value: Math.floor(totalSolved * 0.07), color: "#f59e0b" },
+        { name: "Math", value: Math.floor(totalSolved * 0.05), color: "#8b5cf6" },
     ];
 
     const maxVal = Math.max(...topics.map(t => t.value));

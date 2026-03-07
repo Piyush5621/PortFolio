@@ -13,6 +13,13 @@
   animation: scanline 3s linear infinite;
 }
 
+.backface-hidden { backface-visibility: hidden; }
+.perspective-1000 { perspective: 1000px; }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .glow-line {
   box-shadow: 0 0 20px rgba(0, 85, 255, 0.5), 0 0 40px rgba(0, 85, 255, 0.2);
 }
@@ -31,6 +38,7 @@ body {
   color: #ccd6f6;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  position: relative;
 }
 
 h1,

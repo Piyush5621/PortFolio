@@ -28,11 +28,12 @@ const StatsGrid = ({ lcData, ghData, ccData, gfgData }) => {
             <StatBox title="LeetCode Solved" value={lcData?.totalSolved || 0} icon={SiLeetcode} color="#ffa116" delay={0.1} />
             <StatBox title="LC Global Rank" value={lcData?.ranking || 0} icon={SiLeetcode} color="#00b8a3" delay={0.2} />
             <StatBox title="GitHub Repos" value={ghData?.public_repos || 0} icon={SiGithub} color="#ffffff" delay={0.3} />
-            <StatBox title="CodeChef Rating" value={ccData?.currentRating || 0} icon={SiCodechef} color="#5B4638" delay={0.4} />
-            <StatBox title="GFG Score" value={gfgData?.overall_coding_score || 0} icon={SiGeeksforgeeks} color="#2f8D46" delay={0.5} />
-            <StatBox title="LC Easy" value={lcData?.easySolved || 0} icon={SiLeetcode} color="#00b8a3" delay={0.6} />
-            <StatBox title="LC Medium" value={lcData?.mediumSolved || 0} icon={SiLeetcode} color="#ffc01e" delay={0.7} />
-            <StatBox title="LC Hard" value={lcData?.hardSolved || 0} icon={SiLeetcode} color="#ff375f" delay={0.8} />
+            <StatBox title="GitHub Contributions" value={ghData?.totalContributions || 0} icon={SiGithub} color="#238636" delay={0.4} />
+            <StatBox title="CodeChef Rating" value={ccData?.currentRating || 0} icon={SiCodechef} color="#5B4638" delay={0.5} />
+            <StatBox title="GFG Score" value={gfgData?.overall_coding_score || 0} icon={SiGeeksforgeeks} color="#2f8D46" delay={0.6} />
+            <StatBox title="LC Easy" value={lcData?.easySolved || 0} icon={SiLeetcode} color="#00b8a3" delay={0.7} />
+            <StatBox title="LC Medium" value={lcData?.mediumSolved || 0} icon={SiLeetcode} color="#ffc01e" delay={0.8} />
+            <StatBox title="LC Hard" value={lcData?.hardSolved || 0} icon={SiLeetcode} color="#ff375f" delay={0.9} />
         </div>
     );
 };

@@ -1,7 +1,7 @@
 export const USERNAMES = {
-    leetcode: "CgQSZLUGS0",
-    github: "piyush5621",
-    codechef: "piyush5621",
-    gfg: "piyush5621",
-    hackerrank: "piyushkumar10901"
+    leetcode: import.meta.env.VITE_LEETCODE_USERNAME || "CgQSZLUGS0",
+    github: import.meta.env.VITE_GITHUB_USERNAME || "piyush5621",
+    codechef: import.meta.env.VITE_CODECHEF_USERNAME || "piyush5621",
+    gfg: import.meta.env.VITE_GFG_USERNAME || "piyush5621",
+    hackerrank: import.meta.env.VITE_HACKERRANK_USERNAME || "piyushkumar10901"
 };

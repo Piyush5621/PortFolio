@@ -191,20 +191,6 @@ const AllProjects = () => {
                     Return to Nexus
                 </motion.div>
             </Link>
-
-            <style jsx>{`
-                @keyframes scanline {
-                    0% { transform: translateY(-100%); }
-                    100% { transform: translateY(1000%); }
-                }
-                .animate-scanline {
-                    animation: scanline 8s linear infinite;
-                    opacity: 0.5;
-                }
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
         </div>
     );
 };

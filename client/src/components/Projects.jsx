@@ -187,18 +187,6 @@ const Projects = () => {
                     ))}
                 </div>
             </div>
-
-            <style jsx>{`
-                @keyframes scanline {
-                    0% { transform: translateY(-100%); }
-                    100% { transform: translateY(100%); }
-                }
-                .animate-scanline {
-                    animation: scanline 4s linear infinite;
-                    background: linear-gradient(to bottom, transparent, rgba(0, 85, 255, 0.1), transparent);
-                    height: 50%;
-                }
-            `}</style>
         </section>
     );
 };

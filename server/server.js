@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from './data.js';
 
@@ -22,9 +23,10 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash",
-    systemInstruction: `You are the official AI assistant for Piyush Kumar's portfolio website. 
-    Your personality is professional, concise, friendly, and helpful.
+    model: "gemini-2.5-flash", // The current standard free-tier model
+    systemInstruction: `You are the official AI representative for Piyush Kumar's portfolio website. 
+    
+    CRITICAL IDENTITY RULE: If a user asks "What have YOU built?", "Tell me about YOUR skills", or uses the pronoun "you", they are referring to Piyush Kumar. You must answer using Piyush's information. NEVER break character. NEVER say you are a large language model or an AI created by Google.
     
     Use the following JSON data to answer questions about Piyush:
     ${JSON.stringify(resumeData)}
@@ -88,6 +90,211 @@ app.post('/api/contact', async (req, res) => {
     }, 1000);
 });
 
+// Coding Platform API Proxies
+app.post('/api/leetcode', async (req, res) => {
+    try {
+        const { username } = req.body;
+        const query = 'query getUserProfile($username: String!) { matchedUser(username: $username) { username profile { realName userAvatar reputation ranking } submitStats { acSubmissionNum { difficulty count submissions } } } }';
+        
+        const response = await axios.post('https://leetcode.com/graphql', {
+            query,
+            variables: { username }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Portfolio-App'
+            }
+        });
+        
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// LeetCode Active Days - Get recent submissions to calculate real active days
+app.post('/api/leetcode-activity', async (req, res) => {
+    try {
+        const { username } = req.body;
+        const query = `
+            query getUserRecentSubmissions($username: String!) {
+                recentSubmissionList(username: $username, limit: 100) {
+                    title
+                    titleSlug
+                    timestamp
+                    statusDisplay
+                    lang
+                }
+            }
+        `;
+        
+        const response = await axios.post('https://leetcode.com/graphql', {
+            query,
+            variables: { username }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Portfolio-App'
+            }
+        });
+        
+        // Calculate unique active days from submissions
+        const submissions = response.data.data.recentSubmissionList || [];
+        const uniqueDays = new Set();
+        
+        submissions.forEach(submission => {
+            if (submission.statusDisplay === 'Accepted') {
+                const date = new Date(submission.timestamp * 1000);
+                const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+                uniqueDays.add(dateString);
+            }
+        });
+        
+        res.json({
+            activeDays: uniqueDays.size,
+            totalSubmissions: submissions.length,
+            recentSubmissions: submissions.slice(0, 10) // Return last 10 submissions
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/leetcode-stats/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const response = await axios.get(`https://leetcode-stats-api.herokuapp.com/${username}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/codechef/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const response = await axios.get(`https://codechef-api.vercel.app/${username}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/gfg/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const response = await axios.get(`https://gfgstatscard.vercel.app/${username}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/hackerrank/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const response = await axios.get(`https://hackerrank-stats-api.vercel.app/${username}`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/github/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+        
+        // Get basic user info
+        const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+            headers: {
+                'User-Agent': 'Portfolio-App'
+            }
+        });
+        
+        // Get contribution data using GraphQL
+        const contributionQuery = `
+            query($username: String!) {
+                user(login: $username) {
+                    contributionsCollection {
+                        contributionCalendar {
+                            totalContributions
+                            weeks {
+                                contributionDays {
+                                    contributionCount
+                                    date
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        `;
+        
+        const contributionResponse = await axios.post('https://api.github.com/graphql', {
+            query: contributionQuery,
+            variables: { username }
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.GITHUB_TOKEN || ''}`,
+                'User-Agent': 'Portfolio-App'
+            }
+        });
+        
+        // Calculate active days (days with contributions > 0)
+        const contributions = contributionResponse.data.data.user.contributionsCollection.contributionCalendar;
+        const activeDays = contributions.weeks.reduce((total, week) => {
+            return total + week.contributionDays.filter(day => day.contributionCount > 0).length;
+        }, 0);
+        
+        // Combine data
+        const combinedData = {
+            ...userResponse.data,
+            totalContributions: contributions.totalContributions,
+            activeDays: activeDays
+        };
+        
+        res.json(combinedData);
+    } catch (error) {
+        console.error('GitHub API error:', error);
+        // Fallback to basic user data if GraphQL fails
+        try {
+            const userResponse = await axios.get(`https://api.github.com/users/${username}`, {
+                headers: {
+                    'User-Agent': 'Portfolio-App'
+                }
+            });
+            res.json({
+                ...userResponse.data,
+                totalContributions: 0,
+                activeDays: 0
+            });
+        } catch (fallbackError) {
+            res.status(500).json({ error: fallbackError.message });
+        }
+    }
+});
+
+app.post('/api/leetcode-contests', async (req, res) => {
+    try {
+        const { username } = req.body;
+        const query = 'query getUserContestRankingInfo($username: String!) { userContestRanking(username: $username) { attendedContestsCount rating globalRanking totalParticipants topPercentage } userContestRankingHistory(username: $username) { contest { title startTime } rating ranking } }';
+        
+        const response = await axios.post('https://leetcode.com/graphql', {
+            query,
+            variables: { username }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Portfolio-App'
+            }
+        });
+        
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // SPA Catch-all (Express 5 compatible)
 app.get('/{*path}', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
@@ -96,5 +303,5 @@ app.get('/{*path}', (req, res) => {
 // Start Server
 app.listen(PORT, () => {
     console.log(`\x1b[34m[System]\x1b[0m Digital Architect Server Online at port ${PORT}`);
-    console.log(`\x1b[32m[Gemini]\x1b[0m AI Assistant initialized with model gemini-2.0-flash`);
+    console.log(`\x1b[32m[Gemini]\x1b[0m AI Assistant initialized with model gemini-1.5-flash-8b`);
 });

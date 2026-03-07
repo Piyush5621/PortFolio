@@ -1,16 +1,65 @@
-# React + Vite
+# Portfolio Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React portfolio website with real-time coding statistics dashboard.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time Coding Dashboard**: Displays live statistics from LeetCode, GitHub, CodeChef, GeeksForGeeks, and HackerRank
+- **Responsive Design**: Built with Tailwind CSS for mobile-first design
+- **Interactive Components**: Animated charts and statistics with Framer Motion
+- **Auto-refresh**: Data updates every 5 minutes with manual refresh option
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Expanding the ESLint configuration
+2. Configure your coding platform usernames by creating a `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+   Edit the `.env` file with your usernames:
+   ```
+   VITE_LEETCODE_USERNAME=your_leetcode_username
+   VITE_GITHUB_USERNAME=your_github_username
+   VITE_CODECHEF_USERNAME=your_codechef_username
+   VITE_GFG_USERNAME=your_gfg_username
+   VITE_HACKERRANK_USERNAME=your_hackerrank_username
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## API Sources
+
+The dashboard fetches data from the following APIs:
+
+- **LeetCode**: Official GraphQL API with fallback to leetcode-stats-api
+- **GitHub**: GitHub REST API v3
+- **CodeChef**: CodeChef API via Vercel
+- **GeeksForGeeks**: GFG Stats API via Vercel
+- **HackerRank**: HackerRank Stats API via Vercel
+
+## Environment Variables
+
+All usernames are configured via environment variables prefixed with `VITE_` to be accessible in the browser.
+
+## Development
+
+- Uses Vite for fast development and building
+- ESLint for code quality
+- Tailwind CSS for styling
+- Framer Motion for animations
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist` directory.

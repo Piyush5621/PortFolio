@@ -337,18 +337,6 @@ const Contact = () => {
                     </div>
                 </div>
             </div>
-
-            <style jsx>{`
-                .backface-hidden { backface-visibility: hidden; }
-                .perspective-1000 { perspective: 1000px; }
-                @keyframes scanline {
-                    0% { transform: translateY(-100%); }
-                    100% { transform: translateY(800%); }
-                }
-                .animate-scanline {
-                    animation: scanline 6s linear infinite;
-                }
-            `}</style>
         </section>
     );
 };
