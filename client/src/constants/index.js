@@ -1,20 +1,45 @@
 import { FaReact, FaHtml5, FaCss3Alt, FaJs, FaNode, FaPhp, FaJava, FaPython, FaDatabase } from 'react-icons/fa';
 import { SiTailwindcss, SiMysql, SiCplusplus, SiC, SiNextdotjs } from 'react-icons/si';
 
-export const experiences = [
+export const education = [
   {
-    year: "2023 - Present",
-    role: "B.Tech Computer Science student",
-    company: "Lovely Professional University",
-    description: "Focusing on Full-Stack Engineering, Data Structures, and Scalable Systems. Currently maintaining a 8.00 CGPA while building high-impact web applications."
+    year: "2023 - 2027",
+    degree: "Bachelor of Technology in Computer Science",
+    institution: "Lovely Professional University",
+    description: "Currently pursuing B.Tech with focus on Full-Stack Development and Algorithms. Maintaining a solid academic record with 8.00 CGPA."
   },
   {
-    year: "2025",
-    role: "Java Spring Boot Training",
-    company: "Programming Pathshala",
-    description: "Advanced training in building RESTful APIs, implementing microservices architecture, and backend optimization with MySQL."
+    year: "2021 - 2023",
+    degree: "Intermediate (12th Grade)",
+    institution: "Senior Secondary School",
+    description: "Completed higher secondary education with a focus on Physics, Chemistry, and Mathematics (PCM)."
+  },
+  {
+    year: "2019 - 2021",
+    degree: "Matriculation (10th Grade)",
+    institution: "Secondary School",
+    description: "Completed secondary education with high performance in Mathematics and Science."
   }
 ];
+
+export const certifications = [
+  {
+    title: "Java Full Stack Development",
+    issuer: "Programming Pathshala",
+    date: "2025",
+    link: "#",
+    description: "Specialized training in Spring Boot, Microservices, and Cloud Deployment."
+  },
+  {
+    title: "Frontend Engineering",
+    issuer: "Online Certification",
+    date: "2024",
+    link: "#",
+    description: "Advanced React, Tailwind CSS, and Framer Motion for premium UI/UX."
+  }
+];
+
+
 
 export const skills = {
   frontend: [
@@ -81,5 +106,4 @@ export const socialLinks = {
   phone: "tel:+919798526058"
 };
 
-// Keeping services for compatibility if needed, but focusing on skills/projects as per prompt
 export const services = [];

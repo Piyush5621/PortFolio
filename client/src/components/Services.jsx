@@ -1,168 +1,92 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaCode, FaServer, FaDatabase, FaLayerGroup, FaMicrochip, FaTerminal } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FaCode, FaServer, FaDatabase, FaMobileAlt } from 'react-icons/fa';
+import { HiArrowRight } from 'react-icons/hi';
 
-// 1. Technical Service Data (Use your CV strengths)
 const serviceData = [
     {
         id: "01",
-        title: "Full-Stack Architecture",
-        description: "Designing end-to-end systems like Anarchy Bay. High-performance React frontends paired with robust Node/Express backends.",
-        tech: ["REACT", "NEXT.JS", "EXPRESS"],
-        icon: <FaLayerGroup />
+        title: "Frontend Development",
+        description: "I build responsive and fast user interfaces using React and modern web tools for a great user experience.",
+        tech: ["REACT", "NEXT.JS", "TAILWIND"],
+        icon: <FaCode />,
     },
     {
         id: "02",
-        title: "Backend Engineering",
-        description: "Scalable API development and system logic. Expertise in Java Spring Boot and PHP for secure, enterprise-grade data handling.",
-        tech: ["JAVA", "SPRING BOOT", "PHP"],
-        icon: <FaServer />
+        title: "Backend Development",
+        description: "Creating powerful server-side logic and secure APIs to handle your data and business requirements.",
+        tech: ["NODE.JS", "JAVA", "SPRING"],
+        icon: <FaServer />,
     },
     {
         id: "03",
-        title: "Database Management",
-        description: "Optimized schema design and real-time data sync using MySQL and Supabase. Handling complex 200+ record inventories.",
-        tech: ["MYSQL", "SUPABASE", "POSTGRES"],
-        icon: <FaDatabase />
+        title: "Database Design",
+        description: "Setting up and optimizing data storage so that your information is always safe, organized, and fast to access.",
+        tech: ["POSTGRES", "REDIS", "SQL"],
+        icon: <FaDatabase />,
     },
     {
         id: "04",
-        title: "System Programming",
-        description: "Operating system concepts and IPC simulation. Deep understanding of process synchronization and memory management.",
-        tech: ["C++", "OS CONCEPTS", "IPC"],
-        icon: <FaMicrochip />
+        title: "Mobile Optimization",
+        description: "Ensuring your web app looks and works perfectly on all devices, from desktop computers to mobile phones.",
+        tech: ["RESPONSIVE", "UI/UX", "MOBILE"],
+        icon: <FaMobileAlt />,
     }
 ];
 
 const Services = () => {
-    const [isInitializing, setIsInitializing] = useState(false);
-    const [hoveredIndex, setHoveredIndex] = useState(null);
-
-    const handleInitialization = () => {
-        setIsInitializing(true);
-        setTimeout(() => {
-            setIsInitializing(false);
-            window.location.href = 'mailto:piyushkk0206@gmail.com?subject=System_Collaboration_Request';
-        }, 2000);
-    };
-
     return (
-        <section id="services" className="py-32 bg-[#020203] relative overflow-hidden font-mono">
-            {/* Background Terminal Grid */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ backgroundImage: `linear-gradient(#0055FF 1px, transparent 1px), linear-gradient(90deg, #0055FF 1px, transparent 1px)`, backgroundSize: '50px 50px' }}
-            />
-
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
-                {/* Header: Terminal Style */}
+        <section id="services" className="py-24 bg-[#050608] relative">
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+                
                 <div className="mb-20">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="w-2 h-2 bg-[#0055FF] rounded-full animate-pulse" />
-                        <span className="text-[#0055FF] text-[10px] tracking-[0.5em] uppercase">Core_Modules.sys</span>
-                    </div>
-                    <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4">
-                        Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-white">Services_</span>
-                    </h2>
-                    <p className="text-gray-500 text-sm max-w-xl border-l border-[#0055FF]/30 pl-4 uppercase">
-                        Deploying scalable digital solutions through advanced logic and architecture.
+                    <span className="text-blue-500 font-bold text-xs uppercase tracking-widest mb-4 block">What I Do</span>
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Service Area</h2>
+                    <p className="text-slate-400 max-w-2xl font-medium">
+                        I offer common software development services to help you build your digital products 
+                        from the ground up with high quality results.
                     </p>
                 </div>
 
-                {/* Services Grid: High-Tech Cards */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {serviceData.map((service, index) => (
-                        <div 
+                        <motion.div
                             key={service.id}
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                            className="group relative p-8 border border-white/5 bg-[#0a0a0c] hover:bg-[#0055FF]/5 transition-all duration-300 cursor-crosshair overflow-hidden"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className="group p-10 bg-slate-900/40 border border-white/5 rounded-3xl hover:border-blue-500/30 transition-all duration-500 h-full flex flex-col"
                         >
-                            {/* Scanning Line Effect */}
-                            <div className="absolute top-0 left-0 w-full h-[2px] bg-[#0055FF]/20 translate-y-[-100%] group-hover:animate-scan" />
-                            
-                            <div className="flex justify-between items-start mb-12">
-                                <div className="text-2xl text-gray-600 group-hover:text-[#0055FF] transition-colors duration-500">
-                                    {service.icon}
-                                </div>
-                                <span className="text-[10px] text-[#0055FF] opacity-30 group-hover:opacity-100 font-bold">ID_{service.id}</span>
+                            <div className="w-14 h-14 flex items-center justify-center text-2xl text-slate-500 bg-slate-900 border border-white/5 rounded-2xl group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all duration-500 mb-8">
+                                {service.icon}
                             </div>
 
-                            <h3 className="text-lg font-bold text-white mb-4 tracking-tight uppercase group-hover:translate-x-2 transition-transform duration-300">
+                            <h3 className="text-lg font-bold text-white mb-4 group-hover:text-blue-500 transition-colors">
                                 {service.title}
                             </h3>
-                            
-                            <p className="text-gray-500 text-[11px] leading-relaxed mb-6 h-16">
+
+                            <p className="text-slate-400 text-sm font-medium leading-relaxed mb-10 flex-1">
                                 {service.description}
                             </p>
 
-                            {/* Tech Tags */}
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2 mt-auto">
                                 {service.tech.map(t => (
-                                    <span key={t} className="text-[8px] px-2 py-1 bg-white/5 text-gray-400 border border-white/10 group-hover:border-[#0055FF]/30 transition-colors">
+                                    <span key={t} className="text-[9px] font-bold px-3 py-1 bg-white/5 border border-white/5 text-slate-400 rounded-lg">
                                         {t}
                                     </span>
                                 ))}
                             </div>
-
-                            {/* Corner Accents */}
-                            <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/20 group-hover:border-[#0055FF]" />
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
-
-                {/* --- CALL TO ACTION: TERMINAL BUTTON --- */}
-                <div className="mt-20 flex flex-col items-center">
-                    <div className="w-full max-w-2xl bg-[#0a0a0c] border border-white/10 p-1 flex items-center gap-4">
-                        <div className="bg-[#0055FF] text-white px-4 py-2 text-[10px] font-bold uppercase">
-                            Status
-                        </div>
-                        <marquee className="text-[10px] text-gray-500 uppercase tracking-widest flex-1">
-                             System Ready... Initializing secure handshake... Waiting for project parameters... Connection: STABLE... Location: piyushkk0206@gmail.com
-                        </marquee>
-                    </div>
-
-                    <button
-                        onClick={handleInitialization}
-                        disabled={isInitializing}
-                        className={`mt-8 w-full max-w-2xl py-6 border transition-all duration-500 flex flex-col items-center justify-center gap-2
-                            ${isInitializing 
-                                ? "bg-[#0055FF]/20 border-[#0055FF] text-[#0055FF]" 
-                                : "bg-transparent border-white/20 text-white hover:border-[#0055FF] hover:bg-[#0055FF]/10"
-                            }`}
-                    >
-                        <span className="text-xs font-black tracking-[0.5em] uppercase">
-                            {isInitializing ? "Initializing_System..." : "Start_Collaboration"}
-                        </span>
-                        
-                        {isInitializing ? (
-                            <div className="w-48 h-1 bg-white/10 mt-2 overflow-hidden">
-                                <motion.div 
-                                    initial={{ x: "-100%" }}
-                                    animate={{ x: "100%" }}
-                                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                                    className="w-full h-full bg-[#0055FF]"
-                                />
-                            </div>
-                        ) : (
-                            <span className="text-[8px] text-gray-500 uppercase tracking-widest opacity-50 group-hover:opacity-100">
-                                Click to execute protocol
-                            </span>
-                        )}
-                    </button>
-                </div>
+{/* 
+                <div className="mt-20 text-center">
+                    <a href="#contact" className="px-10 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 inline-flex items-center gap-3">
+                        Contact Me
+                        <HiArrowRight />
+                    </a>
+                </div> */}
             </div>
-
-            {/* Global Scanning Animation CSS */}
-            <style>{`
-                @keyframes scan {
-                    0% { transform: translateY(0); opacity: 0; }
-                    50% { opacity: 1; }
-                    100% { transform: translateY(400px); opacity: 0; }
-                }
-                .animate-scan {
-                    animation: scan 2s linear infinite;
-                }
-            `}</style>
         </section>
     );
 };
