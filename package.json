@@ -1,7 +1,7 @@
 {
     "name": "portfolio-root",
     "version": "1.0.0",
-    "description": "Root package to manage client and server",
+    "description": "Root package for PortFolio - Force Sync",
     "scripts": {
         "install-all": "npm install && cd client && npm install && cd ../server && npm install",
         "build": "cd client && npm install && npm run build",
