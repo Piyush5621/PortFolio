@@ -110,7 +110,7 @@ const ProfileCards = ({ data }) => {
             delay: 0.2,
             stats: [
                 { label: "Solved", value: safeData.leetcode?.totalSolved || 104 },
-                { label: "Rating", value: safeData.contests?.currentRating?.toFixed(0) || '1480' },
+                { label: "Easy", value: safeData.leetcode?.easySolved || 58 },
                 { label: "Global Rank", value: safeData.leetcode?.ranking || 'N/A' },
                 { label: "Med/Hard", value: (safeData.leetcode?.mediumSolved || 0) + (safeData.leetcode?.hardSolved || 0) || 46 }
             ]
