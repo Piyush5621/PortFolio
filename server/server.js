@@ -370,8 +370,8 @@ app.post('/api/leetcode-contests', async (req, res) => {
     }
 });
 
-// SPA Catch-all
-app.get('*', (req, res) => {
+// SPA Catch-all (Express 5 compatible)
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
