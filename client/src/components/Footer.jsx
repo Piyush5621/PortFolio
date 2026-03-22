@@ -1,5 +1,6 @@
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import PranaSpark from './PranaSpark';
 
 /* The exact same Unified Logo from Navbar */
 const UnifiedLogo = () => (
@@ -66,6 +67,10 @@ const Footer = () => {
                                 <Icon size={16} />
                             </a>
                         ))}
+                    </div>
+                    <div className="flex flex-col items-center gap-3">
+                        <PranaSpark />
+                        <span className="text-[8px] font-mono text-slate-500 uppercase tracking-widest">Leave Prana</span>
                     </div>
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-white/5 bg-white/[0.01] rounded-sm backdrop-blur-md">
                         <span className="w-1.5 h-1.5 bg-[#E6A700] shadow-[0_0_8px_#E6A700] rounded-sm animate-pulse" />

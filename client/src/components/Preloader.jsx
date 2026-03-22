@@ -5,10 +5,10 @@ const Preloader = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Give the site exactly 2.2 seconds to "load" the aesthetic before revealing
+        // Animations finish around 1.8s. We wait 2 seconds after that before removing.
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2200);
+        }, 4000);
         return () => clearTimeout(timer);
     }, []);
 
@@ -28,7 +28,7 @@ const Preloader = () => {
                     <motion.div className="flex flex-col items-center justify-center relative z-10 w-full max-w-sm">
                         
                         {/* THE ARROW CREATION */}
-                        <div className="w-32 h-32 relative flex items-center justify-center overflow-visible">
+                        <div className="w-48 h-48 md:w-56 md:h-56 relative flex items-center justify-center overflow-visible">
                             
                             {/* The sweeping arc (Bow pointing Right) */}
                             <motion.svg 
@@ -101,11 +101,14 @@ const Preloader = () => {
                                 राधे राधे
                             </motion.span>
                             
-                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em] font-bold">
-                                Initializing Sequence
+                            <span className="text-[12px] md:text-sm font-light text-[#E6A700] tracking-widest font-serif text-center px-4 leading-relaxed">
+                                कर्मण्येवाधिकारस्ते मा फलेषु कदाचन
                             </span>
-                            <span className="text-[#E6A700] text-sm font-black tracking-widest uppercase">
-                                PIYUSH KUMAR
+                            <span className="text-[8px] md:text-[9px] font-mono text-slate-500 uppercase tracking-[0.3em] font-bold mt-1 text-center max-w-[250px]">
+                                Your right is to work only, but never to its fruits.
+                            </span>
+                            <span className="text-[#E6A700] text-sm md:text-base font-black tracking-[0.2em] font-serif mt-4">
+                                पीयूष कुमार
                             </span>
                             <motion.div 
                                 className="w-[100px] h-[1px] bg-gradient-to-r from-transparent via-[#E6A700] to-transparent mt-4"

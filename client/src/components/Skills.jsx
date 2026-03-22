@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { skills } from '../constants';
 import {
     FaReact, FaNode, FaJava, FaDatabase, FaCode, FaServer, FaTerminal, FaHtml5, FaCss3Alt, FaJs, FaPhp, FaWrench, FaGitAlt, FaGithub
@@ -7,6 +8,7 @@ import {
     SiTailwindcss, SiMysql, SiNextdotjs, SiCplusplus, SiExpress, SiMongodb, SiPostman, SiDocker, SiVercel
 } from 'react-icons/si';
 import { VscVscode } from 'react-icons/vsc';
+import DivineArmoryBackground from './DivineArmoryBackground';
 
 const getIcon = (iconName) => {
     switch (iconName) {
@@ -100,19 +102,18 @@ const skillVariants = {
 };
 
 const Skills = () => {
-    return (
-        <section id="skills" className="py-24 relative overflow-hidden bg-[var(--bg-cosmic)] border-t border-white/5">
+    const [selectedAstra, setSelectedAstra] = useState(null);
 
-            {/* Matrix Background */}
-            <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.02]"
-                style={{ backgroundImage: 'linear-gradient(rgba(230,167,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(230,167,0,0.5) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-            <div className="absolute top-[10%] left-[20%] w-[600px] h-[600px] bg-[rgba(230,167,0,0.02)] rounded-full blur-[160px] pointer-events-none" />
+    return (
+        <section id="skills" className="py-24 relative overflow-hidden bg-[#0A0A0E] border-t border-white/5">
+
+            <DivineArmoryBackground />
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 lg:p-4">
 
                 {/* Intro Block */}
                 <div className="mb-24 grid lg:grid-cols-2 gap-12 items-end">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -122,27 +123,27 @@ const Skills = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E6A700] opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E6A700]"></span>
                             </span>
-                            <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Core Tech Stack</span>
+                            <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">The Armory</span>
                         </div>
                         <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
-                            Technical <br />
-                            <span className="text-gold-gradient bg-clip-text text-transparent pb-2 block">Foundations.</span>
+                            Divine <br />
+                            <span className="text-gold-gradient bg-clip-text text-transparent pb-2 block">Astras.</span>
                         </h2>
                     </motion.div>
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="pb-4"
                     >
                         <p className="text-sm font-medium text-slate-400 leading-relaxed border-l-2 border-[#E6A700]/50 pl-5 max-w-lg">
-                            An advanced inventory of engineering tooling. I focus on building scalable systems through a rigorous selection of modern frameworks, high-performance languages, and automated DevOps protocols.
+                            An advanced inventory of engineering tooling treated as "Astras" (divine weapons). I focus on building scalable systems through a rigorous selection of modern frameworks, high-performance languages, and automated DevOps protocols.
                         </p>
                     </motion.div>
                 </div>
 
                 {/* Sequentially Animated Tech Grid */}
-                <motion.div 
+                <motion.div
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -165,7 +166,7 @@ const Skills = () => {
                             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10 relative overflow-hidden">
                                 {/* Glowing accent line */}
                                 <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-[#E6A700] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
-                                
+
                                 <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-white/[0.03] border border-white/5 text-[#E6A700] text-xl group-hover:bg-[#E6A700]/10 group-hover:border-[#E6A700]/30 transition-all duration-500">
                                     {category.icon}
                                 </div>
@@ -179,7 +180,8 @@ const Skills = () => {
                                         key={sIdx}
                                         variants={skillVariants}
                                         transition={{ delay: 0.1 * sIdx }}
-                                        className="group/skill flex items-center justify-between py-3.5 border-b border-white/[0.03] hover:bg-white/[0.02] px-2 -mx-2 rounded-sm transition-all cursor-crosshair"
+                                        onClick={() => setSelectedAstra({ ...skill, category: category.title })}
+                                        className="group/skill flex items-center justify-between py-3.5 border-b border-white/[0.03] hover:bg-white/[0.02] px-2 -mx-2 rounded-sm transition-all cursor-pointer"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="text-slate-500 group-hover/skill:text-[#E6A700] group-hover/skill:scale-110 transition-all text-lg duration-300">
@@ -200,7 +202,7 @@ const Skills = () => {
                 </motion.div>
 
                 {/* Advanced Metrics Footer */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ delay: 1 }}
@@ -227,6 +229,61 @@ const Skills = () => {
                 </motion.div>
 
             </div>
+
+            {/* Astra Description Panel */}
+            <AnimatePresence>
+                {selectedAstra && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100000] flex items-center justify-center px-4 py-8"
+                    >
+                        <div className="absolute inset-0 bg-[#050608]/90 backdrop-blur-md" onClick={() => setSelectedAstra(null)} />
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-lg bg-[#0A0A0E] border border-white/10 rounded-sm shadow-[0_0_50px_rgba(230,167,0,0.1)] flex flex-col overflow-hidden"
+                        >
+                            {/* Decorative Top Glow */}
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#E6A700] to-transparent opacity-50" />
+
+                            <div className="flex justify-between items-center p-6 border-b border-white/10 relative">
+                                <div className="absolute top-1/2 right-[10%] w-[150px] h-[150px] bg-[#E6A700]/10 rounded-full blur-[80px] pointer-events-none" />
+                                <div className="flex items-center gap-4 z-10">
+                                    <div className="w-12 h-12 flex items-center justify-center text-3xl text-[#E6A700] bg-white/[0.02] border border-white/5 rounded-lg shadow-[0_0_15px_rgba(230,167,0,0.2)]">
+                                        {getIcon(selectedAstra.icon)}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black text-white uppercase tracking-wider">{selectedAstra.name}</h3>
+                                        <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{selectedAstra.category} Astra</span>
+                                    </div>
+                                </div>
+                                <button className="text-slate-500 hover:text-white transition-colors z-10" onClick={() => setSelectedAstra(null)}>X</button>
+                            </div>
+
+                            <div className="p-8 relative">
+                                <p className="text-slate-300 text-sm leading-relaxed font-sans mb-6">
+                                    The <strong className="text-white font-mono">{selectedAstra.name}</strong> astra forms a critical part of my {selectedAstra.category.toLowerCase()} architecture.
+                                    {selectedAstra.name === 'React' || selectedAstra.name === 'Next.js' ? " I invoke this to construct highly interactive, state-driven interfaces that feel seamless and fluid." :
+                                        selectedAstra.name === 'Tailwind CSS' ? " I use this utility-first weapon to forge pixel-perfect, brutalist, and cosmic aesthetics efficiently." :
+                                            selectedAstra.category.includes('Backend') ? " It empowers the server core to manage heavy loads, secure endpoints, and stream data asynchronously." :
+                                                selectedAstra.category.includes('System') ? " Used for writing low-level optimizations, algorithmic problem solving, and rigorous data manipulation." :
+                                                    " Utilized to ensure zero-downtime deployments, maintain strict version control, and orchestrate containerized environments."}
+                                    <br /><br />
+                                    Through rigorous training and real-world combat (projects), its invocation has become instinctual, allowing me to build faster and more resilient systems.
+                                </p>
+
+                                <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-[#E6A700] animate-pulse" />
+                                        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Mastery Achieved</span>
+                                    </div>
+                                    <span className="text-[9px] font-mono font-bold text-[#E6A700] uppercase tracking-[0.2em] bg-[#E6A700]/10 px-2 py-1">DEPLOYABLE</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 };
