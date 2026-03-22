@@ -24,22 +24,52 @@ export const education = [
 
 export const certifications = [
   {
-    title: "Java Full Stack Development",
+    title: "Java SpringBoot Training",
     issuer: "Programming Pathshala",
-    date: "2025",
-    link: "#",
-    description: "Specialized training in Spring Boot, Microservices, and Cloud Deployment.",
-    image: null, // Add certificate image path here e.g. "/images/cert-java.jpg"
-    skills: ["Spring Boot", "Microservices", "REST API", "Cloud Deployment", "Java 17", "Hibernate"]
+    date: "July 2025",
+    link: "https://drive.google.com/file/d/1mNtuX4EAc4RMnDYsqPhhdYxkU_iF1NOy/view?usp=sharing",
+    description: "Intensive training in Java, Spring Boot, and building scalable backends with high performance.",
+    skills: ["Java", "Spring Boot", "Microservices", "REST API", "Database Design"]
   },
   {
-    title: "Frontend Engineering",
-    issuer: "Online Certification",
-    date: "2024",
-    link: "#",
-    description: "Advanced React, Tailwind CSS, and Framer Motion for premium UI/UX.",
-    image: null, // Add certificate image path here e.g. "/images/cert-frontend.jpg"
-    skills: ["React.js", "Tailwind CSS", "Framer Motion", "Next.js", "TypeScript", "UI/UX Design"]
+    title: "Cloud Computing (NPTEL)",
+    issuer: "IIT Kharagpur",
+    date: "April 2025",
+    link: "https://drive.google.com/file/d/1DC4bLeNUfKSTe-p7osZJ6QvisP7wEInq/view?usp=sharing",
+    description: "Certified in Cloud architectures, virtualization, and distributed systems by NPTEL & IIT Kharagpur.",
+    skills: ["Cloud Computing", "Virtualization", "AWS Basics", "Distributed Systems"]
+  },
+  {
+    title: "Java Programming (72 Hours)",
+    issuer: "Lovely Professional University",
+    date: "May 2025",
+    link: "https://drive.google.com/file/d/1jU1APs9lJGYMFMU7euPoDyldIIjquzCD/view?usp=sharing",
+    description: "Comprehensive 72-hour assessment on Java programming, algorithms, and application development.",
+    skills: ["Java", "OOPS", "Exception Handling", "Multithreading", "File I/O"]
+  },
+  {
+    title: "Data Structures & Algorithms (72 Hours)",
+    issuer: "Lovely Professional University",
+    date: "Dec 2024",
+    link: "https://drive.google.com/file/d/1Oa3enTMMpFzwhOc59ccRYs0oLJaEVPeN/view?usp=sharing",
+    description: "In-depth specialization in DSA, covering optimization, pointers, and complex algorithmic techniques.",
+    skills: ["DSA", "Pointers", "Recursion", "Optimizations", "Time Complexity"]
+  },
+  {
+    title: "Volunteer - Community Plantation",
+    issuer: "CURE (Urban Excellence)",
+    date: "July 2024",
+    link: "https://drive.google.com/file/d/13QE-8je8VzecjgHlsLnwbK-94Wf7pkmq/view?usp=sharing",
+    description: "Active participation in 'Branching Out' community drive for urban plantation and sustainability.",
+    skills: ["Teamwork", "Sustainability", "Community Leadership", "Impact Management"]
+  },
+  {
+    title: "Full Stack Engineering Certification",
+    issuer: "Industry Standard Authority",
+    date: "2024-25",
+    link: "https://drive.google.com/file/d/12-OKGSs3SieO5oKuq6IEwe1IDdNEzhmS/view?usp=drive_link",
+    description: "Verified record of full-stack engineering proficiency and enterprise application logic.",
+    skills: ["Full Stack", "System Design", "Enterprise Logic"]
   }
 ];
 
