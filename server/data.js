@@ -39,10 +39,10 @@ export const resumeData = {
         backend: ["Node.js", "Express.js", "PHP", "Java Spring Boot"],
         databases: ["MySQL", "Supabase", "MongoDB"],
         coreConcepts: [
-            "Data Structures & Algorithms", 
+            "Data Structures & Algorithms",
             "Dynamic Programming (Memoization & Tabulation)",
-            "Operating Systems", 
-            "Inter-Process Communication (IPC)", 
+            "Operating Systems",
+            "Inter-Process Communication (IPC)",
             "Automata Theory",
             "Object-Oriented Programming (OOP)"
         ],

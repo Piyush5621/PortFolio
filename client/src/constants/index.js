@@ -122,8 +122,8 @@ export const projects = [
       "Integrated Supabase for real-time database sync and file storage"
     ],
     tech: ["React", "Express.js", "Supabase", "Tailwind CSS"],
-    github_link: "https://github.com/Piyush5621",
-    project_link: "#",
+    github_link: "https://github.com/Piyush5621/AnarchyBay",
+    project_link: "https://anarchy-bay.vercel.app/",
     image_url: "/images/Anarchy-Bay.png"
   },
   {
@@ -139,8 +139,8 @@ export const projects = [
       "Responsive UI with mobile-first design using Tailwind CSS"
     ],
     tech: ["PHP", "MySQL", "JavaScript", "Tailwind CSS"],
-    github_link: "https://github.com/Piyush5621",
-    project_link: "#",
+    github_link: "https://github.com/Piyush5621/NexaMart.com/Piyush5621",
+    project_link: "https://nexamartstore.wuaze.com/",
     image_url: "/images/NexaMart.png"
   },
   {
@@ -156,8 +156,8 @@ export const projects = [
       "Built purely with vanilla JS, HTML, and CSS — no framework dependencies"
     ],
     tech: ["JavaScript", "HTML", "CSS", "OS Concepts"],
-    github_link: "https://github.com/Piyush5621",
-    project_link: "#",
+    github_link: "https://github.com/Piyush5621/IPC-DEBUGGERR",
+    project_link: "https://piyush5621.github.io/IPC-DEBUGGERR/",
     image_url: "/images/IPC.png"
   }
 ];
