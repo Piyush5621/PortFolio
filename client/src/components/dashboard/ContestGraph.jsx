@@ -30,7 +30,7 @@ const ContestGraph = ({ contestData }) => {
             </div>
             <div className="h-48 w-full min-h-[192px]">
                 {data && data.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                         <LineChart data={data}>
                             <XAxis dataKey="name" stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
                             <YAxis stroke="#666" fontSize={10} tickLine={false} axisLine={false} width={40} />

@@ -1,10 +1,20 @@
 import axios from "axios";
 
+// Absolute backend URL for cross-domain support (Render backend)
+const BACKEND_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000' 
+    : 'https://portfolio-ewq8.onrender.com';
+
+// Configure axial base
+const api = axios.create({
+    baseURL: BACKEND_URL
+});
+
 // LeetCode basic stats API
 export const getLeetCode = async (username) => {
     try {
         // Try the GraphQL API first via our server proxy
-        const response = await axios.post('/api/leetcode', { username });
+        const response = await api.post('/api/leetcode', { username });
 
         const user = response.data.data.matchedUser;
         if (!user) throw new Error('User not found');
@@ -31,7 +41,7 @@ export const getLeetCode = async (username) => {
         console.warn('LeetCode GraphQL failed, trying alternative API:', err.message);
         // Fallback to the heroku API via proxy
         try {
-            const res = await axios.get(`/api/leetcode-stats/${username}`);
+            const res = await api.get(`/api/leetcode-stats/${username}`);
             return { data: res.data };
         } catch (fallbackErr) {
             console.error('LeetCode fallback API also failed:', fallbackErr.message);
@@ -43,7 +53,7 @@ export const getLeetCode = async (username) => {
 // LeetCode Activity - Get real active days from submissions
 export const getLeetCodeActivity = async (username) => {
     try {
-        const response = await axios.post('/api/leetcode-activity', { username });
+        const response = await api.post('/api/leetcode-activity', { username });
         return { data: response.data };
     } catch (err) {
         console.error('LeetCode Activity API error:', err.message);
@@ -54,7 +64,7 @@ export const getLeetCodeActivity = async (username) => {
 // LeetCode Contest History API
 export const getLeetCodeContests = async (username) => {
     try {
-        const response = await axios.post('/api/leetcode-contests', { username });
+        const response = await api.post('/api/leetcode-contests', { username });
 
         if (response.status !== 200) {
             throw new Error(`LeetCode API returned status ${response.status}`);
@@ -93,7 +103,7 @@ export const getLeetCodeContests = async (username) => {
 // GitHub API - Enhanced with contribution data
 export const getGithub = async (username) => {
     try {
-        const response = await axios.get(`/api/github/${username}`);
+        const response = await api.get(`/api/github/${username}`);
         return { data: response.data };
     } catch (err) {
         console.error('GitHub API error:', err.message);
@@ -105,7 +115,7 @@ export const getGithub = async (username) => {
 export const getCodeChef = async (username) => {
     try {
         // Try the Vercel API first via proxy
-        const response = await axios.get(`/api/codechef/${username}`);
+        const response = await api.get(`/api/codechef/${username}`);
         return { data: response.data };
     } catch (err) {
         console.warn('CodeChef Vercel API failed:', err.message);
@@ -116,7 +126,7 @@ export const getCodeChef = async (username) => {
 // GeeksForGeeks API
 export const getGFG = async (username) => {
     try {
-        const response = await axios.get(`/api/gfg/${username}`);
+        const response = await api.get(`/api/gfg/${username}`);
         return { data: response.data };
     } catch (err) {
         console.error('GFG API error:', err.message);
@@ -129,7 +139,7 @@ export const getGFG = async (username) => {
 // HackerRank API
 export const getHackerRank = async (username) => {
     try {
-        const response = await axios.get(`/api/hackerrank/${username}`);
+        const response = await api.get(`/api/hackerrank/${username}`);
         return { data: response.data };
     } catch (err) {
         console.error('HackerRank API error:', err.message);
