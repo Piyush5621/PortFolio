@@ -13,7 +13,7 @@ import ContestGraph from "./ContestGraph";
    Krishna's Sudarshana Chakra — Infinite Logic & Flawless Loops
 ───────────────────────────────────────────────────────── */
 const CyberChakraWatermark = () => (
-  <svg className="absolute left-[50%] top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[1200px] opacity-[0.05] mix-blend-screen animate-spin-slow" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+  <svg className="absolute left-[50%] top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[1200px] opacity-[0.25] mix-blend-screen animate-spin-slow" viewBox="0 0 800 800" fill="none" aria-hidden="true">
     <circle cx="400" cy="400" r="390" stroke="#E6A700" strokeWidth="1" strokeDasharray="4 12" />
     <circle cx="400" cy="400" r="300" stroke="#E6A700" strokeWidth="2" strokeDasharray="20 40" className="animate-spin-reverse" style={{ transformOrigin: 'center' }} />
     <circle cx="400" cy="400" r="200" stroke="#E6A700" strokeWidth="0.5" />

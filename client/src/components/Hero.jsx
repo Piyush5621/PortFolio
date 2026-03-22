@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin, FaEnvelope, FaChevronRight } from 'react-icons/fa';
+import OriginBackground from './OriginBackground';
 
 /* ─────────────────────────────────────────────────────────
    THE DHANUSH (BOW) & ARROWHEAD WATERMARK
@@ -16,7 +17,7 @@ const BackgroundWatermark = () => (
         <stop offset="100%" stopColor="#E6A700" stopOpacity="0" />
       </linearGradient>
     </defs>
-    
+
     {/* Grid System */}
     <g stroke="#ffffff" strokeWidth="0.5" strokeDasharray="3 20" opacity="0.3">
       {Array.from({ length: 10 }).map((_, i) => (
@@ -30,11 +31,11 @@ const BackgroundWatermark = () => (
     {/* The Tense Bow (Sweeping Arc) */}
     <path d="M 600 -200 C 1400 300 1400 700 600 1200" stroke="url(#bow-edge)" strokeWidth="1" opacity="0.8" />
     <path d="M 620 -200 C 1410 300 1410 700 620 1200" stroke="#ffffff" strokeWidth="0.5" strokeDasharray="10 5" opacity="0.5" />
-    
+
     {/* The Arrow / Line of Trajectory */}
     <line x1="-200" y1="500" x2="1150" y2="500" stroke="url(#bow-edge)" strokeWidth="2" />
     <polygon points="1170,500 1130,490 1135,500 1130,510" fill="#E6A700" opacity="0.8" />
-    
+
     {/* Focal point pulse */}
     <circle cx="1150" cy="500" r="40" stroke="#E6A700" strokeWidth="0.5" opacity="0.4" />
     <circle cx="1150" cy="500" r="80" stroke="#E6A700" strokeWidth="0.5" strokeDasharray="4 8" opacity="0.2" />
@@ -44,15 +45,15 @@ const BackgroundWatermark = () => (
 const Hero = () => {
   return (
     <section id="home" className="relative w-full pt-28 md:pt-32 pb-16 overflow-hidden bg-[var(--bg-cosmic)] border-b border-white/5">
-      
+
       {/* ── Background Glows ── */}
       <div className="absolute top-[10%] right-[10%] w-[600px] h-[600px] bg-[rgba(230,167,0,0.03)] rounded-full blur-[160px] pointer-events-none z-0" />
       <div className="absolute bottom-[0%] left-[-10%] w-[800px] h-[800px] bg-[rgba(0,62,126,0.04)] rounded-full blur-[180px] pointer-events-none z-0" />
-      
+
       {/* Texture mask */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.012] z-0" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, #E6A700 10px, #E6A700 11px)' }} />
 
-      <BackgroundWatermark />
+      <OriginBackground />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
         {/* Modern, Vercel/Linear style asymmetrical grid */}
@@ -60,7 +61,7 @@ const Hero = () => {
 
           {/* ─── LEFT COLUMN: Massive Typography & Actions ─── */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="lg:col-span-7 flex flex-col items-start">
-            
+
             {/* Minimalist Status Badge */}
             <div className="inline-flex items-center gap-3 px-4 py-2 border border-white/10 rounded-full bg-white/[0.01] backdrop-blur-md mb-8 hover:border-[#E6A700]/30 transition-colors cursor-default">
               <span className="relative flex h-2 w-2">
@@ -84,8 +85,8 @@ const Hero = () => {
 
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
               {/* Primary Action */}
-              <button 
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} 
+              <button
+                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
                 className="w-full sm:w-auto overflow-hidden relative group bg-white text-black px-8 py-4 rounded-sm flex items-center justify-center gap-3 transition-transform hover:scale-[1.02]"
               >
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-slate-300/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
@@ -95,16 +96,16 @@ const Hero = () => {
 
               {/* Secondary Actions / Socials */}
               <div className="flex items-center gap-3 w-full sm:w-auto h-full">
-                {[ 
-                  { href: 'https://github.com/piyush5621', Icon: FaGithub }, 
-                  { href: 'https://www.linkedin.com/in/piyushkumar5621/', Icon: FaLinkedin }, 
-                  { href: 'mailto:piyushkk0206@gmail.com', Icon: FaEnvelope } 
+                {[
+                  { href: 'https://github.com/piyush5621', Icon: FaGithub },
+                  { href: 'https://www.linkedin.com/in/piyushkumar5621/', Icon: FaLinkedin },
+                  { href: 'mailto:piyushkk0206@gmail.com', Icon: FaEnvelope }
                 ].map(({ href, Icon }, idx) => (
-                  <a 
-                    key={idx} 
-                    href={href} 
-                    target="_blank" 
-                    rel="noreferrer" 
+                  <a
+                    key={idx}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
                     className="flex-1 sm:flex-none h-14 w-14 sm:h-[50px] sm:w-[50px] flex items-center justify-center rounded-sm border border-white/10 bg-white/[0.02] text-slate-400 hover:text-[#E6A700] hover:border-[#E6A700]/40 transition-all duration-300 hover:shadow-[0_0_15px_rgba(230,167,0,0.1)]"
                   >
                     <Icon size={18} />
@@ -120,32 +121,32 @@ const Hero = () => {
                 <div className="w-8 h-8 rounded-full border-2 border-[#0A0A0E] bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white">Ts</div>
               </div>
               <p className="text-[10px] font-mono tracking-[0.1em] text-slate-500 uppercase">
-                Specialized in the modern <br/>React ecosystem.
+                Specialized in the modern <br />React ecosystem.
               </p>
             </div>
           </motion.div>
 
           {/* ─── RIGHT COLUMN: Sleek Architectural Integration ─── */}
           <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: 0.2 }} className="lg:col-span-5 relative hidden lg:block h-[700px]">
-            
+
             {/* The Monolith Container */}
             <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[400px] h-[600px] cyber-panel border border-white/5 rounded-sm p-[1px] overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-b from-[#E6A700]/5 to-transparent pointer-events-none z-10" />
-              
+
               <div className="w-full h-full relative bg-[#0A0A0E] rounded-sm overflow-hidden">
-                
+
                 {/* Embedded Image fading to black */}
                 <div className="absolute inset-0 h-[70%]">
-                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0E]/50 to-[#0A0A0E] z-10" />
-                   <img src="/images/ppp.JPG" alt="Piyush Kumar" className="w-full h-full object-cover filter grayscale-[20%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0E]/50 to-[#0A0A0E] z-10" />
+                  <img src="/images/ppp.JPG" alt="Piyush Kumar" className="w-full h-full object-cover filter grayscale-[20%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
                 </div>
 
                 {/* Abstract Data Overlay inside monolithic block */}
                 <div className="absolute bottom-0 left-0 right-0 p-8 z-20 flex flex-col gap-6">
                   <div className="w-full bg-white/[0.02] border border-white/5 p-4 rounded-sm">
                     <div className="flex justify-between items-center mb-2">
-                       <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Architectural Node</span>
-                       <span className="w-2 h-2 bg-[#E6A700] rounded-full animate-pulse shadow-[0_0_8px_#E6A700]" />
+                      <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Architectural Node</span>
+                      <span className="w-2 h-2 bg-[#E6A700] rounded-full animate-pulse shadow-[0_0_8px_#E6A700]" />
                     </div>
                     <div className="text-white font-mono font-bold tracking-tight text-sm">Piyush Kumar</div>
                     <div className="text-slate-400 font-mono text-[10px] uppercase tracking-widest mt-1">Full-Stack Engineer</div>

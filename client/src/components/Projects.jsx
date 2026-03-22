@@ -3,26 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes, FaGlobe, FaCodeBranch } from 'react-icons/fa';
 import { projects } from '../constants';
 import { Link } from 'react-router-dom';
+import ProjectArchitectureBackground from './ProjectArchitectureBackground';
 
-/* Trishul watermark logic */
-const MiniTrishulBackdrop = () => (
-    <svg className="absolute inset-0 w-[200%] h-[200%] opacity-[0.03] mix-blend-screen pointer-events-none -translate-x-1/4 -translate-y-1/4" viewBox="0 0 1000 1000" fill="none">
-        <line x1="500" y1="200" x2="500" y2="850" stroke="#E6A700" strokeWidth="4" />
-        <path d="M 500 450 C 350 450 320 250 320 180" stroke="#E6A700" strokeWidth="3" fill="none" />
-        <path d="M 500 450 C 650 450 680 250 680 180" stroke="#E6A700" strokeWidth="3" fill="none" />
-        <polygon points="500,100 480,220 520,220" fill="#E6A700" opacity="0.8" />
-    </svg>
-);
+
 
 const Projects = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const displayedProjects = projects.slice(0, 3); // Restrict to top 3
 
     return (
-        <section id="projects" className="py-24 bg-[var(--bg-cosmic)] relative overflow-hidden border-t border-white/5">
-            <MiniTrishulBackdrop />
-            
-            <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-[rgba(230,167,0,0.03)] rounded-full blur-[160px] pointer-events-none" />
+        <section id="projects" className="py-24 bg-[#0A0A0E] relative overflow-hidden border-t border-white/5">
+            <ProjectArchitectureBackground />
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
                 <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">

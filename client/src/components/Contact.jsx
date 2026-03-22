@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt, FaCheck, FaArrowRight, FaCopy, FaUserShield } from 'react-icons/fa';
 import confetti from 'canvas-confetti';
+import InboundContactBackground from './InboundContactBackground';
 
 const ContactInput = ({ label, type, name, value, onChange, placeholder, required = true }) => (
     <div className="relative mb-6 group">
@@ -64,13 +65,11 @@ const Contact = () => {
 
     return (
         <section id="contact" className="py-32 bg-[#050608] relative overflow-hidden border-t border-white/5 selection:bg-[#E6A700] selection:text-black min-h-screen">
-            
-            {/* Ambient Background Structure */}
-            <div className="absolute top-[10%] left-[10%] w-[500px] h-[500px] bg-[rgba(230,167,0,0.03)] rounded-full blur-[150px] pointer-events-none" />
-            <div className="absolute bottom-[0%] right-[5%] w-[600px] h-[600px] bg-[rgba(255,255,255,0.01)] rounded-full blur-[120px] pointer-events-none" />
-            
+
+            <InboundContactBackground />
+
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
-                
+
                 {/* ── HEADER ── */}
                 <div className="mb-20">
                     <div className="inline-flex items-center gap-3 px-4 py-2 bg-[rgba(10,10,14,0.6)] backdrop-blur border border-white/10 rounded-full mb-6">
@@ -81,27 +80,27 @@ const Contact = () => {
                         <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Establish Connection</span>
                     </div>
                     <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
-                        Initiate <br/>
+                        Initiate <br />
                         <span className="text-gold-gradient">Transmission.</span>
                     </h2>
                 </div>
 
                 <div className="grid lg:grid-cols-12 gap-12 items-start">
-                    
+
                     {/* ── LEFT: PROFESSIONAL IDENTITY ── */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                         className="lg:col-span-5 bg-[rgba(10,10,14,0.6)] backdrop-blur-md border border-white/10 p-10 rounded-sm relative overflow-hidden shadow-2xl group"
                     >
                         {/* Decorative scanline */}
                         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#E6A700]/30 to-transparent" />
-                        
+
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
                             <div className="w-32 h-32 rounded-sm border border-white/10 mb-8 p-1 relative overflow-hidden bg-white/5 scale-100 group-hover:scale-[1.02] transition-transform duration-700">
-                                <img src="/images/ppp.JPG" alt="Piyush Kumar" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                                <img src="/images/ppp.JPG" alt="Piyush Kumar" className="w-full h-full object-cover transition-all duration-700" />
                                 <div className="absolute inset-0 border border-[#E6A700]/20 pointer-events-none" />
                             </div>
-                            
+
                             <div className="mb-10 w-full">
                                 <h3 className="text-3xl font-black text-white tracking-tight leading-none mb-3">Piyush Kumar</h3>
                                 <p className="text-[10px] font-mono text-[#E6A700] uppercase tracking-[0.3em] font-bold border-b border-white/5 pb-6">Full Stack Architecture // SE</p>
@@ -112,7 +111,7 @@ const Contact = () => {
                                     <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest pl-1">Direct Protocol</span>
                                     <div className="flex items-center justify-between bg-black/40 border border-white/5 p-4 rounded-sm">
                                         <span className="text-xs font-bold text-white pr-2">piyushkk0206@gmail.com</span>
-                                        <button onClick={copyEmail} className="text-slate-500 hover:text-[#E6A700] transition-colors">{copied ? <FaCheck size={12}/> : <FaCopy size={12}/>}</button>
+                                        <button onClick={copyEmail} className="text-slate-500 hover:text-[#E6A700] transition-colors">{copied ? <FaCheck size={12} /> : <FaCopy size={12} />}</button>
                                     </div>
                                 </div>
 
@@ -122,8 +121,8 @@ const Contact = () => {
                                 </div>
 
                                 <div className="pt-6 flex gap-4">
-                                    <a href="https://linkedin.com/in/piyushkumar5621/" target="_blank" rel="noreferrer" className="w-12 h-12 flex items-center justify-center rounded-sm bg-white/5 border border-white/5 hover:border-[#E6A700] hover:text-[#E6A700] transition-all"><FaLinkedin size={18}/></a>
-                                    <a href="https://github.com/piyush5621" target="_blank" rel="noreferrer" className="w-12 h-12 flex items-center justify-center rounded-sm bg-white/5 border border-white/5 hover:border-[#E6A700] hover:text-[#E6A700] transition-all"><FaGithub size={18}/></a>
+                                    <a href="https://linkedin.com/in/piyushkumar5621/" target="_blank" rel="noreferrer" className="w-12 h-12 flex items-center justify-center rounded-sm bg-white/5 border border-white/5 hover:border-[#E6A700] hover:text-[#E6A700] transition-all"><FaLinkedin size={18} /></a>
+                                    <a href="https://github.com/piyush5621" target="_blank" rel="noreferrer" className="w-12 h-12 flex items-center justify-center rounded-sm bg-white/5 border border-white/5 hover:border-[#E6A700] hover:text-[#E6A700] transition-all"><FaGithub size={18} /></a>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +130,7 @@ const Contact = () => {
 
                     {/* ── RIGHT: TRANSMISSION FORM ── */}
                     <div className="lg:col-span-7">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                             className="bg-[rgba(10,10,14,0.6)] backdrop-blur-md border border-white/10 p-8 md:p-12 rounded-sm relative shadow-2xl"
                         >
