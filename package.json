@@ -4,7 +4,7 @@
     "description": "Root package to manage client and server",
     "scripts": {
         "install-all": "npm install && cd client && npm install && cd ../server && npm install",
-        "build": "npm run build --prefix client",
+        "build": "cd client && npm install && npm run build",
         "start": "concurrently \"npm run start --prefix server\" \"npm run dev --prefix client\""
     },
     "devDependencies": {
