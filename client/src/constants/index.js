@@ -28,14 +28,18 @@ export const certifications = [
     issuer: "Programming Pathshala",
     date: "2025",
     link: "#",
-    description: "Specialized training in Spring Boot, Microservices, and Cloud Deployment."
+    description: "Specialized training in Spring Boot, Microservices, and Cloud Deployment.",
+    image: null, // Add certificate image path here e.g. "/images/cert-java.jpg"
+    skills: ["Spring Boot", "Microservices", "REST API", "Cloud Deployment", "Java 17", "Hibernate"]
   },
   {
     title: "Frontend Engineering",
     issuer: "Online Certification",
     date: "2024",
     link: "#",
-    description: "Advanced React, Tailwind CSS, and Framer Motion for premium UI/UX."
+    description: "Advanced React, Tailwind CSS, and Framer Motion for premium UI/UX.",
+    image: null, // Add certificate image path here e.g. "/images/cert-frontend.jpg"
+    skills: ["React.js", "Tailwind CSS", "Framer Motion", "Next.js", "TypeScript", "UI/UX Design"]
   }
 ];
 
@@ -63,6 +67,14 @@ export const skills = {
     { name: "C++", icon: "SiCplusplus", color: "#00599C" },
     { name: "Data Structures", icon: "FaCode", color: "#0055FF" },
     { name: "Algorithms", icon: "FaTerminal", color: "#ffffff" }
+  ],
+  tools: [
+    { name: "Git", icon: "FaGitAlt", color: "#F05032" },
+    { name: "GitHub", icon: "FaGithub", color: "#ffffff" },
+    { name: "VS Code", icon: "VscVscode", color: "#007ACC" },
+    { name: "Postman", icon: "SiPostman", color: "#FF6C37" },
+    { name: "Docker", icon: "SiDocker", color: "#2496ED" },
+    { name: "Vercel", icon: "SiVercel", color: "#000000" }
   ]
 };
 
@@ -72,6 +84,13 @@ export const projects = [
     title: "Anarchy Bay",
     category: "Full Stack",
     description: "Architected a full-stack digital marketplace with 100+ listings. Features secure authentication, dynamic filtering, and optimized checkout, resulting in 30% faster load times.",
+    features: [
+      "Built a full-stack digital marketplace supporting 100+ active product listings",
+      "Implemented secure JWT-based authentication with role-based access control",
+      "Dynamic category filtering and real-time search for fast product discovery",
+      "Optimized checkout pipeline reducing overall load time by 30%",
+      "Integrated Supabase for real-time database sync and file storage"
+    ],
     tech: ["React", "Express.js", "Supabase", "Tailwind CSS"],
     github_link: "https://github.com/Piyush5621",
     project_link: "#",
@@ -82,6 +101,13 @@ export const projects = [
     title: "NexaMart",
     category: "Full Stack",
     description: "Developed a robust B2B/B2C marketing platform managing 200+ inventory records. Streamlined seller onboarding and admin approval workflows with real-time data visualization.",
+    features: [
+      "Designed a B2B/B2C marketing platform with 200+ managed inventory records",
+      "Built seller onboarding flow with multi-step form validation and file uploads",
+      "Admin dashboard with approval/rejection workflows and audit logs",
+      "Real-time data visualization charts for sales and inventory analytics",
+      "Responsive UI with mobile-first design using Tailwind CSS"
+    ],
     tech: ["PHP", "MySQL", "JavaScript", "Tailwind CSS"],
     github_link: "https://github.com/Piyush5621",
     project_link: "#",
@@ -92,6 +118,13 @@ export const projects = [
     title: "IPC Simulator",
     category: "Web App",
     description: "A technical visualization of Inter-Process Communication mechanisms. Models pipe, message queue, and shared memory behavior across concurrent simulated processes.",
+    features: [
+      "Visual simulation of IPC mechanisms: Pipes, Message Queues, Shared Memory",
+      "Concurrent process modeling with step-by-step execution trace",
+      "Interactive UI to configure process count and IPC method",
+      "Real-time state visualization showing memory blocks and message flow",
+      "Built purely with vanilla JS, HTML, and CSS — no framework dependencies"
+    ],
     tech: ["JavaScript", "HTML", "CSS", "OS Concepts"],
     github_link: "https://github.com/Piyush5621",
     project_link: "#",
