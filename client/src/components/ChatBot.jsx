@@ -3,6 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaTerminal, FaMicrochip, FaUserAstronaut, FaSignal } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import ChatbotBackground from './ChatbotBackground';
+
+// Trinetra (Third Eye) Icon
+const TrinetraIcon = ({ className }) => (
+    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="50" rx="20" ry="35" stroke="currentColor" strokeWidth="5" />
+        <circle cx="50" cy="50" r="10" fill="currentColor" className="animate-pulse shadow-[0_0_15px_currentColor]" />
+    </svg>
+);
 
 const BACKEND_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:5000' 
@@ -38,9 +47,9 @@ const MarkdownContent = ({ content }) => (
 );
 
 const TypingIndicator = () => (
-    <div className="flex items-end gap-3 w-full">
+    <div className="flex items-end gap-3 w-full relative z-10">
         <div className="flex-shrink-0 w-8 h-8 bg-white/[0.02] border border-[#E6A700]/30 rounded-sm flex items-center justify-center">
-            <FaMicrochip size={12} className="text-[#E6A700] animate-pulse" />
+            <TrinetraIcon className="w-4 h-4 text-[#E6A700] animate-pulse" />
         </div>
         <div className="bg-[rgba(10,10,14,0.95)] border border-[#E6A700]/20 px-4 py-3 rounded-sm">
             <div className="flex items-center gap-2">
@@ -59,16 +68,16 @@ const Message = ({ msg }) => {
             initial={{ opacity: 0, y: 15, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: "spring", stiffness: 250, damping: 25 }}
-            className={`flex items-end gap-3 w-full ${isBot ? '' : 'flex-row-reverse'}`}
+            className={`flex items-end gap-3 w-full relative z-10 ${isBot ? '' : 'flex-row-reverse'}`}
         >
             {/* Avatar */}
             <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-sm
                 ${isBot
-                    ? 'bg-[#0A0A0E] border border-[#E6A700]/40 text-[#E6A700]'
+                    ? 'bg-[#0A0A0E] border border-[#E6A700]/40 text-[#E6A700] shadow-[0_0_10px_rgba(230,167,0,0.2)]'
                     : 'bg-white/[0.05] border border-white/20 text-white'
                 }`}
             >
-                {isBot ? <FaMicrochip size={12} /> : <FaUserAstronaut size={12} />}
+                {isBot ? <TrinetraIcon className="w-4 h-4" /> : <FaUserAstronaut size={12} />}
             </div>
 
             {/* Bubble */}
@@ -175,7 +184,7 @@ const ChatBot = () => {
                                 whileTap={{ scale: 0.95 }}
                                 className="relative w-14 h-14 bg-[#0A0A0E] border border-white/20 group-hover:border-[#E6A700] text-slate-400 group-hover:text-[#E6A700] flex items-center justify-center rounded-sm transition-all shadow-[0_0_20px_rgba(230,167,0,0.1)] outline-none"
                             >
-                                <FaTerminal size={20} />
+                                <TrinetraIcon className="w-6 h-6" />
                                 <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#E6A700] shadow-[0_0_8px_#E6A700] rounded-sm animate-pulse" />
                             </motion.button>
                         </motion.div>
@@ -220,13 +229,14 @@ const ChatBot = () => {
                         </div>
 
                         {/* ── Output Buffer (Messages) ── */}
-                        <div className="flex-1 overflow-y-auto bg-[rgba(5,6,8,0.98)] backdrop-blur-md px-4 py-6 space-y-6 no-scrollbar"
-                            style={{ minHeight: '350px', maxHeight: '420px', backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px)' }}>
+                        <div className="flex-1 overflow-y-auto relative px-4 py-6 space-y-6 no-scrollbar"
+                            style={{ minHeight: '350px', maxHeight: '420px' }}>
+                            <ChatbotBackground />
                             {messages.map((msg, i) => (
                                 <Message key={i} msg={msg} />
                             ))}
                             {isLoading && <TypingIndicator />}
-                            <div ref={messagesEndRef} />
+                            <div ref={messagesEndRef} className="relative z-10" />
                         </div>
 
                         {/* ── Input Console ── */}
