@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -35,7 +36,14 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Request logging for debugging
+app.use((req, res, next) => {
+    if (req.url.startsWith('/api')) {
+        console.log(`[API Request] ${req.method} ${req.url}`);
+    }
+    next();
+});
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -56,9 +64,19 @@ const model = genAI.getGenerativeModel({
 
 // --- API ROUTES ---
 
-// Health Check
+// Health Check (enhanced with build check)
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Core systems operational' });
+    const distPath = path.join(__dirname, '../client/dist');
+    const indexExists = fs.existsSync(path.join(distPath, 'index.html'));
+    res.json({ 
+        status: 'ok', 
+        message: 'Core systems operational',
+        timestamp: new Date().toISOString(),
+        buildStatus: {
+            distExists: fs.existsSync(distPath),
+            indexExists: indexExists
+        }
+    });
 });
 
 // Chatbot Endpoint
@@ -370,9 +388,18 @@ app.post('/api/leetcode-contests', async (req, res) => {
     }
 });
 
+// Static serving and SPA Catch-all
+const distPath = path.join(__dirname, '../client/dist');
+app.use(express.static(distPath));
+
 // SPA Catch-all (Express 5 compatible middleware)
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    // Only serve index.html for non-API routes that aren't files
+    if (!req.url.startsWith('/api')) {
+        res.sendFile(path.join(distPath, 'index.html'));
+    } else {
+        res.status(404).json({ error: 'API route not found' });
+    }
 });
 
 // Start Server
