@@ -4,7 +4,9 @@ import { FaTimes, FaTerminal, FaMicrochip, FaUserAstronaut, FaSignal } from 'rea
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000' 
+    : 'https://portfolio-ewq8.onrender.com';
 
 // --- Markdown Formatter (Gold/Cyber Theme) ---
 const MarkdownContent = ({ content }) => (
