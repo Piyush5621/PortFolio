@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaDownload, FaExpand, FaCompress, FaExternalLinkAlt, FaFileAlt } from 'react-icons/fa';
 
 // Pointing explicitly to the newly uploaded CV in the images directory
-const RESUME_PDF = '/images/Piyush_Kumar_CV.pdf';
+// Utilizing a high-availability Google Drive Preview for consistent cross-browser rendering
+const RESUME_PDF = 'https://drive.google.com/file/d/1cNHye3FhjcCC2osX0LI2a3nF_BeBbrFc/preview';
+// Direct download link (optional backup)
+const RESUME_DOWNLOAD = 'https://drive.google.com/uc?export=download&id=1cNHye3FhjcCC2osX0LI2a3nF_BeBbrFc';
 
 const Resume = () => {
   const [fullscreen, setFullscreen] = useState(false);
@@ -53,22 +56,21 @@ const Resume = () => {
           </button>
 
           <a
-            href={RESUME_PDF}
+            href="https://drive.google.com/file/d/1cNHye3FhjcCC2osX0LI2a3nF_BeBbrFc/view?usp=sharing"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 px-4 py-2 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 hover:border-[#E6A700]/30 rounded-sm text-slate-400 hover:text-white text-[9px] font-bold uppercase tracking-widest transition-all"
           >
             <FaExternalLinkAlt size={10} />
-            OPEN RAW
+            OPEN IN DRIVE
           </a>
 
           <a
-            href={RESUME_PDF}
-            download="Piyush_Kumar_CV.pdf"
+            href={RESUME_DOWNLOAD}
             className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-slate-200 border border-transparent rounded-sm text-[9px] font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
             <FaDownload size={10} />
-            DOWNLOAD
+            DOWNLOAD CV
           </a>
         </div>
       </motion.header>
@@ -110,11 +112,11 @@ const Resume = () => {
                     Your browser has restricted native document rendering. Use the command below to access the secure PDF link directly or download for full resolution.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <a href={RESUME_PDF} target="_blank" rel="noreferrer" className="px-8 py-3.5 bg-white text-black text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:bg-[#E6A700] transition-all flex items-center gap-3">
-                        <FaExternalLinkAlt size={10}/> Open in New Tab
+                    <a href="https://drive.google.com/file/d/1cNHye3FhjcCC2osX0LI2a3nF_BeBbrFc/view?usp=sharing" target="_blank" rel="noreferrer" className="px-8 py-3.5 bg-white text-black text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:bg-[#E6A700] transition-all flex items-center gap-3">
+                        <FaExternalLinkAlt size={10}/> Open Drive Link
                     </a>
-                    <a href={RESUME_PDF} download="Piyush_Kumar_CV.pdf" className="px-8 py-3.5 bg-[#0A0A0E] border border-white/10 text-white text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:border-[#E6A700]/50 transition-all flex items-center gap-3">
-                        <FaDownload size={10}/> Download PDF
+                    <a href={RESUME_DOWNLOAD} className="px-8 py-3.5 bg-[#0A0A0E] border border-white/10 text-white text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:border-[#E6A700]/50 transition-all flex items-center gap-3">
+                        <FaDownload size={10}/> Direct Download
                     </a>
                 </div>
             </div>
