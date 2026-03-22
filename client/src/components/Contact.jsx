@@ -107,7 +107,7 @@ const Contact = () => {
                                     <FaGithub size={22} className="group-hover:scale-110 transition-transform" /> 
                                     <span className="text-[9px] font-bold uppercase tracking-widest">GitHub</span>
                                 </a>
-                                <a href="https://www.linkedin.com/in/piyush5621/" target="_blank" rel="noreferrer" className="flex flex-col items-center justify-center gap-3 p-6 bg-white/5 border border-white/10 rounded-3xl text-slate-400 hover:text-white hover:bg-white/10 transition-all group">
+                                <a href="https://www.linkedin.com/in/piyushkumar5621/" target="_blank" rel="noreferrer" className="flex flex-col items-center justify-center gap-3 p-6 bg-white/5 border border-white/10 rounded-3xl text-slate-400 hover:text-white hover:bg-white/10 transition-all group">
                                     <FaLinkedin size={22} className="group-hover:scale-110 transition-transform" /> 
                                     <span className="text-[9px] font-bold uppercase tracking-widest">LinkedIn</span>
                                 </a>

@@ -43,8 +43,8 @@ const Navbar = () => {
                 
                 {/* Logo */}
                 <a href="#" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-blue-600/20 group-hover:scale-105 transition-transform">
-                        P
+                    <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-sm text-white shadow-lg shadow-blue-600/20 group-hover:scale-105 transition-transform">
+                        PK
                     </div>
                     <span className="font-bold text-xl tracking-tight text-white group-hover:text-blue-500 transition-colors">Kumar</span>
                 </a>
