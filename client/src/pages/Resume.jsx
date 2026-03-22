@@ -93,25 +93,32 @@ const Resume = () => {
             </>
           )}
 
-          {/* Secure Object Embed for the Physical PDF */}
-          <object
-            data={`${RESUME_PDF}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-            type="application/pdf"
-            className="w-full h-full relative z-10"
+          {/* High-Compatibility PDF Viewer */}
+          <iframe
+            src={RESUME_PDF}
+            className="w-full h-full relative z-10 border-none"
             style={{ backgroundColor: '#0A0A0E' }}
+            title="Professional CV Viewer"
           >
-            {/* Fallback rendering if the browser natively crushes PDF viewing (e.g. strict mobile browsers) */}
+            {/* Fallback rendering if the iframe natively crushes PDF viewing */}
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#050608] text-center p-8">
-                <FaFileAlt className="text-[#E6A700]/30 mb-4" size={48} />
-                <h3 className="text-white font-bold text-lg mb-2">Browser Rendering Unavailable</h3>
-                <p className="text-slate-500 text-xs max-w-sm mb-6">
-                    Your current browser configuration refuses to natively render PDF elements within standard web borders.
+                <div className="w-16 h-16 rounded-full bg-[#E6A700]/10 flex items-center justify-center mb-6">
+                    <FaFileAlt className="text-[#E6A700]" size={24} />
+                </div>
+                <h3 className="text-white font-black text-xl mb-3 tracking-tight uppercase">Document Link Initialized</h3>
+                <p className="text-slate-500 text-[10px] font-mono leading-relaxed max-w-sm mb-8 uppercase tracking-widest">
+                    Your browser has restricted native document rendering. Use the command below to access the secure PDF link directly or download for full resolution.
                 </p>
-                <a href={RESUME_PDF} target="_blank" rel="noreferrer" className="bg-[#E6A700] hover:bg-[#FCD34D] text-black px-6 py-3 rounded-sm text-[10px] font-black tracking-widest uppercase transition-colors">
-                    Access File Directly
-                </a>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <a href={RESUME_PDF} target="_blank" rel="noreferrer" className="px-8 py-3.5 bg-white text-black text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:bg-[#E6A700] transition-all flex items-center gap-3">
+                        <FaExternalLinkAlt size={10}/> Open in New Tab
+                    </a>
+                    <a href={RESUME_PDF} download="Piyush_Kumar_CV.pdf" className="px-8 py-3.5 bg-[#0A0A0E] border border-white/10 text-white text-[10px] font-black tracking-[0.2em] uppercase rounded-sm hover:border-[#E6A700]/50 transition-all flex items-center gap-3">
+                        <FaDownload size={10}/> Download PDF
+                    </a>
+                </div>
             </div>
-          </object>
+          </iframe>
 
         </div>
       </motion.main>
