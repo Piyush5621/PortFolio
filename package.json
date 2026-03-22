@@ -4,7 +4,7 @@
   "description": "Root package for PortFolio - Force Sync",
   "scripts": {
     "install-all": "npm install && cd client && npm install && cd ../server && npm install",
-    "build": "npm install && cd client && npm install && npm run build && cd ../server && npm install",
+    "build": "cd client && npm run build && cd ../server && npm run build",
     "postinstall": "cd client && npm install && npm run build && cd ../server && npm install",
     "start": "node server/server.js",
     "dev": "concurrently \"npm run start --prefix server\" \"npm run dev --prefix client\""
