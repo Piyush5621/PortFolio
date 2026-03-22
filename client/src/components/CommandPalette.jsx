@@ -14,7 +14,7 @@ const CommandPalette = ({ isOpen, onClose }) => {
         { id: 'projects', title: 'Projects', icon: <FaProjectDiagram />, action: () => { navigate('/projects'); onClose(); } },
         { id: 'lab', title: 'The Lab (Experimental)', icon: <FaSearch />, action: () => { navigate('/lab'); onClose(); } }, // Added Lab
         { id: 'about', title: 'About', icon: <FaUser />, action: () => { navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); onClose(); } },
-        { id: 'resume', title: 'View Resume', icon: <FaFileAlt />, action: () => { window.open('/resume.pdf', '_blank'); onClose(); } },
+        { id: 'resume', title: 'View Resume', icon: <FaFileAlt />, action: () => { window.open('/Piyush_Kumar_CV.pdf', '_blank'); onClose(); } },
         { id: 'contact', title: 'Contact', icon: <FaEnvelope />, action: () => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); onClose(); } },
     ];
 

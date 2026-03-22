@@ -96,9 +96,9 @@ const ProfileCards = ({ data }) => {
             delay: 0.1,
             stats: [
                 { label: "Repos", value: safeData.github?.public_repos || 22 },
-                { label: "Commits", value: safeData.github?.totalContributions || 450 },
-                { label: "Stars", value: safeData.github?.stars || 12 },
-                { label: "Streak", value: safeData.github?.streak || 5, suffix: "Days" }
+                { label: "Commits", value: safeData.github?.totalContributions || 153 },
+                { label: "Followers", value: safeData.github?.followers || 1 },
+                { label: "Active Days", value: safeData.github?.activeDays || 36 }
             ]
         },
         {
@@ -123,10 +123,10 @@ const ProfileCards = ({ data }) => {
             link: `https://www.codechef.com/users/${USERNAMES.codechef}`,
             delay: 0.3,
             stats: [
-                { label: "Rating", value: safeData.codechef?.currentRating || 1512 },
-                { label: "Stars", value: safeData.codechef?.stars || '2', suffix: "★" },
-                { label: "Global", value: safeData.codechef?.globalRank || 24500 },
-                { label: "Country", value: safeData.codechef?.countryRank || 8200 }
+                { label: "Rating", value: safeData.codechef?.currentRating || 1226 },
+                { label: "Stars", value: safeData.codechef?.stars || '1', suffix: "★" },
+                { label: "Global", value: safeData.codechef?.globalRank || 80702 },
+                { label: "Country", value: safeData.codechef?.countryRank || 76404 }
             ]
         },
         {
@@ -137,10 +137,10 @@ const ProfileCards = ({ data }) => {
             link: `https://www.geeksforgeeks.org/user/${USERNAMES.gfg}/`,
             delay: 0.4,
             stats: [
-                { label: "Score", value: safeData.gfg?.overall_coding_score || 342 },
-                { label: "Rank", value: safeData.gfg?.rank || "Top 5%" },
-                { label: "Solved", value: safeData.gfg?.total_problems_solved || 120 },
-                { label: "Streak", value: safeData.gfg?.streak || 12, suffix: "Days" }
+                { label: "Score", value: safeData.gfg?.overall_coding_score || 239 },
+                { label: "Solved", value: safeData.gfg?.total_problems_solved || 80 },
+                { label: "Inst. Rank", value: safeData.gfg?.institute_rank || 6739 },
+                { label: "Articles", value: safeData.gfg?.articles_published || 0 }
             ]
         },
         {
