@@ -1,7 +1,14 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ContestGraph = ({ contestData }) => {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     // Use real contest data if available, otherwise fallback to sample data
     const data = contestData?.contestHistory || [
         { name: 'Jan', rating: 1200 },
@@ -28,9 +35,9 @@ const ContestGraph = ({ contestData }) => {
                     </div>
                 )}
             </div>
-            <div className="h-48 w-full min-h-[192px]">
-                {data && data.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <div className="w-full" style={{ height: '192px', minHeight: '192px' }}>
+                {isMounted && data && data.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={data}>
                             <XAxis dataKey="name" stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
                             <YAxis stroke="#666" fontSize={10} tickLine={false} axisLine={false} width={40} />
@@ -43,7 +50,7 @@ const ContestGraph = ({ contestData }) => {
                     </ResponsiveContainer>
                 ) : (
                     <div className="flex items-center justify-center h-full text-gray-500">
-                        Loading contest data...
+                        Initializing graph engine...
                     </div>
                 )}
             </div>
