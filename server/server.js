@@ -79,6 +79,11 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// Ping Route (for uptime monitoring / keep-alive checks)
+app.get("/ping", (req, res) => {
+    res.send("I'm alive 🚀");
+});
+
 // Chatbot Endpoint
 app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
