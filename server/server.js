@@ -134,6 +134,10 @@ app.post('/api/contact', async (req, res) => {
 app.post('/api/leetcode', async (req, res) => {
     try {
         const { username } = req.body;
+        const cacheKey = `leetcode_${username}`;
+        const cached = getCached(cacheKey);
+        if (cached) return res.json(cached);
+
         const query = 'query getUserProfile($username: String!) { matchedUser(username: $username) { username profile { realName userAvatar reputation ranking } submitStats { acSubmissionNum { difficulty count submissions } } } }';
         
         const response = await axios.post('https://leetcode.com/graphql', {
@@ -146,6 +150,7 @@ app.post('/api/leetcode', async (req, res) => {
             }
         });
         
+        setCache(cacheKey, response.data);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -156,6 +161,10 @@ app.post('/api/leetcode', async (req, res) => {
 app.post('/api/leetcode-activity', async (req, res) => {
     try {
         const { username } = req.body;
+        const cacheKey = `leetcode_activity_${username}`;
+        const cached = getCached(cacheKey);
+        if (cached) return res.json(cached);
+
         const query = `
             query getUserRecentSubmissions($username: String!) {
                 recentSubmissionList(username: $username, limit: 100) {
@@ -190,11 +199,14 @@ app.post('/api/leetcode-activity', async (req, res) => {
             }
         });
         
-        res.json({
+        const result = {
             activeDays: uniqueDays.size,
             totalSubmissions: submissions.length,
             recentSubmissions: submissions.slice(0, 10) // Return last 10 submissions
-        });
+        };
+
+        setCache(cacheKey, result);
+        res.json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -213,7 +225,12 @@ app.get('/api/leetcode-stats/:username', async (req, res) => {
 app.get('/api/codechef/:username', async (req, res) => {
     try {
         const { username } = req.params;
+        const cacheKey = `codechef_${username}`;
+        const cached = getCached(cacheKey);
+        if (cached) return res.json(cached);
+
         const response = await axios.get(`https://codechef-api.vercel.app/${username}`, { timeout: 8000 });
+        setCache(cacheKey, response.data);
         res.json(response.data);
     } catch (error) {
         console.error('CodeChef API error:', error.message);
@@ -389,6 +406,10 @@ app.get('/api/github/:username', async (req, res) => {
 app.post('/api/leetcode-contests', async (req, res) => {
     try {
         const { username } = req.body;
+        const cacheKey = `leetcode_contests_${username}`;
+        const cached = getCached(cacheKey);
+        if (cached) return res.json(cached);
+
         const query = 'query getUserContestRankingInfo($username: String!) { userContestRanking(username: $username) { attendedContestsCount rating globalRanking totalParticipants topPercentage } userContestRankingHistory(username: $username) { contest { title startTime } rating ranking } }';
         
         const response = await axios.post('https://leetcode.com/graphql', {
@@ -401,6 +422,7 @@ app.post('/api/leetcode-contests', async (req, res) => {
             }
         });
         
+        setCache(cacheKey, response.data);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ error: error.message });

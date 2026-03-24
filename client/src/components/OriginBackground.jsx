@@ -14,54 +14,20 @@ const OriginBackground = () => {
       
       {/* Inner Slow Pulse (Soft expansion) */}
       <motion.div
-        initial={{ scale: 0.8, opacity: 0.4 }}
-        animate={{ scale: 4.5, opacity: 0 }}
-        transition={{ 
-          duration: 8, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-        className="absolute w-[200px] h-[200px] rounded-full border border-[#E6A700] mix-blend-screen shadow-[0_0_20px_rgba(230,167,0,0.15)]"
-      />
-      
-      {/* Dashed Expanding Ring (Very Slow, Gentle Twist) */}
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0.3, rotate: 0 }}
-        animate={{ scale: 5.5, opacity: 0, rotate: 90 }}
+        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.4, 0.3] }}
         transition={{ 
           duration: 12, 
           repeat: Infinity, 
-          ease: "linear", 
-          delay: 2 
+          ease: "easeInOut" 
         }}
-        className="absolute w-[250px] h-[250px] rounded-full border-[1.5px] border-dashed border-[#E6A700] mix-blend-screen opacity-20 shadow-[0_0_15px_rgba(230,167,0,0.1)]"
+        className="absolute w-[300px] h-[300px] rounded-full border border-[#E6A700]/30 mix-blend-screen shadow-[0_0_20px_rgba(230,167,0,0.1)]"
       />
+      
+      {/* Dashed Expanding Ring */}
+      <div className="absolute w-[400px] h-[400px] rounded-full border-[1.5px] border-dashed border-[#E6A700]/10 animate-spin-slow" />
 
-      {/* Dotted Expanding Ring (Counter-Clockwise Soft Twist) */}
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0.25, rotate: 0 }}
-        animate={{ scale: 6.5, opacity: 0, rotate: -90 }}
-        transition={{ 
-          duration: 15, 
-          repeat: Infinity, 
-          ease: "linear", 
-          delay: 4 
-        }}
-        className="absolute w-[300px] h-[300px] rounded-full border-[1.5px] border-dotted border-white/40 mix-blend-screen"
-      />
-
-      {/* Extreme Outer Ripple (Very Faint, Glacial Speed) */}
-      <motion.div
-        initial={{ scale: 1, opacity: 0.15 }}
-        animate={{ scale: 7, opacity: 0 }}
-        transition={{ 
-          duration: 18, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-          delay: 3 
-        }}
-        className="absolute w-[350px] h-[350px] rounded-full border-[0.5px] border-[#E6A700]/10"
-      />
+      {/* Extreme Outer Ripple (Very Faint) */}
+      <div className="absolute w-[600px] h-[600px] rounded-full border-[0.5px] border-[#E6A700]/5" />
 
     </div>
   );

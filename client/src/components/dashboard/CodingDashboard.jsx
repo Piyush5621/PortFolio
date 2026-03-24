@@ -12,22 +12,24 @@ import ContestGraph from "./ContestGraph";
    THE CHAKRA WATERMARK
    Krishna's Sudarshana Chakra — Infinite Logic & Flawless Loops
 ───────────────────────────────────────────────────────── */
-const CyberChakraWatermark = () => (
-  <svg className="absolute left-[50%] top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[1200px] opacity-[0.25] mix-blend-screen animate-spin-slow" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+import { useMemo, memo } from "react";
+
+const CyberChakraWatermark = memo(() => (
+  <svg className="absolute left-[50%] top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[1200px] opacity-[0.2] mix-blend-screen animate-spin-slow" viewBox="0 0 800 800" fill="none" aria-hidden="true">
     <circle cx="400" cy="400" r="390" stroke="#E6A700" strokeWidth="1" strokeDasharray="4 12" />
     <circle cx="400" cy="400" r="300" stroke="#E6A700" strokeWidth="2" strokeDasharray="20 40" className="animate-spin-reverse" style={{ transformOrigin: 'center' }} />
     <circle cx="400" cy="400" r="200" stroke="#E6A700" strokeWidth="0.5" />
-    {Array.from({ length: 36 }).map((_, i) => {
+    {useMemo(() => Array.from({ length: 36 }).map((_, i) => {
       const angle = (i * 10 * Math.PI) / 180;
       return <line key={i} x1={400 + 40 * Math.cos(angle)} y1={400 + 40 * Math.sin(angle)} x2={400 + 390 * Math.cos(angle)} y2={400 + 390 * Math.sin(angle)} stroke="#E6A700" strokeWidth="0.5" opacity="0.3" />;
-    })}
+    }), [])}
     <circle cx="400" cy="400" r="10" fill="#E6A700" />
   </svg>
-);
+));
 
 const StatCard = ({ children, className = "", title, icon }) => (
-  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-    className={`cyber-panel p-6 md:p-8 flex flex-col h-full hover:border-[#E6A700]/40 transition-all duration-500 group relative overflow-hidden rounded-sm ${className}`}>
+  <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+    className={`cyber-panel p-6 md:p-8 flex flex-col h-full hover:border-[#E6A700]/40 transition-all duration-300 group relative overflow-hidden rounded-sm transform-gpu ${className}`}>
     <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(230,167,0,0.1)] blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     
     {(title || icon) && (
@@ -125,7 +127,7 @@ const CodingDashboard = () => {
                 { label: "Stars", val: data.github?.stars || 0 },
                 { label: "Followers", val: data.github?.followers || 0 }
               ].map((stat, i) => (
-                <div key={i} className="flex flex-col p-4 bg-white/[0.02] border border-white/5 rounded-sm relative overflow-hidden group hover:border-[#E6A700]/30 transition-colors hover:-translate-y-1">
+                <div key={i} className="flex flex-col p-4 bg-white/[0.02] border border-white/5 rounded-sm relative overflow-hidden group hover:border-[#E6A700]/30 transition-colors transform-gpu">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10 group-hover:bg-[#E6A700] transition-colors" />
                   <span className="text-slate-500 text-[9px] font-mono uppercase tracking-[0.2em] mb-1 group-hover:text-[#E6A700] transition-colors">{stat.label}</span>
                   <span className="text-xl font-bold font-mono text-slate-200 tracking-tight transition-colors">{stat.val}</span>
@@ -140,13 +142,13 @@ const CodingDashboard = () => {
               <ContestGraph contestData={data.contests} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 relative overflow-hidden group hover:-translate-y-1">
+              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 relative overflow-hidden group transform-gpu">
                 <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest mb-2 block group-hover:text-[#E6A700]">Peak Rating</span>
                 <div className="text-3xl font-mono font-black text-white group-hover:text-[#E6A700] transition-colors">
                   {data.contests?.topRating?.toFixed(0) || '1500'}
                 </div>
               </div>
-              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 group hover:-translate-y-1">
+              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 group transform-gpu">
                 <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest mb-2 block group-hover:text-[#E6A700]">Global Rank</span>
                 <div className="text-3xl font-mono font-black text-white tracking-tighter group-hover:text-[#E6A700] transition-colors">
                   {data.contests?.globalRanking || 'N/A'}

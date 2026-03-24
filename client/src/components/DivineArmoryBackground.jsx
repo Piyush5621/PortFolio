@@ -52,29 +52,21 @@ const DhanushIcon = ({ className }) => (
 const DivineArmoryBackground = () => {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#0A0A0E] flex items-center justify-center">
-      
-      {/* Grid that matches your 4-column text layout. 
-        Opacity is kept very low (0.05) so it looks like a subtle watermark/blueprint behind the text.
-      */}
-      <div className="w-full h-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 opacity-[0.05] mix-blend-screen items-center">
+      <div className="w-full h-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 opacity-[0.08] mix-blend-screen items-center">
         
         {/* Column 1 Background: CHAKRA */}
         <div className="flex justify-center items-center w-full h-full lg:pt-[40%]">
-          <motion.div 
-            animate={{ rotate: 360 }} 
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="w-full max-w-[200px] text-[#00b4d8]" // Peacock Blue
-          >
+          <div className="w-full max-w-[200px] text-[#00b4d8] animate-spin-slow">
             <ChakraIcon className="w-full h-auto drop-shadow-[0_0_15px_#00b4d8]" />
-          </motion.div>
+          </div>
         </div>
 
         {/* Column 2 Background: TRISHUL */}
         <div className="flex justify-center items-center w-full h-full lg:pt-[40%]">
           <motion.div 
-            animate={{ y: [-8, 8, -8] }} 
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full max-w-[200px] text-[#E6A700]" // Saffron Gold
+            animate={{ y: [-5, 5, -5] }} 
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="w-full max-w-[200px] text-[#E6A700]"
           >
             <TrishulIcon className="w-full h-auto drop-shadow-[0_0_15px_#E6A700]" />
           </motion.div>
@@ -82,21 +74,17 @@ const DivineArmoryBackground = () => {
 
         {/* Column 3 Background: VAJRA */}
         <div className="flex justify-center items-center w-full h-full lg:pt-[40%]">
-          <motion.div 
-            animate={{ scale: [0.95, 1.05, 0.95] }} 
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full max-w-[200px] text-[#cbd5e1]" // Silver/Ash
-          >
+          <div className="w-full max-w-[200px] text-[#cbd5e1] opacity-50">
             <VajraIcon className="w-full h-auto drop-shadow-[0_0_15px_#cbd5e1]" />
-          </motion.div>
+          </div>
         </div>
 
         {/* Column 4 Background: DHANUSH */}
         <div className="flex justify-center items-center w-full h-full lg:pt-[40%]">
           <motion.div 
-            animate={{ x: [-5, 5, -5] }} 
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full max-w-[200px] text-[#E6A700]" // Saffron Gold
+            animate={{ x: [-3, 3, -3] }} 
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="w-full max-w-[200px] text-[#E6A700]"
           >
             <DhanushIcon className="w-full h-auto drop-shadow-[0_0_15px_#E6A700]" />
           </motion.div>
@@ -104,7 +92,6 @@ const DivineArmoryBackground = () => {
 
       </div>
 
-      {/* Subtle fade effect at the bottom */}
       <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#050608] to-transparent z-10" />
     </div>
   );

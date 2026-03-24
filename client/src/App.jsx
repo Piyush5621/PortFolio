@@ -1,35 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { lazy, Suspense } from 'react';
-
-// Main Sections
+// Eagerly import tiny/critical components
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import CodingDashboard from './components/dashboard/CodingDashboard';
-import Skills from './components/Skills';
-import Education from './components/Education';
-import Projects from './components/Projects';
-import Services from './components/Services';
-import Contact from './components/Contact';
-import CommandPalette from './components/CommandPalette';
-import ChatBot from './components/ChatBot';
 import Preloader from './components/Preloader';
+import CommandPalette from './components/CommandPalette';
 
-// Lazy Loaded Secondary Pages for Performance
+// Lazy-load sections
+const Hero             = lazy(() => import('./components/Hero'));
+const CodingDashboard  = lazy(() => import('./components/dashboard/CodingDashboard'));
+const Skills           = lazy(() => import('./components/Skills'));
+const Education        = lazy(() => import('./components/Education'));
+const Projects         = lazy(() => import('./components/Projects'));
+const Services         = lazy(() => import('./components/Services'));
+const Contact          = lazy(() => import('./components/Contact'));
+const ChatBot          = lazy(() => import('./components/ChatBot'));
+
+// Pages
 const AllProjects = lazy(() => import('./pages/AllProjects'));
-const Now = lazy(() => import('./pages/Now'));
-const Lab = lazy(() => import('./pages/Lab'));
-const Resume = lazy(() => import('./pages/Resume'));
+const Now         = lazy(() => import('./pages/Now'));
+const Lab         = lazy(() => import('./pages/Lab'));
+const Resume      = lazy(() => import('./pages/Resume'));
 
-// Sequential Reveal Wrapper
-const SectionReveal = ({ children, delay = 0 }) => (
+// Simplified reveal — Opacity only for buttery smooth performance
+const SectionReveal = ({ children }) => (
   <motion.section
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-100px" }}
-    transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    viewport={{ once: true, margin: '-150px' }}
+    transition={{ duration: 0.6, ease: "linear" }}
   >
     {children}
   </motion.section>
@@ -82,19 +82,15 @@ function App() {
               exit={{ opacity: 0 }}
             >
               <main className="relative flex-grow">
-                <SectionReveal><Hero /></SectionReveal>
-                
-                <SectionReveal delay={0.1}>
-                    <div id="problem-solving">
-                      <CodingDashboard />
-                    </div>
-                </SectionReveal>
-
-                <SectionReveal delay={0.2}><Skills /></SectionReveal>
-                <SectionReveal delay={0.2}><Services /></SectionReveal>
-                <SectionReveal delay={0.2}><Projects /></SectionReveal>
-                <SectionReveal delay={0.2}><Education /></SectionReveal>
-                <SectionReveal delay={0.2}><Contact /></SectionReveal>
+                <Suspense fallback={null}>
+                  <SectionReveal><div id="home"><Hero /></div></SectionReveal>
+                  <SectionReveal><div id="stats"><CodingDashboard /></div></SectionReveal>
+                  <SectionReveal><div id="skills"><Skills /></div></SectionReveal>
+                  <SectionReveal><div id="services"><Services /></div></SectionReveal>
+                  <SectionReveal><div id="projects"><Projects /></div></SectionReveal>
+                  <SectionReveal><div id="education"><Education /></div></SectionReveal>
+                  <SectionReveal><div id="contact"><Contact /></div></SectionReveal>
+                </Suspense>
               </main>
             </motion.div>
           } />
@@ -107,9 +103,12 @@ function App() {
       </AnimatePresence>
 
       <CommandPalette isOpen={isCmdOpen} onClose={() => setIsCmdOpen(false)} />
-      {location.pathname !== '/resume' && <ChatBot />}
+      {location.pathname !== '/resume' && (
+        <Suspense fallback={null}><ChatBot /></Suspense>
+      )}
 
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+      {/* Noise overlay — pure CSS grain, no external network request */}
+      <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.025]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")" }} />
     </div>
   );
 }

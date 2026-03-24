@@ -66,11 +66,11 @@ const Education = () => {
             {education.map((edu, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="relative flex items-start pl-[60px] md:pl-[80px] group"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="relative flex items-start pl-[60px] md:pl-[80px] group transform-gpu"
               >
                 {/* Glowing Node */}
                 <div className="absolute left-[13px] md:left-[17px] top-1 w-4 h-4 rounded-full bg-[#0A0A0E] border-2 border-[#E6A700] flex items-center justify-center transition-transform group-hover:scale-125 z-10">
@@ -111,12 +111,12 @@ const Education = () => {
             {certifications.map((cert, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, scale: 0.98, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                transition={{ duration: 0.4 }}
                 onClick={() => setSelectedItem({ ...cert, type: 'cert' })}
-                className="group w-full bg-[#0A0A0E] border border-white/10 hover:border-[#E6A700]/50 p-6 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 overflow-hidden relative cursor-pointer shadow-lg hover:shadow-[0_10px_30px_rgba(230,167,0,0.1)] transition-all"
+                className="group w-full bg-[#0A0A0E] border border-white/10 hover:border-[#E6A700]/50 p-6 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 overflow-hidden relative cursor-pointer shadow-lg hover:shadow-[0_10px_30px_rgba(230,167,0,0.1)] transition-all transform-gpu"
               >
                 {/* Hover Glow */}
                 <div className="absolute -inset-10 bg-gradient-to-r from-transparent via-[#E6A700]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rotate-12" />

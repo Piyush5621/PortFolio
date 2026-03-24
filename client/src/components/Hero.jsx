@@ -72,15 +72,15 @@ const Hero = () => {
             </div>
 
             <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter leading-[0.95] text-white mb-8">
-              Digital <br />
-              Precision & <br />
+              Full-Stack <br />
+              Software <br />
               <span className="text-gold-gradient bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(230,167,0,0.15)] pb-2 block">
                 Engineering.
               </span>
             </h1>
 
             <p className="text-base md:text-lg text-slate-400 font-medium leading-relaxed max-w-xl mb-12 border-l-2 border-white/10 pl-6">
-              I'm Piyush Kumar, a full-stack engineer blending modern architectures with robust logic. I build high-performance web applications designed for scale, precision, and immersive user experiences.
+              I'm Piyush Kumar, a software engineer with expertise in building scalable web applications and high-performance digital systems.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
@@ -131,14 +131,17 @@ const Hero = () => {
 
             {/* The Monolith Container */}
             <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[400px] h-[600px] cyber-panel border border-white/5 rounded-sm p-[1px] overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#E6A700]/5 to-transparent pointer-events-none z-10" />
-
+              
               <div className="w-full h-full relative bg-[#0A0A0E] rounded-sm overflow-hidden">
 
-                {/* Embedded Image fading to black */}
-                <div className="absolute inset-0 h-[70%]">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0E]/50 to-[#0A0A0E] z-10" />
-                  <img src="/images/ppp.JPG" alt="Piyush Kumar" className="w-full h-full object-cover filter grayscale-[20%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
+                {/* Embedded Image — Removed artificial filters/brightness */}
+                <div className="absolute inset-0 h-[70%] overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0A0E] z-10" />
+                  <img 
+                    src="/images/ppp.JPG" 
+                    alt="Piyush Kumar" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 transform-gpu" 
+                  />
                 </div>
 
                 {/* Abstract Data Overlay inside monolithic block */}

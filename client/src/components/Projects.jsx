@@ -44,12 +44,12 @@ const Projects = () => {
                     {displayedProjects.map((project, idx) => (
                         <motion.div
                             key={project.title}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: idx * 0.15 }}
+                            transition={{ duration: 0.6 }}
                             onClick={() => setSelectedProject(project)}
-                            className="group cyber-panel border border-white/5 rounded-sm overflow-hidden cursor-pointer hover:border-[#E6A700]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col h-full bg-[#0A0A0E] shadow-2xl"
+                            className="group cyber-panel border border-white/5 rounded-sm overflow-hidden cursor-pointer hover:border-[#E6A700]/40 hover:scale-[1.01] transition-all duration-300 transform-gpu flex flex-col h-full bg-[#0A0A0E] shadow-2xl"
                         >
                             <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5">
                                 <img src={project.image_url} alt={project.title} className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0" />

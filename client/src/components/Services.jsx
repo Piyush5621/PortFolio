@@ -35,11 +35,11 @@ const CyberTrishulWatermark = () => (
 
 const ServiceCard = ({ icon, title, description, benefits, isActive, idx }) => (
     <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ delay: idx * 0.15 }}
-        className="group relative cyber-panel border border-white/5 rounded-sm p-8 hover:border-[#E6A700]/30 transition-all duration-500 overflow-hidden"
+        transition={{ duration: 0.5 }}
+        className="group relative cyber-panel border border-white/5 rounded-sm p-8 hover:border-[#E6A700]/30 transition-all duration-300 overflow-hidden transform-gpu"
     >
         <div className="absolute top-0 right-0 w-40 h-40 bg-[rgba(230,167,0,0.08)] blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         

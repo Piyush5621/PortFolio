@@ -73,30 +73,27 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.2
+            duration: 0.5
         }
     }
 };
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        y: 0,
         transition: {
-            duration: 0.6,
-            ease: [0.22, 1, 0.36, 1]
+            duration: 0.4
         }
     }
 };
 
 const skillVariants = {
-    hidden: { opacity: 0, x: -10 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        x: 0,
         transition: {
-            duration: 0.4
+            duration: 0.3
         }
     }
 };
@@ -147,8 +144,8 @@ const Skills = () => {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 items-start"
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 items-start transform-gpu"
                 >
                     {categoryData.map((category, idx) => (
                         <motion.div
@@ -179,7 +176,6 @@ const Skills = () => {
                                     <motion.div
                                         key={sIdx}
                                         variants={skillVariants}
-                                        transition={{ delay: 0.1 * sIdx }}
                                         onClick={() => setSelectedAstra({ ...skill, category: category.title })}
                                         className="group/skill flex items-center justify-between py-3.5 border-b border-white/[0.03] hover:bg-white/[0.02] px-2 -mx-2 rounded-sm transition-all cursor-pointer"
                                     >
