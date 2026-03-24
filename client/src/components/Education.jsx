@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { education, certifications } from '../constants';
 import { FaGraduationCap, FaAward, FaBuilding, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
@@ -129,7 +130,7 @@ const Education = () => {
                   <h4 className="text-xl font-bold text-white tracking-tight group-hover:text-[#E6A700] transition-colors">{cert.title}</h4>
                 </div>
 
-                <a 
+                <a
                   href={cert.link}
                   target="_blank"
                   rel="noreferrer"
@@ -143,75 +144,81 @@ const Education = () => {
             ))}
           </div>
         </div>
-
       </div>
 
-      {/* ── Fullscreen Details Modal for Credentials ── */}
-      <AnimatePresence>
-        {selectedItem && selectedItem.type === 'cert' && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100000] flex items-center justify-center px-4 py-8"
-          >
-            <div className="absolute inset-0 bg-[#050608]/90 backdrop-blur-md" onClick={() => setSelectedItem(null)} />
-
+      {/* ── Fullscreen Details Modal Target (Portaled) ── */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {selectedItem && selectedItem.type === 'cert' && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#0A0A0E] border border-white/10 rounded-sm shadow-2xl flex flex-col max-h-full"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[2000000] flex items-center justify-center p-4 md:p-8"
+              style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}
             >
-              <div className="flex items-center justify-between p-6 border-b border-white/10 shrink-0">
-                <div className="flex items-center gap-3 text-white">
-                  <FaAward className="text-[#E6A700]" size={16} />
-                  <span className="text-xs font-mono font-bold tracking-widest uppercase">{selectedItem.title}</span>
-                </div>
-                <button onClick={() => setSelectedItem(null)} className="text-slate-500 hover:text-[#E6A700] transition-colors">
-                  <FaTimes size={16} />
-                </button>
-              </div>
+              <div className="absolute inset-0 bg-[#050608]/90 backdrop-blur-md cursor-zoom-out" onClick={() => setSelectedItem(null)} />
 
-              <div className="p-6 md:p-8 overflow-y-auto no-scrollbar">
-                {/* Abstract Certification Graphic */}
-                <div className="w-full h-32 md:h-48 bg-[rgba(230,167,0,0.05)] border border-[#E6A700]/20 flex flex-col items-center justify-center mb-8 bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')] relative overflow-hidden">
-                  <FaAward size={64} className="text-[#E6A700] opacity-30 animate-pulse absolute" />
-                  <span className="text-[10px] font-mono tracking-[0.3em] font-bold text-[#E6A700] uppercase relative z-10 z-20">VERIFIED DOMAIN IDENTIFIER</span>
-                  <h2 className="text-2xl font-black text-white uppercase tracking-tighter mt-2 relative z-10 text-center px-4">{selectedItem.title}</h2>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="relative w-full max-w-2xl bg-[#0A0A0E] border border-white/10 rounded-sm shadow-2xl flex flex-col max-h-[85vh] z-10"
+              >
+                <div className="flex items-center justify-between p-6 border-b border-white/10 shrink-0">
+                  <div className="flex items-center gap-3 text-white">
+                    <FaAward className="text-[#E6A700]" size={16} />
+                    <span className="text-xs font-mono font-bold tracking-widest uppercase">{selectedItem.title}</span>
+                  </div>
+                  <button onClick={() => setSelectedItem(null)} className="text-slate-500 hover:text-[#E6A700] transition-colors">
+                    <FaTimes size={16} />
+                  </button>
                 </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-2">Issuing Authority</span>
-                    <span className="text-base text-white font-medium">{selectedItem.issuer}</span>
+                <div className="p-6 md:p-8 overflow-y-auto no-scrollbar">
+                  <div className="w-full h-32 md:h-48 bg-[rgba(230,167,0,0.05)] border border-[#E6A700]/20 flex flex-col items-center justify-center mb-8 relative overflow-hidden">
+                    <FaAward size={64} className="text-[#E6A700] opacity-30 animate-pulse absolute" />
+                    <span className="text-[10px] font-mono tracking-[0.3em] font-bold text-[#E6A700] uppercase relative z-10">VERIFIED DOMAIN IDENTIFIER</span>
+                    <h2 className="text-2xl font-black text-white uppercase tracking-tighter mt-2 relative z-10 text-center px-4">{selectedItem.title}</h2>
                   </div>
-                  <div>
-                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-2">Description</span>
-                    <p className="text-slate-400 text-sm leading-relaxed">{selectedItem.description}</p>
-                  </div>
-                  {selectedItem.skills && selectedItem.skills.length > 0 && (
+
+                  <div className="space-y-6">
                     <div>
-                      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-3">Skills Verified</span>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedItem.skills.map((skill, sIdx) => (
-                          <span key={sIdx} className="px-3 py-1 bg-white/[0.05] border border-white/10 rounded-sm text-[10px] font-mono font-bold text-slate-300 tracking-wider">
-                            {skill}
-                          </span>
-                        ))}
+                      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-2">Issuing Authority</span>
+                      <span className="text-base text-white font-medium">{selectedItem.issuer}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-2">Description</span>
+                      <p className="text-slate-400 text-sm leading-relaxed">{selectedItem.description}</p>
+                    </div>
+                    {selectedItem.skills && selectedItem.skills.length > 0 && (
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-3">Skills Verified</span>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedItem.skills.map((skill, sIdx) => (
+                            <span key={sIdx} className="px-3 py-1 bg-white/[0.05] border border-white/10 rounded-sm text-[10px] font-mono font-bold text-slate-300 tracking-wider">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {selectedItem.link && (
-                    <div className="pt-4 mt-2 border-t border-white/5">
-                      <a href={selectedItem.link} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center w-full gap-3 px-6 py-4 bg-[#E6A700] hover:bg-[#FCD34D] text-black text-[11px] font-mono font-black uppercase tracking-widest rounded-sm transition-colors shadow-[0_0_20px_rgba(230,167,0,0.2)] hover:shadow-[0_0_30px_rgba(230,167,0,0.4)]">
-                        Access Original Certificate Document <FaExternalLinkAlt size={12} />
-                      </a>
-                    </div>
-                  )}
+                    {selectedItem.link && (
+                      <div className="pt-4 mt-2 border-t border-white/5">
+                        <a href={selectedItem.link} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center w-full gap-3 px-6 py-4 bg-[#E6A700] hover:bg-[#FCD34D] text-black text-[11px] font-mono font-black uppercase tracking-widest rounded-sm transition-colors shadow-[0_0_20px_rgba(230,167,0,0.2)] hover:shadow-[0_0_30px_rgba(230,167,0,0.4)]">
+                          Access Original Certificate Document <FaExternalLinkAlt size={12} />
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
     </section>
   );
