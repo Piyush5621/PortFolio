@@ -12,7 +12,7 @@ const UnifiedLogo = () => (
     <div className="relative w-8 h-8 flex items-center justify-center border border-white/10 rounded-sm bg-white/[0.02] group-hover:border-[#E6A700]/40 group-hover:bg-[rgba(230,167,0,0.05)] transition-all duration-300 overflow-hidden">
         {/* Hover gold sweep effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#E6A700]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-        
+
         <svg viewBox="0 0 64 64" fill="none" className="w-5 h-5 text-slate-300 group-hover:text-[#E6A700] transition-colors relative z-10 block">
             {/* The Bow Curve */}
             <path d="M 20 12 C 40 12 56 28 56 48" stroke="currentColor" strokeWidth="6" strokeLinecap="square" />
@@ -34,38 +34,51 @@ const Navbar = () => {
     useEffect(() => {
         if (!isHome) return;
 
-        const sections = ['home', 'stats', 'skills', 'services', 'projects', 'education', 'contact'];
-        const observers = [];
+        const handleScroll = () => {
+            const sections = ['home', 'stats', 'skills', 'services', 'projects', 'education', 'contact'];
+            const triggerPoint = 160; // The 'active line' in the viewport
 
-        const observerOptions = {
-            rootMargin: "0px 0px -75% 0px", // Trigger when top of section enters 25% from top
-            threshold: 0
-        };
+            let activeId = 'home';
+            let found = false;
 
-        const observerCallback = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    const name = id === 'stats' ? 'PROFILES' : id.toUpperCase();
-                    setActiveSection(name);
+            // 1. Primary Check: Does the section contain the trigger point?
+            for (const id of sections) {
+                const element = document.getElementById(id);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= triggerPoint && rect.bottom >= triggerPoint) {
+                        activeId = id;
+                        found = true;
+                        break;
+                    }
                 }
-            });
+            }
+
+            // 2. Fallback: If in a gap, find the one closest to the trigger point
+            if (!found) {
+                let minDistance = Infinity;
+                sections.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        const distance = Math.abs(element.getBoundingClientRect().top - triggerPoint);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            activeId = id;
+                        }
+                    }
+                });
+            }
+
+            const name = activeId === 'stats' ? 'PROFILES' : activeId.toUpperCase();
+            setActiveSection(name);
+            setScrolled(window.scrollY > 20);
         };
 
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-        
-        sections.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        // Initial call
+        handleScroll();
 
-        const handleScrollScrolled = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScrollScrolled);
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('scroll', handleScrollScrolled);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [isHome]);
 
     const navLinks = [
@@ -89,10 +102,9 @@ const Navbar = () => {
     return (
         <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'py-4' : 'py-6 px-4'}`}>
             <div className={`mx-auto max-w-7xl transition-all duration-500 rounded-sm`}>
-                <div className={`flex items-center justify-between px-6 py-4 transition-all duration-500 ${
-                    scrolled ? 'bg-[rgba(10,10,14,0.85)] backdrop-blur-2xl border border-white/5 shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] rounded-sm' : 'bg-transparent border border-transparent shadow-none'
-                }`}>
-                    
+                <div className={`flex items-center justify-between px-6 py-4 transition-all duration-500 ${scrolled ? 'bg-[rgba(10,10,14,0.85)] backdrop-blur-2xl border border-white/5 shadow-[0_15px_40px_-5px_rgba(0,0,0,0.8)] rounded-sm' : 'bg-transparent border border-transparent shadow-none'
+                    }`}>
+
                     {/* Brand Logo */}
                     <a href={isHome ? '#home' : '/'} className="flex items-center gap-3 group">
                         <UnifiedLogo />
