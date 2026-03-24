@@ -171,7 +171,7 @@ const Education = () => {
 
               <div className="p-6 md:p-8 overflow-y-auto no-scrollbar">
                 {/* Abstract Certification Graphic */}
-                <div className="w-full h-32 md:h-48 bg-[rgba(230,167,0,0.05)] border border-[#E6A700]/20 flex flex-col items-center justify-center mb-8 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] relative overflow-hidden">
+                <div className="w-full h-32 md:h-48 bg-[rgba(230,167,0,0.05)] border border-[#E6A700]/20 flex flex-col items-center justify-center mb-8 bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')] relative overflow-hidden">
                   <FaAward size={64} className="text-[#E6A700] opacity-30 animate-pulse absolute" />
                   <span className="text-[10px] font-mono tracking-[0.3em] font-bold text-[#E6A700] uppercase relative z-10 z-20">VERIFIED DOMAIN IDENTIFIER</span>
                   <h2 className="text-2xl font-black text-white uppercase tracking-tighter mt-2 relative z-10 text-center px-4">{selectedItem.title}</h2>

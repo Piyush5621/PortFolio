@@ -6,9 +6,9 @@ import { USERNAMES } from '../../services/statsService';
 const ActivityHeatmap = () => {
     const scrollRef = useRef(null);
 
-    const explicitTheme = {
+    const blueTheme = {
         light: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
-        dark: ['#161b22', '#1a3b5c', '#155d8f', '#107fc2', '#0055FF'], // Custom blue theme
+        dark: ['#161b22', '#1a3b5c', '#155d8f', '#107fc2', '#0055FF'],
     };
 
     // Auto-scroll to the right to show recent contributions
@@ -26,18 +26,17 @@ const ActivityHeatmap = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-[#0a0a0c] p-6 rounded-xl border border-white/10 group hover:border-[#0055FF]/30 transition-colors w-full"
+            className="bg-transparent group transition-colors w-full"
         >
-            <h4 className="text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest border-b border-white/5 pb-4">Contribution Heatmap</h4>
-            <div ref={scrollRef} className="overflow-x-auto" style={{ scrollBehavior: 'smooth' }}>
-                <div className="flex justify-center md:block min-w-fit">
+            <div ref={scrollRef} className="overflow-x-auto select-none custom-scrollbar" style={{ scrollBehavior: 'smooth' }}>
+                <div className="flex justify-center md:block min-w-fit pb-2">
                     <GitHubCalendar
                         username={USERNAMES.github}
                         colorScheme="dark"
-                        theme={explicitTheme}
+                        theme={blueTheme}
                         blockSize={12}
                         blockMargin={4}
-                        fontSize={10}
+                        fontSize={9}
                         hideMonthLabels={false}
                     />
                 </div>

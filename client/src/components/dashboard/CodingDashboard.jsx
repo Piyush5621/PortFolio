@@ -6,7 +6,7 @@ import { SiGithub } from 'react-icons/si';
 
 import ProfileCards from "./ProfileCards";
 import ActivityHeatmap from "./ActivityHeatmap";
-import ContestGraph from "./ContestGraph";
+import LeetCodeHeatmap from "./LeetCodeHeatmap";
 
 /* ─────────────────────────────────────────────────────────
    THE CHAKRA WATERMARK
@@ -31,7 +31,7 @@ const StatCard = ({ children, className = "", title, icon }) => (
   <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
     className={`cyber-panel p-6 md:p-8 flex flex-col h-full hover:border-[#E6A700]/40 transition-all duration-300 group relative overflow-hidden rounded-sm transform-gpu ${className}`}>
     <div className="absolute top-0 right-0 w-32 h-32 bg-[rgba(230,167,0,0.1)] blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-    
+
     {(title || icon) && (
       <div className="flex items-center gap-3 mb-8 border-b border-white/5 pb-4">
         {icon && <div className="text-[#E6A700]">{icon}</div>}
@@ -50,18 +50,28 @@ const CodingDashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        const [lc, gh, cc, gfg, hr, contests, lcActivity] = await Promise.allSettled([
-          getLeetCode(USERNAMES.leetcode), getGithub(USERNAMES.github), getCodeChef(USERNAMES.codechef), getGFG(USERNAMES.gfg), getHackerRank(USERNAMES.hackerrank), getLeetCodeContests(USERNAMES.leetcode), getLeetCodeActivity(USERNAMES.leetcode)
-        ]);
-        setData({
-          leetcode: lc.status === 'fulfilled' ? lc.value.data : null, github: gh.status === 'fulfilled' ? gh.value.data : null,
-          codechef: cc.status === 'fulfilled' ? cc.value.data : null, gfg: gfg.status === 'fulfilled' ? gfg.value.data : null,
-          hackerrank: hr.status === 'fulfilled' ? hr.value.data : null, contests: contests.status === 'fulfilled' ? contests.value.data : null,
-          leetcodeActivity: lcActivity.status === 'fulfilled' ? lcActivity.value.data : null
-        });
-      } catch (err) { console.error("Dashboard error:", err); } 
-      finally { setLoading(false); }
+      // Individual fetchers to update state progressively
+      const fetchers = [
+        { key: 'leetcode', fn: () => getLeetCode(USERNAMES.leetcode) },
+        { key: 'github', fn: () => getGithub(USERNAMES.github) },
+        { key: 'codechef', fn: () => getCodeChef(USERNAMES.codechef) },
+        { key: 'gfg', fn: () => getGFG(USERNAMES.gfg) },
+        { key: 'hackerrank', fn: () => getHackerRank(USERNAMES.hackerrank) },
+        { key: 'contests', fn: () => getLeetCodeContests(USERNAMES.leetcode) },
+        { key: 'leetcodeActivity', fn: () => getLeetCodeActivity(USERNAMES.leetcode) }
+      ];
+
+      fetchers.forEach(async ({ key, fn }) => {
+        try {
+          const result = await fn();
+          setData(prev => ({ ...prev, [key]: result.data }));
+        } catch (err) {
+          console.error(`Error fetching ${key}:`, err);
+        }
+      });
+
+      // Initially set loading to false quickly if some data is hit, or after a timeout
+      setLoading(false);
     };
     fetchStats();
   }, []);
@@ -77,31 +87,31 @@ const CodingDashboard = () => {
 
   return (
     <section id="stats" className="py-24 bg-[var(--bg-cosmic)] relative overflow-hidden border-t border-white/5">
-      
+
       {/* Structural matrix background */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
-           style={{ backgroundImage: 'linear-gradient(rgba(230,167,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(230,167,0,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-      
+        style={{ backgroundImage: 'linear-gradient(rgba(230,167,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(230,167,0,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
       <CyberChakraWatermark />
       <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-[rgba(230,167,0,0.03)] rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        
+
         {/* Header Section */}
         <div className="mb-20">
           <div className="inline-flex items-center gap-3 px-4 py-2 border border-white/10 rounded-full bg-white/[0.01] backdrop-blur-md mb-8 hover:border-[#E6A700]/30 transition-colors cursor-default">
-             <span className="relative flex h-2 w-2">
-               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E6A700] opacity-75"></span>
-               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E6A700]"></span>
-             </span>
-             <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Coding Stats</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E6A700] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E6A700]"></span>
+            </span>
+            <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Coding Stats</span>
           </div>
-          
+
           <h2 className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.95]">
-            Data & <br/>
+            Data & <br />
             <span className="text-gold-gradient">Algorithms.</span>
           </h2>
-          
+
           <p className="text-base font-medium text-slate-400 max-w-xl leading-relaxed border-l border-white/10 pl-5">
             Programming is an infinite cycle of logic — much like the Sudarshana Chakra rotating flawlessly.
             These statistics are pulled in real-time, verifying my algorithmic consistency.
@@ -114,7 +124,7 @@ const CodingDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-          
+
           {/* Activity Heatmap */}
           <StatCard title="Version Control / GitHub" icon={<SiGithub />}>
             <div className="p-4 md:p-8 border border-white/5 rounded-sm bg-white/[0.01] mb-8 overflow-hidden relative">
@@ -136,24 +146,25 @@ const CodingDashboard = () => {
             </div>
           </StatCard>
 
-          {/* Contest History */}
-          <StatCard title="Competitive History">
-            <div className="w-full mb-8 p-4 border border-white/5 rounded-sm bg-white/[0.01]">
-              <ContestGraph contestData={data.contests} />
+          {/* LeetCode Activity Heatmap */}
+          <StatCard title="LeetCode Activity">
+            <div className="p-4 md:p-8 border border-white/5 rounded-sm bg-white/[0.01] mb-8 overflow-hidden relative min-h-[250px] flex items-center">
+              <LeetCodeHeatmap activityData={data.leetcodeActivity} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 relative overflow-hidden group transform-gpu">
-                <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest mb-2 block group-hover:text-[#E6A700]">Peak Rating</span>
-                <div className="text-3xl font-mono font-black text-white group-hover:text-[#E6A700] transition-colors">
-                  {data.contests?.topRating?.toFixed(0) || '1500'}
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {[
+                { label: "Streak", val: `${data.leetcodeActivity?.streak || 0}d` },
+                { label: "Active Days", val: data.leetcodeActivity?.activeDays || 0 },
+                { label: "Solved", val: data.leetcode?.totalSolved || 0 },
+                { label: "Submissions", val: data.leetcodeActivity?.totalSubmissions || 0 }
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col p-4 bg-white/[0.02] border border-white/5 rounded-sm relative overflow-hidden group hover:border-[#E6A700]/30 transition-colors transform-gpu">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10 group-hover:bg-[#E6A700] transition-colors" />
+                  <span className="text-slate-500 text-[9px] font-mono uppercase tracking-[0.2em] mb-1 group-hover:text-[#E6A700] transition-colors">{stat.label}</span>
+                  <span className="text-xl font-bold font-mono text-slate-200 tracking-tight transition-colors">{stat.val}</span>
                 </div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/5 hover:border-[#E6A700]/30 transition-colors rounded-sm p-5 group transform-gpu">
-                <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest mb-2 block group-hover:text-[#E6A700]">Global Rank</span>
-                <div className="text-3xl font-mono font-black text-white tracking-tighter group-hover:text-[#E6A700] transition-colors">
-                  {data.contests?.globalRanking || 'N/A'}
-                </div>
-              </div>
+              ))}
             </div>
           </StatCard>
         </div>
