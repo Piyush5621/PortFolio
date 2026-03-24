@@ -80,8 +80,8 @@ const Contact = () => {
                         <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Establish Connection</span>
                     </div>
                     <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
-                        Initiate <br />
-                        <span className="text-gold-gradient">Transmission.</span>
+                        THE <br />
+                        <span className="text-gold-gradient">SAMVĀD.</span>
                     </h2>
                 </div>
 

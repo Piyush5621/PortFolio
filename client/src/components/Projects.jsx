@@ -26,8 +26,8 @@ const Projects = () => {
                             <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Engineering Showcase</span>
                         </div>
                         <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95]">
-                            Featured <br/>
-                            <span className="text-gold-gradient bg-clip-text text-transparent pb-2 block">Projects.</span>
+                            DIGITAL <br/>
+                            <span className="text-gold-gradient bg-clip-text text-transparent pb-2 block">NIRMĀN.</span>
                         </h2>
                     </div>
                     <div className="flex flex-col items-start md:items-end gap-6">

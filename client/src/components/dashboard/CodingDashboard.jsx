@@ -108,8 +108,8 @@ const CodingDashboard = () => {
           </div>
 
           <h2 className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.95]">
-            Data & <br />
-            <span className="text-gold-gradient">Algorithms.</span>
+            THE <br />
+            <span className="text-gold-gradient">ABHYĀSA.</span>
           </h2>
 
           <p className="text-base font-medium text-slate-400 max-w-xl leading-relaxed border-l border-white/10 pl-5">

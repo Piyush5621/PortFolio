@@ -88,7 +88,7 @@ const Services = () => {
                             <span className="text-[10px] font-mono text-slate-300 tracking-[0.2em] uppercase">Core Capabilities</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-widest">
-                            What I <span className="text-gold-gradient">Do.</span>
+                            THE <span className="text-gold-gradient">SEVĀ.</span>
                         </h2>
                     </div>
                     <p className="text-sm font-mono text-slate-400 max-w-sm leading-relaxed md:text-right border-l md:border-l-0 md:border-r border-[#E6A700]/30 px-4">
