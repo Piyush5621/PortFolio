@@ -124,6 +124,11 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; letter-spacing: -0.02
   100% { transform: translateY(100vh); }
 }
 
+/* ── Performance Optimizations ── */
+section {
+  will-change: transform, opacity;
+}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar       { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-cosmic); }

@@ -32,24 +32,40 @@ const Navbar = () => {
     const isHome = location.pathname === '/';
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-            if (!isHome) return;
+        if (!isHome) return;
 
-            const sections = ['home', 'stats', 'skills', 'services', 'projects', 'contact'];
-            for (const section of sections) {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-                        const name = section === 'stats' ? 'PROFILES' : section.toUpperCase();
-                        setActiveSection(name);
-                    }
-                }
-            }
+        const sections = ['home', 'stats', 'skills', 'services', 'projects', 'education', 'contact'];
+        const observers = [];
+
+        const observerOptions = {
+            rootMargin: "0px 0px -75% 0px", // Trigger when top of section enters 25% from top
+            threshold: 0
         };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        const observerCallback = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const name = id === 'stats' ? 'PROFILES' : id.toUpperCase();
+                    setActiveSection(name);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        
+        sections.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+
+        const handleScrollScrolled = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScrollScrolled);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('scroll', handleScrollScrolled);
+        };
     }, [isHome]);
 
     const navLinks = [
@@ -58,12 +74,14 @@ const Navbar = () => {
         { name: 'SKILLS', href: '#skills' },
         { name: 'SERVICES', href: '#services' },
         { name: 'PROJECTS', href: '#projects' },
+        { name: 'EDUCATION', href: '#education' },
         { name: 'CONTACT', href: '#contact' },
     ];
 
-    const handleScrollToSection = (e, href) => {
+    const handleScrollToSection = (e, name, href) => {
         e.preventDefault();
         setIsOpen(false);
+        setActiveSection(name); // Immediate visual feedback
         const el = document.querySelector(href);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
@@ -91,15 +109,15 @@ const Navbar = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    onClick={(e) => handleScrollToSection(e, link.href)}
+                                    onClick={(e) => handleScrollToSection(e, link.name, link.href)}
                                     className={`px-5 py-2 text-xs font-bold font-mono tracking-widest transition-colors relative group
                                         ${isActive ? 'text-[#E6A700]' : 'text-slate-400 hover:text-white'}
                                     `}
                                 >
                                     {link.name}
-                                    <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] transition-all duration-300 shadow-[0_0_8px_#E6A700]
+                                    <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] transition-all duration-200 shadow-[0_0_8px_#E6A700]
                                         ${isActive ? 'w-1/2 bg-[#E6A700] opacity-100' : 'w-0 bg-[#E6A700] group-hover:w-1/2 opacity-0 group-hover:opacity-100'}
-                                    `} />
+                                     `} />
                                 </a>
                             );
                         }) : (
@@ -143,7 +161,7 @@ const Navbar = () => {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    onClick={(e) => handleScrollToSection(e, link.href)}
+                                    onClick={(e) => handleScrollToSection(e, link.name, link.href)}
                                     className="text-sm font-mono font-bold tracking-widest text-slate-300 hover:text-[#E6A700] p-3 rounded-sm border border-transparent hover:border-white/10 hover:bg-white/[0.02] transition-colors"
                                 >
                                     {link.name}
